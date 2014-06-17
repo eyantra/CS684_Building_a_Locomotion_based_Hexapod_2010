@@ -1,0 +1,4262 @@
+                        .module hexapod.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile D:\BUILDI~1\hexapod.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile D:\BUILDI~1\hexapod.c
+ 0000           _arm_number::
+ 0000                   .blkb 1
+                        .area idata
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0001                   .dbfile D:\BUILDI~1\hexapod.c
+ 0001                   .dbsym e arm_number _arm_number c
+ 0001           _angle_upper_byte::
+ 0001                   .blkb 1
+                        .area idata
+ 0001 00                .byte 0
+                        .area data(ram, con, rel)
+ 0002                   .dbfile D:\BUILDI~1\hexapod.c
+ 0002                   .dbsym e angle_upper_byte _angle_upper_byte c
+ 0002           _angle_lower_byte::
+ 0002                   .blkb 1
+                        .area idata
+ 0002 00                .byte 0
+                        .area data(ram, con, rel)
+ 0003                   .dbfile D:\BUILDI~1\hexapod.c
+ 0003                   .dbsym e angle_lower_byte _angle_lower_byte c
+ 0003           _degree::
+ 0003                   .blkb 1
+                        .area idata
+ 0003 00                .byte 0
+                        .area data(ram, con, rel)
+ 0004                   .dbfile D:\BUILDI~1\hexapod.c
+ 0004                   .dbsym e degree _degree c
+ 0004           _delay_count::
+ 0004                   .blkb 2
+                        .area idata
+ 0004 0000              .word 0
+                        .area data(ram, con, rel)
+ 0006                   .dbfile D:\BUILDI~1\hexapod.c
+ 0006                   .dbsym e delay_count _delay_count i
+ 0006           _serial_communication_interval::
+ 0006                   .blkb 2
+                        .area idata
+ 0006 0000              .word 0
+                        .area data(ram, con, rel)
+ 0008                   .dbfile D:\BUILDI~1\hexapod.c
+ 0008                   .dbsym e serial_communication_interval _serial_communication_interval i
+ 0008           _serial_communication_channel_number::
+ 0008                   .blkb 1
+                        .area idata
+ 0008 00                .byte 0
+                        .area data(ram, con, rel)
+ 0009                   .dbfile D:\BUILDI~1\hexapod.c
+ 0009                   .dbsym e serial_communication_channel_number _serial_communication_channel_number c
+ 0009           _motion_busy::
+ 0009                   .blkb 1
+                        .area idata
+ 0009 00                .byte 0
+                        .area data(ram, con, rel)
+ 000A                   .dbfile D:\BUILDI~1\hexapod.c
+ 000A                   .dbsym e motion_busy _motion_busy c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile D:\BUILDI~1\hexapod.c
+ 0000                   .dbfunc e port_init _port_init fV
+                        .even
+ 0000           _port_init::
+ 0000                   .dbline -1
+ 0000                   .dbline 127
+ 0000           ; //ICC-AVR application builder : 11/4/2009 1:05:10 PM
+ 0000           ; // Target : M2560
+ 0000           ; // Crystal: 11.059Mhz
+ 0000           ; 
+ 0000           ; /*
+ 0000           ;  Pin name     Port            Anding (make 0)         Oring (make 1)
+ 0000           ;  SP LEFT      PL1             1111 1101       0xFD            0000 0010       0x02
+ 0000           ; 
+ 0000           ;  1A           PD5             1101 1111       0xDF            0010 0000       0x20
+ 0000           ;  1B           PL2             1111 1011       0xFB            0000 0100       0x04
+ 0000           ;  1C           PG1             1111 1101       0xFD            0000 0010       0x02
+ 0000           ;  2A           PL6             1011 1111       0xBF            0100 0000       0x40
+ 0000           ;  2B           PD4             1110 1111       0xEF            0001 0000       0x10
+ 0000           ;  2C           PL7             0111 1111       0x7F            1000 0000       0x80
+ 0000           ;  3A           PH6             1011 1111       0xBF            0100 0000       0x40
+ 0000           ;  3B           PH4             1110 1111       0xEF            0001 0000       0x10
+ 0000           ;  3C           PH5             1101 1111       0xDF            0010 0000       0x20
+ 0000           ;  SP RIGHT     PJ7             0111 1111       0x7F            1000 0000       0x80
+ 0000           ;  4A           PG0             1111 1110       0xFE            0000 0001       0x01
+ 0000           ;  4B           PD7             0111 1111       0x7F            1000 0000       0x80
+ 0000           ;  4C           PD6             1011 1111       0xBF            0100 0000       0x40
+ 0000           ;  5A           PJ5             1101 1111       0xDF            0010 0000       0x20
+ 0000           ;  5B           PJ6             1011 1111       0xBF            0100 0000       0x40
+ 0000           ;  5C           PJ4             1110 1111       0xEF            0001 0000       0x10
+ 0000           ;  6A           PJ3             1111 0111       0XF7            0000 1000       0x08
+ 0000           ;  6B           PJ1             1111 1101       0xFD            0000 0010       0x02
+ 0000           ;  6C           PJ2             1111 1011       0xFB            0000 0100       0x04
+ 0000           ; 
+ 0000           ;  Remote control communication protocoal
+ 0000           ;  transmitted command          received data
+ 0000           ;  1                                            right joystick x axis 8 bit analog position;    center:0x24; left: 0x3B; right: 0x04
+ 0000           ;  2                                            right joystick y axis 8 bit analog position;    center:0x24; up: 0x3B; down: 0x04
+ 0000           ;  3                                            left joystick x axis 8 bit analog position;             center:0x3A; left: 0x23; right: 0x04
+ 0000           ;  4                                            left joystick y axis 8 bit analog position;             center:0x1F; up: 0x34; down: 0x04
+ 0000           ;  5                                            right joystick button
+ 0000           ;  6                                            left joystick button
+ 0000           ;  7                                            digital switches left 1,2 and right 1,2
+ 0000           ;  bit7: Right 2; bit6: right 1; bit4: left 1; bit3: left 2
+ 0000           ; 
+ 0000           ;  Received data will be stored in the array unsigned char remote_data [8]; from the location 1 to 7 in the same order as the command.
+ 0000           ;  */
+ 0000           ;  
+ 0000           ;  
+ 0000           ;  /*********************************************************************************
+ 0000           ; 
+ 0000           ;    Copyright (c) 2010, ERTS Lab IIT Bombay erts@cse.iitb.ac.in               -*- c -*-
+ 0000           ;    All rights reserved.
+ 0000           ; 
+ 0000           ;    Redistribution and use in source and binary forms, with or without
+ 0000           ;    modification, are permitted provided that the following conditions are met:
+ 0000           ; 
+ 0000           ;    * Redistributions of source code must retain the above copyright
+ 0000           ;      notice, this list of conditions and the following disclaimer.
+ 0000           ; 
+ 0000           ;    * Redistributions in binary form must reproduce the above copyright
+ 0000           ;      notice, this list of conditions and the following disclaimer in
+ 0000           ;      the documentation and/or other materials provided with the
+ 0000           ;      distribution.
+ 0000           ; 
+ 0000           ;    * Neither the name of the copyright holders nor the names of
+ 0000           ;      contributors may be used to endorse or promote products derived
+ 0000           ;      from this software without specific prior written permission.
+ 0000           ; 
+ 0000           ;    * Source code can be used for academic purpose. 
+ 0000           ;        For commercial use permission form the author needs to be taken.
+ 0000           ; 
+ 0000           ;   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ 0000           ;   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ 0000           ;   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ 0000           ;   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ 0000           ;   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ 0000           ;   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ 0000           ;   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ 0000           ;   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ 0000           ;   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ 0000           ;   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ 0000           ;   POSSIBILITY OF SUCH DAMAGE. 
+ 0000           ; 
+ 0000           ;   Software released under Creative Commence cc by-nc-sa licence.
+ 0000           ;   For legal information refer to: 
+ 0000           ;   http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+ 0000           ; 
+ 0000           ; ********************************************************************************/
+ 0000           ; 
+ 0000           ; 
+ 0000           ; #include <iom2560v.h>
+ 0000           ; #include <macros.h>
+ 0000           ; #include "hexapod_macro.h"
+ 0000           ; #include "keyboard.h"
+ 0000           ; 
+ 0000           ; 
+ 0000           ; unsigned char arm_number = 0;
+ 0000           ; unsigned char angle_upper_byte = 0;
+ 0000           ; unsigned char angle_lower_byte = 0;
+ 0000           ; unsigned char degree = 0;
+ 0000           ; unsigned char angle_upper_byte_1A, angle_lower_byte_1A;
+ 0000           ; angle_upper_byte_1B, angle_lower_byte_1B; angle_upper_byte_1C, angle_lower_byte_1C;
+ 0000           ; unsigned char angle_upper_byte_2A, angle_lower_byte_2A;
+ 0000           ; angle_upper_byte_2B, angle_lower_byte_2B; angle_upper_byte_2C, angle_lower_byte_2C;
+ 0000           ; unsigned char angle_upper_byte_3A, angle_lower_byte_3A;
+ 0000           ; angle_upper_byte_3B, angle_lower_byte_3B; angle_upper_byte_3C, angle_lower_byte_3C;
+ 0000           ; unsigned char angle_upper_byte_4A, angle_lower_byte_4A;
+ 0000           ; angle_upper_byte_4B, angle_lower_byte_4B; angle_upper_byte_4C, angle_lower_byte_4C;
+ 0000           ; unsigned char angle_upper_byte_5A, angle_lower_byte_5A;
+ 0000           ; angle_upper_byte_5B, angle_lower_byte_5B; angle_upper_byte_5C, angle_lower_byte_5C;
+ 0000           ; unsigned char angle_upper_byte_6A, angle_lower_byte_6A;
+ 0000           ; angle_upper_byte_6B, angle_lower_byte_6B; angle_upper_byte_6C, angle_lower_byte_6C;
+ 0000           ; unsigned int delay_count = 0;
+ 0000           ; //variables relatd to the serial commuication or remote control
+ 0000           ; unsigned int serial_communication_interval = 0;
+ 0000           ; unsigned char serial_communication_channel_number = 0;
+ 0000           ; unsigned char remote_data[8]; //see remote channel allocation in the notes above
+ 0000           ; unsigned char motion_busy = 0; //sets to one if any of the motion function is called.
+ 0000           ; 
+ 0000           ; unsigned char data;
+ 0000           ; 
+ 0000           ; 
+ 0000           ; 
+ 0000           ; void delay(int time);
+ 0000           ; void swap(unsigned char *a, unsigned char *b);
+ 0000           ; void buzzer_on(void);
+ 0000           ; void buzzer_off(void);
+ 0000           ; 
+ 0000           ; /**
+ 0000           ; Port Initialization
+ 0000           ; */
+ 0000           ; void port_init(void) {
+ 0000                   .dbline 128
+ 0000           ;       PORTA = 0x00;
+ 0000 2224              clr R2
+ 0002 22B8              out 0x2,R2
+ 0004                   .dbline 129
+ 0004           ;       DDRA = 0xFF;
+ 0004 8FEF              ldi R24,255
+ 0006 81B9              out 0x1,R24
+ 0008                   .dbline 130
+ 0008           ;       PORTB = 0x00;
+ 0008 25B8              out 0x5,R2
+ 000A                   .dbline 131
+ 000A           ;       DDRB = 0x01;
+ 000A 81E0              ldi R24,1
+ 000C 84B9              out 0x4,R24
+ 000E                   .dbline 132
+ 000E           ;       PORTC = 0x00; //m103 output only
+ 000E 28B8              out 0x8,R2
+ 0010                   .dbline 133
+ 0010           ;       DDRC = 0xFF;
+ 0010 8FEF              ldi R24,255
+ 0012 87B9              out 0x7,R24
+ 0014                   .dbline 134
+ 0014           ;       PORTD = 0x00;
+ 0014 2BB8              out 0xb,R2
+ 0016                   .dbline 135
+ 0016           ;       DDRD = 0xF0;
+ 0016 80EF              ldi R24,240
+ 0018 8AB9              out 0xa,R24
+ 001A                   .dbline 136
+ 001A           ;       PORTE = 0x00;
+ 001A 2EB8              out 0xe,R2
+ 001C                   .dbline 137
+ 001C           ;       DDRE = 0x00;
+ 001C 2DB8              out 0xd,R2
+ 001E                   .dbline 138
+ 001E           ;       PORTF = 0x00;
+ 001E 21BA              out 0x11,R2
+ 0020                   .dbline 139
+ 0020           ;       DDRF = 0x00;
+ 0020 20BA              out 0x10,R2
+ 0022                   .dbline 140
+ 0022           ;       PORTG = 0x00;
+ 0022 24BA              out 0x14,R2
+ 0024                   .dbline 141
+ 0024           ;       DDRG = 0x03;
+ 0024 83E0              ldi R24,3
+ 0026 83BB              out 0x13,R24
+ 0028                   .dbline 142
+ 0028           ;       PORTH = 0x00;
+ 0028 20920201          sts 258,R2
+ 002C                   .dbline 143
+ 002C           ;       DDRH = 0x70;
+ 002C 80E7              ldi R24,112
+ 002E 80930101          sts 257,R24
+ 0032                   .dbline 144
+ 0032           ;       PORTJ = 0x00;
+ 0032 20920501          sts 261,R2
+ 0036                   .dbline 145
+ 0036           ;       DDRJ = 0xFE; //0xFE original
+ 0036 8EEF              ldi R24,254
+ 0038 80930401          sts 260,R24
+ 003C                   .dbline 146
+ 003C           ;       PORTK = 0x00;
+ 003C 20920801          sts 264,R2
+ 0040                   .dbline 147
+ 0040           ;       DDRK = 0x00;
+ 0040 20920701          sts 263,R2
+ 0044                   .dbline 148
+ 0044           ;       PORTL = 0x00;
+ 0044 20920B01          sts 267,R2
+ 0048                   .dbline 149
+ 0048           ;       DDRL = 0xC7;
+ 0048 87EC              ldi R24,199
+ 004A 80930A01          sts 266,R24
+ 004E                   .dbline -2
+ 004E           L1:
+ 004E                   .dbline 0 ; func end
+ 004E 0895              ret
+ 0050                   .dbend
+ 0050                   .dbfunc e timer1_init _timer1_init fV
+                        .even
+ 0050           _timer1_init::
+ 0050                   .dbline -1
+ 0050                   .dbline 156
+ 0050           ; }
+ 0050           ; 
+ 0050           ; //TIMER1 initialize - prescale:1
+ 0050           ; // WGM: 0) Normal, TOP=0xFFFF
+ 0050           ; // desired value: 400Hz
+ 0050           ; // actual value: 400.007Hz (0.0%)
+ 0050           ; void timer1_init(void) {
+ 0050                   .dbline 157
+ 0050           ;       TCCR1B = 0x00; //stop
+ 0050 2224              clr R2
+ 0052 20928100          sts 129,R2
+ 0056                   .dbline 158
+ 0056           ;       TCNT1H = 0x94; //setup
+ 0056 84E9              ldi R24,148
+ 0058 80938500          sts 133,R24
+ 005C                   .dbline 159
+ 005C           ;       TCNT1L = 0x01;
+ 005C 81E0              ldi R24,1
+ 005E 80938400          sts 132,R24
+ 0062                   .dbline 160
+ 0062           ;       OCR1AH = 0x6B;
+ 0062 8BE6              ldi R24,107
+ 0064 80938900          sts 137,R24
+ 0068                   .dbline 161
+ 0068           ;       OCR1AL = 0xFF;
+ 0068 8FEF              ldi R24,255
+ 006A 80938800          sts 136,R24
+ 006E                   .dbline 162
+ 006E           ;       OCR1BH = 0x6B;
+ 006E 8BE6              ldi R24,107
+ 0070 80938B00          sts 139,R24
+ 0074                   .dbline 163
+ 0074           ;       OCR1BL = 0xFF;
+ 0074 8FEF              ldi R24,255
+ 0076 80938A00          sts 138,R24
+ 007A                   .dbline 164
+ 007A           ;       OCR1CH = 0x00;
+ 007A 20928D00          sts 141,R2
+ 007E                   .dbline 165
+ 007E           ;       OCR1CL = 0x00;
+ 007E 20928C00          sts 140,R2
+ 0082                   .dbline 166
+ 0082           ;       ICR1H = 0x6B;
+ 0082 8BE6              ldi R24,107
+ 0084 80938700          sts 135,R24
+ 0088                   .dbline 167
+ 0088           ;       ICR1L = 0xFF;
+ 0088 8FEF              ldi R24,255
+ 008A 80938600          sts 134,R24
+ 008E                   .dbline 168
+ 008E           ;       TCCR1A = 0x00;
+ 008E 20928000          sts 128,R2
+ 0092                   .dbline 169
+ 0092           ;       TCCR1C = 0x00;
+ 0092 20928200          sts 130,R2
+ 0096                   .dbline 170
+ 0096           ;       TCCR1B = 0x01; //start Timer
+ 0096 81E0              ldi R24,1
+ 0098 80938100          sts 129,R24
+ 009C                   .dbline -2
+ 009C           L2:
+ 009C                   .dbline 0 ; func end
+ 009C 0895              ret
+ 009E                   .dbend
+ 009E                   .dbfunc e turn_on_sharp15 _turn_on_sharp15 fV
+                        .even
+ 009E           _turn_on_sharp15::
+ 009E                   .dbline -1
+ 009E                   .dbline 175
+ 009E           ; }
+ 009E           ; 
+ 009E           ; 
+ 009E           ; void turn_on_sharp15 (void) //turn on Sharp IR range sensors 1,5
+ 009E           ; {
+ 009E                   .dbline 176
+ 009E           ;   PORTH = PORTH & 0xFB;
+ 009E 80910201          lds R24,258
+ 00A2 8B7F              andi R24,251
+ 00A4 80930201          sts 258,R24
+ 00A8                   .dbline -2
+ 00A8           L3:
+ 00A8                   .dbline 0 ; func end
+ 00A8 0895              ret
+ 00AA                   .dbend
+ 00AA                   .dbfunc e turn_off_sharp15 _turn_off_sharp15 fV
+                        .even
+ 00AA           _turn_off_sharp15::
+ 00AA                   .dbline -1
+ 00AA                   .dbline 180
+ 00AA           ; }
+ 00AA           ; 
+ 00AA           ; void turn_off_sharp15 (void) //turn off Sharp IR range sensors 1,5
+ 00AA           ; {
+ 00AA                   .dbline 181
+ 00AA           ;  PORTH = PORTH | 0x04;
+ 00AA 80910201          lds R24,258
+ 00AE 8460              ori R24,4
+ 00B0 80930201          sts 258,R24
+ 00B4                   .dbline -2
+ 00B4           L4:
+ 00B4                   .dbline 0 ; func end
+ 00B4 0895              ret
+ 00B6                   .dbend
+ 00B6                   .dbfunc e reset_1A _reset_1A fV
+                        .even
+ 00B6           _reset_1A::
+ 00B6                   .dbline -1
+ 00B6                   .dbline 184
+ 00B6           ; }
+ 00B6           ; 
+ 00B6           ; void reset_1A(void) {
+ 00B6                   .dbline 185
+ 00B6           ;       PORTD = PORTD & 0xDF;
+ 00B6 8BB1              in R24,0xb
+ 00B8 8F7D              andi R24,223
+ 00BA 8BB9              out 0xb,R24
+ 00BC                   .dbline -2
+ 00BC           L5:
+ 00BC                   .dbline 0 ; func end
+ 00BC 0895              ret
+ 00BE                   .dbend
+ 00BE                   .dbfunc e set_1A _set_1A fV
+                        .even
+ 00BE           _set_1A::
+ 00BE                   .dbline -1
+ 00BE                   .dbline 188
+ 00BE           ; }
+ 00BE           ; 
+ 00BE           ; void set_1A(void) {
+ 00BE                   .dbline 189
+ 00BE           ;       PORTD = PORTD | 0x20;
+ 00BE 5D9A              sbi 0xb,5
+ 00C0                   .dbline -2
+ 00C0           L6:
+ 00C0                   .dbline 0 ; func end
+ 00C0 0895              ret
+ 00C2                   .dbend
+ 00C2                   .dbfunc e reset_1B _reset_1B fV
+                        .even
+ 00C2           _reset_1B::
+ 00C2                   .dbline -1
+ 00C2                   .dbline 192
+ 00C2           ; }
+ 00C2           ; 
+ 00C2           ; void reset_1B(void) {
+ 00C2                   .dbline 193
+ 00C2           ;       PORTL = PORTL & 0xFB;
+ 00C2 80910B01          lds R24,267
+ 00C6 8B7F              andi R24,251
+ 00C8 80930B01          sts 267,R24
+ 00CC                   .dbline -2
+ 00CC           L7:
+ 00CC                   .dbline 0 ; func end
+ 00CC 0895              ret
+ 00CE                   .dbend
+ 00CE                   .dbfunc e set_1B _set_1B fV
+                        .even
+ 00CE           _set_1B::
+ 00CE                   .dbline -1
+ 00CE                   .dbline 196
+ 00CE           ; }
+ 00CE           ; 
+ 00CE           ; void set_1B(void) {
+ 00CE                   .dbline 197
+ 00CE           ;       PORTL = PORTL | 0x04;
+ 00CE 80910B01          lds R24,267
+ 00D2 8460              ori R24,4
+ 00D4 80930B01          sts 267,R24
+ 00D8                   .dbline -2
+ 00D8           L8:
+ 00D8                   .dbline 0 ; func end
+ 00D8 0895              ret
+ 00DA                   .dbend
+ 00DA                   .dbfunc e reset_1C _reset_1C fV
+                        .even
+ 00DA           _reset_1C::
+ 00DA                   .dbline -1
+ 00DA                   .dbline 200
+ 00DA           ; }
+ 00DA           ; 
+ 00DA           ; void reset_1C(void) {
+ 00DA                   .dbline 201
+ 00DA           ;       PORTG = PORTG & 0xFD;
+ 00DA 84B3              in R24,0x14
+ 00DC 8D7F              andi R24,253
+ 00DE 84BB              out 0x14,R24
+ 00E0                   .dbline -2
+ 00E0           L9:
+ 00E0                   .dbline 0 ; func end
+ 00E0 0895              ret
+ 00E2                   .dbend
+ 00E2                   .dbfunc e set_1C _set_1C fV
+                        .even
+ 00E2           _set_1C::
+ 00E2                   .dbline -1
+ 00E2                   .dbline 204
+ 00E2           ; }
+ 00E2           ; 
+ 00E2           ; void set_1C(void) {
+ 00E2                   .dbline 205
+ 00E2           ;       PORTG = PORTG | 0x02;
+ 00E2 A19A              sbi 0x14,1
+ 00E4                   .dbline -2
+ 00E4           L10:
+ 00E4                   .dbline 0 ; func end
+ 00E4 0895              ret
+ 00E6                   .dbend
+ 00E6                   .dbfunc e reset_2A _reset_2A fV
+                        .even
+ 00E6           _reset_2A::
+ 00E6                   .dbline -1
+ 00E6                   .dbline 208
+ 00E6           ; }
+ 00E6           ; 
+ 00E6           ; void reset_2A(void) {
+ 00E6                   .dbline 209
+ 00E6           ;       PORTL = PORTL & 0xBF;
+ 00E6 80910B01          lds R24,267
+ 00EA 8F7B              andi R24,191
+ 00EC 80930B01          sts 267,R24
+ 00F0                   .dbline -2
+ 00F0           L11:
+ 00F0                   .dbline 0 ; func end
+ 00F0 0895              ret
+ 00F2                   .dbend
+ 00F2                   .dbfunc e set_2A _set_2A fV
+                        .even
+ 00F2           _set_2A::
+ 00F2                   .dbline -1
+ 00F2                   .dbline 212
+ 00F2           ; }
+ 00F2           ; 
+ 00F2           ; void set_2A(void) {
+ 00F2                   .dbline 213
+ 00F2           ;       PORTL = PORTL | 0x40;
+ 00F2 80910B01          lds R24,267
+ 00F6 8064              ori R24,64
+ 00F8 80930B01          sts 267,R24
+ 00FC                   .dbline -2
+ 00FC           L12:
+ 00FC                   .dbline 0 ; func end
+ 00FC 0895              ret
+ 00FE                   .dbend
+ 00FE                   .dbfunc e reset_2B _reset_2B fV
+                        .even
+ 00FE           _reset_2B::
+ 00FE                   .dbline -1
+ 00FE                   .dbline 216
+ 00FE           ; }
+ 00FE           ; 
+ 00FE           ; void reset_2B(void) {
+ 00FE                   .dbline 217
+ 00FE           ;       PORTD = PORTD & 0xEF;
+ 00FE 8BB1              in R24,0xb
+ 0100 8F7E              andi R24,239
+ 0102 8BB9              out 0xb,R24
+ 0104                   .dbline -2
+ 0104           L13:
+ 0104                   .dbline 0 ; func end
+ 0104 0895              ret
+ 0106                   .dbend
+ 0106                   .dbfunc e set_2B _set_2B fV
+                        .even
+ 0106           _set_2B::
+ 0106                   .dbline -1
+ 0106                   .dbline 220
+ 0106           ; }
+ 0106           ; 
+ 0106           ; void set_2B(void) {
+ 0106                   .dbline 221
+ 0106           ;       PORTD = PORTD | 0x10;
+ 0106 5C9A              sbi 0xb,4
+ 0108                   .dbline -2
+ 0108           L14:
+ 0108                   .dbline 0 ; func end
+ 0108 0895              ret
+ 010A                   .dbend
+ 010A                   .dbfunc e reset_2C _reset_2C fV
+                        .even
+ 010A           _reset_2C::
+ 010A                   .dbline -1
+ 010A                   .dbline 224
+ 010A           ; }
+ 010A           ; 
+ 010A           ; void reset_2C(void) {
+ 010A                   .dbline 225
+ 010A           ;       PORTL = PORTL & 0x7F;
+ 010A 80910B01          lds R24,267
+ 010E 8F77              andi R24,127
+ 0110 80930B01          sts 267,R24
+ 0114                   .dbline -2
+ 0114           L15:
+ 0114                   .dbline 0 ; func end
+ 0114 0895              ret
+ 0116                   .dbend
+ 0116                   .dbfunc e set_2C _set_2C fV
+                        .even
+ 0116           _set_2C::
+ 0116                   .dbline -1
+ 0116                   .dbline 228
+ 0116           ; }
+ 0116           ; 
+ 0116           ; void set_2C(void) {
+ 0116                   .dbline 229
+ 0116           ;       PORTL = PORTL | 0x80;
+ 0116 80910B01          lds R24,267
+ 011A 8068              ori R24,128
+ 011C 80930B01          sts 267,R24
+ 0120                   .dbline -2
+ 0120           L16:
+ 0120                   .dbline 0 ; func end
+ 0120 0895              ret
+ 0122                   .dbend
+ 0122                   .dbfunc e reset_3A _reset_3A fV
+                        .even
+ 0122           _reset_3A::
+ 0122                   .dbline -1
+ 0122                   .dbline 232
+ 0122           ; }
+ 0122           ; 
+ 0122           ; void reset_3A(void) {
+ 0122                   .dbline 233
+ 0122           ;       PORTH = PORTH & 0xBF;
+ 0122 80910201          lds R24,258
+ 0126 8F7B              andi R24,191
+ 0128 80930201          sts 258,R24
+ 012C                   .dbline -2
+ 012C           L17:
+ 012C                   .dbline 0 ; func end
+ 012C 0895              ret
+ 012E                   .dbend
+ 012E                   .dbfunc e set_3A _set_3A fV
+                        .even
+ 012E           _set_3A::
+ 012E                   .dbline -1
+ 012E                   .dbline 236
+ 012E           ; }
+ 012E           ; 
+ 012E           ; void set_3A(void) {
+ 012E                   .dbline 237
+ 012E           ;       PORTH = PORTH | 0x40;
+ 012E 80910201          lds R24,258
+ 0132 8064              ori R24,64
+ 0134 80930201          sts 258,R24
+ 0138                   .dbline -2
+ 0138           L18:
+ 0138                   .dbline 0 ; func end
+ 0138 0895              ret
+ 013A                   .dbend
+ 013A                   .dbfunc e reset_3B _reset_3B fV
+                        .even
+ 013A           _reset_3B::
+ 013A                   .dbline -1
+ 013A                   .dbline 240
+ 013A           ; }
+ 013A           ; 
+ 013A           ; void reset_3B(void) {
+ 013A                   .dbline 241
+ 013A           ;       PORTH = PORTH & 0xEF;
+ 013A 80910201          lds R24,258
+ 013E 8F7E              andi R24,239
+ 0140 80930201          sts 258,R24
+ 0144                   .dbline -2
+ 0144           L19:
+ 0144                   .dbline 0 ; func end
+ 0144 0895              ret
+ 0146                   .dbend
+ 0146                   .dbfunc e set_3B _set_3B fV
+                        .even
+ 0146           _set_3B::
+ 0146                   .dbline -1
+ 0146                   .dbline 244
+ 0146           ; }
+ 0146           ; 
+ 0146           ; void set_3B(void) {
+ 0146                   .dbline 245
+ 0146           ;       PORTH = PORTH | 0x10;
+ 0146 80910201          lds R24,258
+ 014A 8061              ori R24,16
+ 014C 80930201          sts 258,R24
+ 0150                   .dbline -2
+ 0150           L20:
+ 0150                   .dbline 0 ; func end
+ 0150 0895              ret
+ 0152                   .dbend
+ 0152                   .dbfunc e reset_3C _reset_3C fV
+                        .even
+ 0152           _reset_3C::
+ 0152                   .dbline -1
+ 0152                   .dbline 248
+ 0152           ; }
+ 0152           ; 
+ 0152           ; void reset_3C(void) {
+ 0152                   .dbline 249
+ 0152           ;       PORTH = PORTH & 0xDF;
+ 0152 80910201          lds R24,258
+ 0156 8F7D              andi R24,223
+ 0158 80930201          sts 258,R24
+ 015C                   .dbline -2
+ 015C           L21:
+ 015C                   .dbline 0 ; func end
+ 015C 0895              ret
+ 015E                   .dbend
+ 015E                   .dbfunc e set_3C _set_3C fV
+                        .even
+ 015E           _set_3C::
+ 015E                   .dbline -1
+ 015E                   .dbline 252
+ 015E           ; }
+ 015E           ; 
+ 015E           ; void set_3C(void) {
+ 015E                   .dbline 253
+ 015E           ;       PORTH = PORTH | 0x20;
+ 015E 80910201          lds R24,258
+ 0162 8062              ori R24,32
+ 0164 80930201          sts 258,R24
+ 0168                   .dbline -2
+ 0168           L22:
+ 0168                   .dbline 0 ; func end
+ 0168 0895              ret
+ 016A                   .dbend
+ 016A                   .dbfunc e reset_SP_RIGHT _reset_SP_RIGHT fV
+                        .even
+ 016A           _reset_SP_RIGHT::
+ 016A                   .dbline -1
+ 016A                   .dbline 256
+ 016A           ; }
+ 016A           ; 
+ 016A           ; void reset_SP_RIGHT(void) {
+ 016A                   .dbline 257
+ 016A           ;       PORTJ = PORTJ & 0x7F;
+ 016A 80910501          lds R24,261
+ 016E 8F77              andi R24,127
+ 0170 80930501          sts 261,R24
+ 0174                   .dbline -2
+ 0174           L23:
+ 0174                   .dbline 0 ; func end
+ 0174 0895              ret
+ 0176                   .dbend
+ 0176                   .dbfunc e set_SP_RIGHT _set_SP_RIGHT fV
+                        .even
+ 0176           _set_SP_RIGHT::
+ 0176                   .dbline -1
+ 0176                   .dbline 260
+ 0176           ; }
+ 0176           ; 
+ 0176           ; void set_SP_RIGHT(void) {
+ 0176                   .dbline 261
+ 0176           ;       PORTJ = PORTJ | 0x80;
+ 0176 80910501          lds R24,261
+ 017A 8068              ori R24,128
+ 017C 80930501          sts 261,R24
+ 0180                   .dbline -2
+ 0180           L24:
+ 0180                   .dbline 0 ; func end
+ 0180 0895              ret
+ 0182                   .dbend
+ 0182                   .dbfunc e reset_4A _reset_4A fV
+                        .even
+ 0182           _reset_4A::
+ 0182                   .dbline -1
+ 0182                   .dbline 264
+ 0182           ; }
+ 0182           ; 
+ 0182           ; void reset_4A(void) {
+ 0182                   .dbline 265
+ 0182           ;       PORTG = PORTG & 0xFE;
+ 0182 84B3              in R24,0x14
+ 0184 8E7F              andi R24,254
+ 0186 84BB              out 0x14,R24
+ 0188                   .dbline -2
+ 0188           L25:
+ 0188                   .dbline 0 ; func end
+ 0188 0895              ret
+ 018A                   .dbend
+ 018A                   .dbfunc e set_4A _set_4A fV
+                        .even
+ 018A           _set_4A::
+ 018A                   .dbline -1
+ 018A                   .dbline 268
+ 018A           ; }
+ 018A           ; 
+ 018A           ; void set_4A(void) {
+ 018A                   .dbline 269
+ 018A           ;       PORTG = PORTG | 0x01;
+ 018A A09A              sbi 0x14,0
+ 018C                   .dbline -2
+ 018C           L26:
+ 018C                   .dbline 0 ; func end
+ 018C 0895              ret
+ 018E                   .dbend
+ 018E                   .dbfunc e reset_4B _reset_4B fV
+                        .even
+ 018E           _reset_4B::
+ 018E                   .dbline -1
+ 018E                   .dbline 272
+ 018E           ; }
+ 018E           ; 
+ 018E           ; void reset_4B(void) {
+ 018E                   .dbline 273
+ 018E           ;       PORTD = PORTD & 0x7F;
+ 018E 8BB1              in R24,0xb
+ 0190 8F77              andi R24,127
+ 0192 8BB9              out 0xb,R24
+ 0194                   .dbline -2
+ 0194           L27:
+ 0194                   .dbline 0 ; func end
+ 0194 0895              ret
+ 0196                   .dbend
+ 0196                   .dbfunc e set_4B _set_4B fV
+                        .even
+ 0196           _set_4B::
+ 0196                   .dbline -1
+ 0196                   .dbline 276
+ 0196           ; }
+ 0196           ; 
+ 0196           ; void set_4B(void) {
+ 0196                   .dbline 277
+ 0196           ;       PORTD = PORTD | 0x80;
+ 0196 5F9A              sbi 0xb,7
+ 0198                   .dbline -2
+ 0198           L28:
+ 0198                   .dbline 0 ; func end
+ 0198 0895              ret
+ 019A                   .dbend
+ 019A                   .dbfunc e reset_4C _reset_4C fV
+                        .even
+ 019A           _reset_4C::
+ 019A                   .dbline -1
+ 019A                   .dbline 280
+ 019A           ; }
+ 019A           ; 
+ 019A           ; void reset_4C(void) {
+ 019A                   .dbline 281
+ 019A           ;       PORTD = PORTD & 0xBF;
+ 019A 8BB1              in R24,0xb
+ 019C 8F7B              andi R24,191
+ 019E 8BB9              out 0xb,R24
+ 01A0                   .dbline -2
+ 01A0           L29:
+ 01A0                   .dbline 0 ; func end
+ 01A0 0895              ret
+ 01A2                   .dbend
+ 01A2                   .dbfunc e set_4C _set_4C fV
+                        .even
+ 01A2           _set_4C::
+ 01A2                   .dbline -1
+ 01A2                   .dbline 284
+ 01A2           ; }
+ 01A2           ; 
+ 01A2           ; void set_4C(void) {
+ 01A2                   .dbline 285
+ 01A2           ;       PORTD = PORTD | 0x40;
+ 01A2 5E9A              sbi 0xb,6
+ 01A4                   .dbline -2
+ 01A4           L30:
+ 01A4                   .dbline 0 ; func end
+ 01A4 0895              ret
+ 01A6                   .dbend
+ 01A6                   .dbfunc e reset_5A _reset_5A fV
+                        .even
+ 01A6           _reset_5A::
+ 01A6                   .dbline -1
+ 01A6                   .dbline 288
+ 01A6           ; }
+ 01A6           ; 
+ 01A6           ; void reset_5A(void) {
+ 01A6                   .dbline 289
+ 01A6           ;       PORTJ = PORTJ & 0xDF;
+ 01A6 80910501          lds R24,261
+ 01AA 8F7D              andi R24,223
+ 01AC 80930501          sts 261,R24
+ 01B0                   .dbline -2
+ 01B0           L31:
+ 01B0                   .dbline 0 ; func end
+ 01B0 0895              ret
+ 01B2                   .dbend
+ 01B2                   .dbfunc e set_5A _set_5A fV
+                        .even
+ 01B2           _set_5A::
+ 01B2                   .dbline -1
+ 01B2                   .dbline 292
+ 01B2           ; }
+ 01B2           ; 
+ 01B2           ; void set_5A(void) {
+ 01B2                   .dbline 293
+ 01B2           ;       PORTJ = PORTJ | 0x20;
+ 01B2 80910501          lds R24,261
+ 01B6 8062              ori R24,32
+ 01B8 80930501          sts 261,R24
+ 01BC                   .dbline -2
+ 01BC           L32:
+ 01BC                   .dbline 0 ; func end
+ 01BC 0895              ret
+ 01BE                   .dbend
+ 01BE                   .dbfunc e reset_5B _reset_5B fV
+                        .even
+ 01BE           _reset_5B::
+ 01BE                   .dbline -1
+ 01BE                   .dbline 296
+ 01BE           ; }
+ 01BE           ; 
+ 01BE           ; void reset_5B(void) {
+ 01BE                   .dbline 297
+ 01BE           ;       PORTJ = PORTJ & 0xBF;
+ 01BE 80910501          lds R24,261
+ 01C2 8F7B              andi R24,191
+ 01C4 80930501          sts 261,R24
+ 01C8                   .dbline -2
+ 01C8           L33:
+ 01C8                   .dbline 0 ; func end
+ 01C8 0895              ret
+ 01CA                   .dbend
+ 01CA                   .dbfunc e set_5B _set_5B fV
+                        .even
+ 01CA           _set_5B::
+ 01CA                   .dbline -1
+ 01CA                   .dbline 300
+ 01CA           ; }
+ 01CA           ; 
+ 01CA           ; void set_5B(void) {
+ 01CA                   .dbline 301
+ 01CA           ;       PORTJ = PORTJ | 0x40;
+ 01CA 80910501          lds R24,261
+ 01CE 8064              ori R24,64
+ 01D0 80930501          sts 261,R24
+ 01D4                   .dbline -2
+ 01D4           L34:
+ 01D4                   .dbline 0 ; func end
+ 01D4 0895              ret
+ 01D6                   .dbend
+ 01D6                   .dbfunc e reset_5C _reset_5C fV
+                        .even
+ 01D6           _reset_5C::
+ 01D6                   .dbline -1
+ 01D6                   .dbline 304
+ 01D6           ; }
+ 01D6           ; 
+ 01D6           ; void reset_5C(void) {
+ 01D6                   .dbline 305
+ 01D6           ;       PORTJ = PORTJ & 0xEF;
+ 01D6 80910501          lds R24,261
+ 01DA 8F7E              andi R24,239
+ 01DC 80930501          sts 261,R24
+ 01E0                   .dbline -2
+ 01E0           L35:
+ 01E0                   .dbline 0 ; func end
+ 01E0 0895              ret
+ 01E2                   .dbend
+ 01E2                   .dbfunc e set_5C _set_5C fV
+                        .even
+ 01E2           _set_5C::
+ 01E2                   .dbline -1
+ 01E2                   .dbline 308
+ 01E2           ; }
+ 01E2           ; 
+ 01E2           ; void set_5C(void) {
+ 01E2                   .dbline 309
+ 01E2           ;       PORTJ = PORTJ | 0x10;
+ 01E2 80910501          lds R24,261
+ 01E6 8061              ori R24,16
+ 01E8 80930501          sts 261,R24
+ 01EC                   .dbline -2
+ 01EC           L36:
+ 01EC                   .dbline 0 ; func end
+ 01EC 0895              ret
+ 01EE                   .dbend
+ 01EE                   .dbfunc e reset_6A _reset_6A fV
+                        .even
+ 01EE           _reset_6A::
+ 01EE                   .dbline -1
+ 01EE                   .dbline 312
+ 01EE           ; }
+ 01EE           ; 
+ 01EE           ; void reset_6A(void) {
+ 01EE                   .dbline 313
+ 01EE           ;       PORTJ = PORTJ & 0xF7;
+ 01EE 80910501          lds R24,261
+ 01F2 877F              andi R24,247
+ 01F4 80930501          sts 261,R24
+ 01F8                   .dbline -2
+ 01F8           L37:
+ 01F8                   .dbline 0 ; func end
+ 01F8 0895              ret
+ 01FA                   .dbend
+ 01FA                   .dbfunc e set_6A _set_6A fV
+                        .even
+ 01FA           _set_6A::
+ 01FA                   .dbline -1
+ 01FA                   .dbline 316
+ 01FA           ; }
+ 01FA           ; 
+ 01FA           ; void set_6A(void) {
+ 01FA                   .dbline 317
+ 01FA           ;       PORTJ = PORTJ | 0x08;
+ 01FA 80910501          lds R24,261
+ 01FE 8860              ori R24,8
+ 0200 80930501          sts 261,R24
+ 0204                   .dbline -2
+ 0204           L38:
+ 0204                   .dbline 0 ; func end
+ 0204 0895              ret
+ 0206                   .dbend
+ 0206                   .dbfunc e reset_6B _reset_6B fV
+                        .even
+ 0206           _reset_6B::
+ 0206                   .dbline -1
+ 0206                   .dbline 320
+ 0206           ; }
+ 0206           ; 
+ 0206           ; void reset_6B(void) {
+ 0206                   .dbline 321
+ 0206           ;       PORTJ = PORTJ & 0xFD;
+ 0206 80910501          lds R24,261
+ 020A 8D7F              andi R24,253
+ 020C 80930501          sts 261,R24
+ 0210                   .dbline -2
+ 0210           L39:
+ 0210                   .dbline 0 ; func end
+ 0210 0895              ret
+ 0212                   .dbend
+ 0212                   .dbfunc e set_6B _set_6B fV
+                        .even
+ 0212           _set_6B::
+ 0212                   .dbline -1
+ 0212                   .dbline 324
+ 0212           ; }
+ 0212           ; 
+ 0212           ; void set_6B(void) {
+ 0212                   .dbline 325
+ 0212           ;       PORTJ = PORTJ | 0x02;
+ 0212 80910501          lds R24,261
+ 0216 8260              ori R24,2
+ 0218 80930501          sts 261,R24
+ 021C                   .dbline -2
+ 021C           L40:
+ 021C                   .dbline 0 ; func end
+ 021C 0895              ret
+ 021E                   .dbend
+ 021E                   .dbfunc e reset_6C _reset_6C fV
+                        .even
+ 021E           _reset_6C::
+ 021E                   .dbline -1
+ 021E                   .dbline 328
+ 021E           ; }
+ 021E           ; 
+ 021E           ; void reset_6C(void) {
+ 021E                   .dbline 329
+ 021E           ;       PORTJ = PORTJ & 0xFB;
+ 021E 80910501          lds R24,261
+ 0222 8B7F              andi R24,251
+ 0224 80930501          sts 261,R24
+ 0228                   .dbline -2
+ 0228           L41:
+ 0228                   .dbline 0 ; func end
+ 0228 0895              ret
+ 022A                   .dbend
+ 022A                   .dbfunc e set_6C _set_6C fV
+                        .even
+ 022A           _set_6C::
+ 022A                   .dbline -1
+ 022A                   .dbline 332
+ 022A           ; }
+ 022A           ; 
+ 022A           ; void set_6C(void) {
+ 022A                   .dbline 333
+ 022A           ;       PORTJ = PORTJ | 0x04;
+ 022A 80910501          lds R24,261
+ 022E 8460              ori R24,4
+ 0230 80930501          sts 261,R24
+ 0234                   .dbline -2
+ 0234           L42:
+ 0234                   .dbline 0 ; func end
+ 0234 0895              ret
+ 0236                   .dbend
+                        .area vector(rom, abs)
+                        .org 68
+ 0044 0C941B01          jmp _timer1_compa_isr
+                        .area text(rom, con, rel)
+ 0236                   .dbfile D:\BUILDI~1\hexapod.c
+ 0236                   .dbfunc e timer1_compa_isr _timer1_compa_isr fV
+                        .even
+ 0236           _timer1_compa_isr::
+ 0236 0A92              st -y,R0
+ 0238 1A92              st -y,R1
+ 023A 2A92              st -y,R2
+ 023C 3A92              st -y,R3
+ 023E 4A92              st -y,R4
+ 0240 5A92              st -y,R5
+ 0242 6A92              st -y,R6
+ 0244 7A92              st -y,R7
+ 0246 8A92              st -y,R8
+ 0248 9A92              st -y,R9
+ 024A 0A93              st -y,R16
+ 024C 1A93              st -y,R17
+ 024E 2A93              st -y,R18
+ 0250 3A93              st -y,R19
+ 0252 8A93              st -y,R24
+ 0254 9A93              st -y,R25
+ 0256 AA93              st -y,R26
+ 0258 BA93              st -y,R27
+ 025A EA93              st -y,R30
+ 025C FA93              st -y,R31
+ 025E 0FB6              in R0,0x3f
+ 0260 0A92              st -y,R0
+ 0262                   .dbline -1
+ 0262                   .dbline 338
+ 0262           ; }
+ 0262           ; 
+ 0262           ; 
+ 0262           ; #pragma interrupt_handler timer1_compa_isr:iv_TIM1_COMPA
+ 0262           ; void timer1_compa_isr(void) {
+ 0262                   .dbline 340
+ 0262           ;       //compare occured TCNT1=OCR1A
+ 0262           ;       if (arm_number == 0) {
+ 0262 20900000          lds R2,_arm_number
+ 0266 2220              tst R2
+ 0268 09F4              brne L44
+ 026A           X0:
+ 026A                   .dbline 340
+ 026A                   .dbline 341
+ 026A           ;               reset_1A();
+ 026A 25DF              xcall _reset_1A
+ 026C                   .dbline 342
+ 026C           ;       }
+ 026C           L44:
+ 026C                   .dbline 343
+ 026C           ;       if (arm_number == 1) {
+ 026C 80910000          lds R24,_arm_number
+ 0270 8130              cpi R24,1
+ 0272 09F4              brne L46
+ 0274           X1:
+ 0274                   .dbline 343
+ 0274                   .dbline 344
+ 0274           ;               reset_2A();
+ 0274 38DF              xcall _reset_2A
+ 0276                   .dbline 345
+ 0276           ;       }
+ 0276           L46:
+ 0276                   .dbline 346
+ 0276           ;       if (arm_number == 2) {
+ 0276 80910000          lds R24,_arm_number
+ 027A 8230              cpi R24,2
+ 027C 09F4              brne L48
+ 027E           X2:
+ 027E                   .dbline 346
+ 027E                   .dbline 347
+ 027E           ;               reset_3A();
+ 027E 51DF              xcall _reset_3A
+ 0280                   .dbline 348
+ 0280           ;       }
+ 0280           L48:
+ 0280                   .dbline 349
+ 0280           ;       if (arm_number == 3) {
+ 0280 80910000          lds R24,_arm_number
+ 0284 8330              cpi R24,3
+ 0286 09F4              brne L50
+ 0288           X3:
+ 0288                   .dbline 349
+ 0288                   .dbline 350
+ 0288           ;               reset_4A();
+ 0288 7CDF              xcall _reset_4A
+ 028A                   .dbline 351
+ 028A           ;       }
+ 028A           L50:
+ 028A                   .dbline 352
+ 028A           ;       if (arm_number == 4) {
+ 028A 80910000          lds R24,_arm_number
+ 028E 8430              cpi R24,4
+ 0290 09F4              brne L52
+ 0292           X4:
+ 0292                   .dbline 352
+ 0292                   .dbline 353
+ 0292           ;               reset_5A();
+ 0292 89DF              xcall _reset_5A
+ 0294                   .dbline 354
+ 0294           ;       }
+ 0294           L52:
+ 0294                   .dbline 355
+ 0294           ;       if (arm_number == 5) {
+ 0294 80910000          lds R24,_arm_number
+ 0298 8530              cpi R24,5
+ 029A 09F4              brne L54
+ 029C           X5:
+ 029C                   .dbline 355
+ 029C                   .dbline 356
+ 029C           ;               reset_6A();
+ 029C A8DF              xcall _reset_6A
+ 029E                   .dbline 357
+ 029E           ;       }
+ 029E           L54:
+ 029E                   .dbline -2
+ 029E           L43:
+ 029E                   .dbline 0 ; func end
+ 029E 0990              ld R0,y+
+ 02A0 0FBE              out 0x3f,R0
+ 02A2 F991              ld R31,y+
+ 02A4 E991              ld R30,y+
+ 02A6 B991              ld R27,y+
+ 02A8 A991              ld R26,y+
+ 02AA 9991              ld R25,y+
+ 02AC 8991              ld R24,y+
+ 02AE 3991              ld R19,y+
+ 02B0 2991              ld R18,y+
+ 02B2 1991              ld R17,y+
+ 02B4 0991              ld R16,y+
+ 02B6 9990              ld R9,y+
+ 02B8 8990              ld R8,y+
+ 02BA 7990              ld R7,y+
+ 02BC 6990              ld R6,y+
+ 02BE 5990              ld R5,y+
+ 02C0 4990              ld R4,y+
+ 02C2 3990              ld R3,y+
+ 02C4 2990              ld R2,y+
+ 02C6 1990              ld R1,y+
+ 02C8 0990              ld R0,y+
+ 02CA 1895              reti
+ 02CC                   .dbend
+                        .area vector(rom, abs)
+                        .org 72
+ 0048 0C946601          jmp _timer1_compb_isr
+                        .area text(rom, con, rel)
+ 02CC                   .dbfile D:\BUILDI~1\hexapod.c
+ 02CC                   .dbfunc e timer1_compb_isr _timer1_compb_isr fV
+                        .even
+ 02CC           _timer1_compb_isr::
+ 02CC 0A92              st -y,R0
+ 02CE 1A92              st -y,R1
+ 02D0 2A92              st -y,R2
+ 02D2 3A92              st -y,R3
+ 02D4 4A92              st -y,R4
+ 02D6 5A92              st -y,R5
+ 02D8 6A92              st -y,R6
+ 02DA 7A92              st -y,R7
+ 02DC 8A92              st -y,R8
+ 02DE 9A92              st -y,R9
+ 02E0 0A93              st -y,R16
+ 02E2 1A93              st -y,R17
+ 02E4 2A93              st -y,R18
+ 02E6 3A93              st -y,R19
+ 02E8 8A93              st -y,R24
+ 02EA 9A93              st -y,R25
+ 02EC AA93              st -y,R26
+ 02EE BA93              st -y,R27
+ 02F0 EA93              st -y,R30
+ 02F2 FA93              st -y,R31
+ 02F4 0FB6              in R0,0x3f
+ 02F6 0A92              st -y,R0
+ 02F8                   .dbline -1
+ 02F8                   .dbline 361
+ 02F8           ; }
+ 02F8           ; 
+ 02F8           ; #pragma interrupt_handler timer1_compb_isr:iv_TIM1_COMPB
+ 02F8           ; void timer1_compb_isr(void) {
+ 02F8                   .dbline 363
+ 02F8           ;       //compare occured TCNT1=OCR1B
+ 02F8           ;       if (arm_number == 0) {
+ 02F8 20900000          lds R2,_arm_number
+ 02FC 2220              tst R2
+ 02FE 09F4              brne L57
+ 0300           X6:
+ 0300                   .dbline 363
+ 0300                   .dbline 364
+ 0300           ;               reset_1B();
+ 0300 E0DE              xcall _reset_1B
+ 0302                   .dbline 365
+ 0302           ;       }
+ 0302           L57:
+ 0302                   .dbline 366
+ 0302           ;       if (arm_number == 1) {
+ 0302 80910000          lds R24,_arm_number
+ 0306 8130              cpi R24,1
+ 0308 09F4              brne L59
+ 030A           X7:
+ 030A                   .dbline 366
+ 030A                   .dbline 367
+ 030A           ;               reset_2B();
+ 030A F9DE              xcall _reset_2B
+ 030C                   .dbline 368
+ 030C           ;       }
+ 030C           L59:
+ 030C                   .dbline 369
+ 030C           ;       if (arm_number == 2) {
+ 030C 80910000          lds R24,_arm_number
+ 0310 8230              cpi R24,2
+ 0312 09F4              brne L61
+ 0314           X8:
+ 0314                   .dbline 369
+ 0314                   .dbline 370
+ 0314           ;               reset_3B();
+ 0314 12DF              xcall _reset_3B
+ 0316                   .dbline 371
+ 0316           ;       }
+ 0316           L61:
+ 0316                   .dbline 372
+ 0316           ;       if (arm_number == 3) {
+ 0316 80910000          lds R24,_arm_number
+ 031A 8330              cpi R24,3
+ 031C 09F4              brne L63
+ 031E           X9:
+ 031E                   .dbline 372
+ 031E                   .dbline 373
+ 031E           ;               reset_4B();
+ 031E 37DF              xcall _reset_4B
+ 0320                   .dbline 374
+ 0320           ;       }
+ 0320           L63:
+ 0320                   .dbline 375
+ 0320           ;       if (arm_number == 4) {
+ 0320 80910000          lds R24,_arm_number
+ 0324 8430              cpi R24,4
+ 0326 09F4              brne L65
+ 0328           X10:
+ 0328                   .dbline 375
+ 0328                   .dbline 376
+ 0328           ;               reset_5B();
+ 0328 4ADF              xcall _reset_5B
+ 032A                   .dbline 377
+ 032A           ;       }
+ 032A           L65:
+ 032A                   .dbline 378
+ 032A           ;       if (arm_number == 5) {
+ 032A 80910000          lds R24,_arm_number
+ 032E 8530              cpi R24,5
+ 0330 09F4              brne L67
+ 0332           X11:
+ 0332                   .dbline 378
+ 0332                   .dbline 379
+ 0332           ;               reset_6B();
+ 0332 69DF              xcall _reset_6B
+ 0334                   .dbline 380
+ 0334           ;       }
+ 0334           L67:
+ 0334                   .dbline -2
+ 0334           L56:
+ 0334                   .dbline 0 ; func end
+ 0334 0990              ld R0,y+
+ 0336 0FBE              out 0x3f,R0
+ 0338 F991              ld R31,y+
+ 033A E991              ld R30,y+
+ 033C B991              ld R27,y+
+ 033E A991              ld R26,y+
+ 0340 9991              ld R25,y+
+ 0342 8991              ld R24,y+
+ 0344 3991              ld R19,y+
+ 0346 2991              ld R18,y+
+ 0348 1991              ld R17,y+
+ 034A 0991              ld R16,y+
+ 034C 9990              ld R9,y+
+ 034E 8990              ld R8,y+
+ 0350 7990              ld R7,y+
+ 0352 6990              ld R6,y+
+ 0354 5990              ld R5,y+
+ 0356 4990              ld R4,y+
+ 0358 3990              ld R3,y+
+ 035A 2990              ld R2,y+
+ 035C 1990              ld R1,y+
+ 035E 0990              ld R0,y+
+ 0360 1895              reti
+ 0362                   .dbend
+                        .area vector(rom, abs)
+                        .org 76
+ 004C 0C94B101          jmp _timer1_compc_isr
+                        .area text(rom, con, rel)
+ 0362                   .dbfile D:\BUILDI~1\hexapod.c
+ 0362                   .dbfunc e timer1_compc_isr _timer1_compc_isr fV
+                        .even
+ 0362           _timer1_compc_isr::
+ 0362 0A92              st -y,R0
+ 0364 1A92              st -y,R1
+ 0366 2A92              st -y,R2
+ 0368 3A92              st -y,R3
+ 036A 4A92              st -y,R4
+ 036C 5A92              st -y,R5
+ 036E 6A92              st -y,R6
+ 0370 7A92              st -y,R7
+ 0372 8A92              st -y,R8
+ 0374 9A92              st -y,R9
+ 0376 0A93              st -y,R16
+ 0378 1A93              st -y,R17
+ 037A 2A93              st -y,R18
+ 037C 3A93              st -y,R19
+ 037E 8A93              st -y,R24
+ 0380 9A93              st -y,R25
+ 0382 AA93              st -y,R26
+ 0384 BA93              st -y,R27
+ 0386 EA93              st -y,R30
+ 0388 FA93              st -y,R31
+ 038A 0FB6              in R0,0x3f
+ 038C 0A92              st -y,R0
+ 038E                   .dbline -1
+ 038E                   .dbline 384
+ 038E           ; }
+ 038E           ; 
+ 038E           ; #pragma interrupt_handler timer1_compc_isr:iv_TIM1_COMPC
+ 038E           ; void timer1_compc_isr(void) {
+ 038E                   .dbline 386
+ 038E           ;       //compare occured TCNT1=OCR1c
+ 038E           ;       if (arm_number == 0) {
+ 038E 20900000          lds R2,_arm_number
+ 0392 2220              tst R2
+ 0394 09F4              brne L70
+ 0396           X12:
+ 0396                   .dbline 386
+ 0396                   .dbline 387
+ 0396           ;               reset_1C();
+ 0396 A1DE              xcall _reset_1C
+ 0398                   .dbline 388
+ 0398           ;       }
+ 0398           L70:
+ 0398                   .dbline 389
+ 0398           ;       if (arm_number == 1) {
+ 0398 80910000          lds R24,_arm_number
+ 039C 8130              cpi R24,1
+ 039E 09F4              brne L72
+ 03A0           X13:
+ 03A0                   .dbline 389
+ 03A0                   .dbline 390
+ 03A0           ;               reset_2C();
+ 03A0 B4DE              xcall _reset_2C
+ 03A2                   .dbline 391
+ 03A2           ;       }
+ 03A2           L72:
+ 03A2                   .dbline 392
+ 03A2           ;       if (arm_number == 2) {
+ 03A2 80910000          lds R24,_arm_number
+ 03A6 8230              cpi R24,2
+ 03A8 09F4              brne L74
+ 03AA           X14:
+ 03AA                   .dbline 392
+ 03AA                   .dbline 393
+ 03AA           ;               reset_3C();
+ 03AA D3DE              xcall _reset_3C
+ 03AC                   .dbline 394
+ 03AC           ;       }
+ 03AC           L74:
+ 03AC                   .dbline 395
+ 03AC           ;       if (arm_number == 3) {
+ 03AC 80910000          lds R24,_arm_number
+ 03B0 8330              cpi R24,3
+ 03B2 09F4              brne L76
+ 03B4           X15:
+ 03B4                   .dbline 395
+ 03B4                   .dbline 396
+ 03B4           ;               reset_4C();
+ 03B4 F2DE              xcall _reset_4C
+ 03B6                   .dbline 397
+ 03B6           ;       }
+ 03B6           L76:
+ 03B6                   .dbline 398
+ 03B6           ;       if (arm_number == 4) {
+ 03B6 80910000          lds R24,_arm_number
+ 03BA 8430              cpi R24,4
+ 03BC 09F4              brne L78
+ 03BE           X16:
+ 03BE                   .dbline 398
+ 03BE                   .dbline 399
+ 03BE           ;               reset_5C();
+ 03BE 0BDF              xcall _reset_5C
+ 03C0                   .dbline 400
+ 03C0           ;       }
+ 03C0           L78:
+ 03C0                   .dbline 401
+ 03C0           ;       if (arm_number == 5) {
+ 03C0 80910000          lds R24,_arm_number
+ 03C4 8530              cpi R24,5
+ 03C6 09F4              brne L80
+ 03C8           X17:
+ 03C8                   .dbline 401
+ 03C8                   .dbline 402
+ 03C8           ;               reset_6C();
+ 03C8 2ADF              xcall _reset_6C
+ 03CA                   .dbline 403
+ 03CA           ;       }
+ 03CA           L80:
+ 03CA                   .dbline -2
+ 03CA           L69:
+ 03CA                   .dbline 0 ; func end
+ 03CA 0990              ld R0,y+
+ 03CC 0FBE              out 0x3f,R0
+ 03CE F991              ld R31,y+
+ 03D0 E991              ld R30,y+
+ 03D2 B991              ld R27,y+
+ 03D4 A991              ld R26,y+
+ 03D6 9991              ld R25,y+
+ 03D8 8991              ld R24,y+
+ 03DA 3991              ld R19,y+
+ 03DC 2991              ld R18,y+
+ 03DE 1991              ld R17,y+
+ 03E0 0991              ld R16,y+
+ 03E2 9990              ld R9,y+
+ 03E4 8990              ld R8,y+
+ 03E6 7990              ld R7,y+
+ 03E8 6990              ld R6,y+
+ 03EA 5990              ld R5,y+
+ 03EC 4990              ld R4,y+
+ 03EE 3990              ld R3,y+
+ 03F0 2990              ld R2,y+
+ 03F2 1990              ld R1,y+
+ 03F4 0990              ld R0,y+
+ 03F6 1895              reti
+ 03F8                   .dbend
+                        .area vector(rom, abs)
+                        .org 80
+ 0050 0C94FC01          jmp _timer1_ovf_isr
+                        .area text(rom, con, rel)
+ 03F8                   .dbfile D:\BUILDI~1\hexapod.c
+ 03F8                   .dbfunc e timer1_ovf_isr _timer1_ovf_isr fV
+                        .even
+ 03F8           _timer1_ovf_isr::
+ 03F8 0A92              st -y,R0
+ 03FA 1A92              st -y,R1
+ 03FC 2A92              st -y,R2
+ 03FE 3A92              st -y,R3
+ 0400 4A92              st -y,R4
+ 0402 5A92              st -y,R5
+ 0404 6A92              st -y,R6
+ 0406 7A92              st -y,R7
+ 0408 8A92              st -y,R8
+ 040A 9A92              st -y,R9
+ 040C 0A93              st -y,R16
+ 040E 1A93              st -y,R17
+ 0410 2A93              st -y,R18
+ 0412 3A93              st -y,R19
+ 0414 8A93              st -y,R24
+ 0416 9A93              st -y,R25
+ 0418 AA93              st -y,R26
+ 041A BA93              st -y,R27
+ 041C EA93              st -y,R30
+ 041E FA93              st -y,R31
+ 0420 0FB6              in R0,0x3f
+ 0422 0A92              st -y,R0
+ 0424                   .dbline -1
+ 0424                   .dbline 407
+ 0424           ; }
+ 0424           ; 
+ 0424           ; #pragma interrupt_handler timer1_ovf_isr:iv_TIM1_OVF
+ 0424           ; void timer1_ovf_isr(void) {
+ 0424                   .dbline 409
+ 0424           ;       //TIMER1 has overflowed
+ 0424           ;       TCNT1H = 0x94; //reload counter high value
+ 0424 84E9              ldi R24,148
+ 0426 80938500          sts 133,R24
+ 042A                   .dbline 410
+ 042A           ;       TCNT1L = 0x01; //reload counter low value
+ 042A 81E0              ldi R24,1
+ 042C 80938400          sts 132,R24
+ 0430                   .dbline 411
+ 0430           ;       delay_count++;
+ 0430 80910400          lds R24,_delay_count
+ 0434 90910500          lds R25,_delay_count+1
+ 0438 0196              adiw R24,1
+ 043A 90930500          sts _delay_count+1,R25
+ 043E 80930400          sts _delay_count,R24
+ 0442                   .dbline 412
+ 0442           ;       arm_number++;
+ 0442 80910000          lds R24,_arm_number
+ 0446 8F5F              subi R24,255    ; addi 1
+ 0448 80930000          sts _arm_number,R24
+ 044C                   .dbline 413
+ 044C           ;       if (arm_number > 7) {
+ 044C 87E0              ldi R24,7
+ 044E 20900000          lds R2,_arm_number
+ 0452 8215              cp R24,R2
+ 0454 18F4              brsh L83
+ 0456           X18:
+ 0456                   .dbline 413
+ 0456                   .dbline 414
+ 0456           ;               arm_number = 0;
+ 0456 2224              clr R2
+ 0458 20920000          sts _arm_number,R2
+ 045C                   .dbline 415
+ 045C           ;       }
+ 045C           L83:
+ 045C                   .dbline 417
+ 045C           ; 
+ 045C           ;       if (arm_number == 0) {
+ 045C 20900000          lds R2,_arm_number
+ 0460 2220              tst R2
+ 0462 19F5              brne L85
+ 0464           X19:
+ 0464                   .dbline 417
+ 0464                   .dbline 418
+ 0464           ;               set_1A();
+ 0464 2CDE              xcall _set_1A
+ 0466                   .dbline 419
+ 0466           ;               set_1B();
+ 0466 33DE              xcall _set_1B
+ 0468                   .dbline 420
+ 0468           ;               set_1C();
+ 0468 3CDE              xcall _set_1C
+ 046A                   .dbline 421
+ 046A           ;               OCR1AH = angle_upper_byte_1A;
+ 046A 20904400          lds R2,_angle_upper_byte_1A
+ 046E 20928900          sts 137,R2
+ 0472                   .dbline 422
+ 0472           ;               OCR1AL = angle_lower_byte_1A;
+ 0472 20904300          lds R2,_angle_lower_byte_1A
+ 0476 20928800          sts 136,R2
+ 047A                   .dbline 423
+ 047A           ;               OCR1BH = angle_upper_byte_1B;
+ 047A 20904100          lds R2,_angle_upper_byte_1B
+ 047E 30904200          lds R3,_angle_upper_byte_1B+1
+ 0482 20928B00          sts 139,R2
+ 0486                   .dbline 424
+ 0486           ;               OCR1BL = angle_lower_byte_1B;
+ 0486 20903F00          lds R2,_angle_lower_byte_1B
+ 048A 30904000          lds R3,_angle_lower_byte_1B+1
+ 048E 20928A00          sts 138,R2
+ 0492                   .dbline 425
+ 0492           ;               OCR1CH = angle_upper_byte_1C;
+ 0492 20903D00          lds R2,_angle_upper_byte_1C
+ 0496 30903E00          lds R3,_angle_upper_byte_1C+1
+ 049A 20928D00          sts 141,R2
+ 049E                   .dbline 426
+ 049E           ;               OCR1CL = angle_lower_byte_1C;
+ 049E 20903B00          lds R2,_angle_lower_byte_1C
+ 04A2 30903C00          lds R3,_angle_lower_byte_1C+1
+ 04A6 20928C00          sts 140,R2
+ 04AA                   .dbline 427
+ 04AA           ;       }
+ 04AA           L85:
+ 04AA                   .dbline 429
+ 04AA           ; 
+ 04AA           ;       if (arm_number == 1) {
+ 04AA 80910000          lds R24,_arm_number
+ 04AE 8130              cpi R24,1
+ 04B0 19F5              brne L87
+ 04B2           X20:
+ 04B2                   .dbline 429
+ 04B2                   .dbline 430
+ 04B2           ;               set_2A();
+ 04B2 1FDE              xcall _set_2A
+ 04B4                   .dbline 431
+ 04B4           ;               set_2B();
+ 04B4 28DE              xcall _set_2B
+ 04B6                   .dbline 432
+ 04B6           ;               set_2C();
+ 04B6 2FDE              xcall _set_2C
+ 04B8                   .dbline 433
+ 04B8           ;               OCR1AH = angle_upper_byte_2A;
+ 04B8 20903A00          lds R2,_angle_upper_byte_2A
+ 04BC 20928900          sts 137,R2
+ 04C0                   .dbline 434
+ 04C0           ;               OCR1AL = angle_lower_byte_2A;
+ 04C0 20903900          lds R2,_angle_lower_byte_2A
+ 04C4 20928800          sts 136,R2
+ 04C8                   .dbline 435
+ 04C8           ;               OCR1BH = angle_upper_byte_2B;
+ 04C8 20903700          lds R2,_angle_upper_byte_2B
+ 04CC 30903800          lds R3,_angle_upper_byte_2B+1
+ 04D0 20928B00          sts 139,R2
+ 04D4                   .dbline 436
+ 04D4           ;               OCR1BL = angle_lower_byte_2B;
+ 04D4 20903500          lds R2,_angle_lower_byte_2B
+ 04D8 30903600          lds R3,_angle_lower_byte_2B+1
+ 04DC 20928A00          sts 138,R2
+ 04E0                   .dbline 437
+ 04E0           ;               OCR1CH = angle_upper_byte_2C;
+ 04E0 20903300          lds R2,_angle_upper_byte_2C
+ 04E4 30903400          lds R3,_angle_upper_byte_2C+1
+ 04E8 20928D00          sts 141,R2
+ 04EC                   .dbline 438
+ 04EC           ;               OCR1CL = angle_lower_byte_2C;
+ 04EC 20903100          lds R2,_angle_lower_byte_2C
+ 04F0 30903200          lds R3,_angle_lower_byte_2C+1
+ 04F4 20928C00          sts 140,R2
+ 04F8                   .dbline 439
+ 04F8           ;       }
+ 04F8           L87:
+ 04F8                   .dbline 441
+ 04F8           ; 
+ 04F8           ;       if (arm_number == 2) {
+ 04F8 80910000          lds R24,_arm_number
+ 04FC 8230              cpi R24,2
+ 04FE 19F5              brne L89
+ 0500           X21:
+ 0500                   .dbline 441
+ 0500                   .dbline 442
+ 0500           ;               set_3A();
+ 0500 16DE              xcall _set_3A
+ 0502                   .dbline 443
+ 0502           ;               set_3B();
+ 0502 21DE              xcall _set_3B
+ 0504                   .dbline 444
+ 0504           ;               set_3C();
+ 0504 2CDE              xcall _set_3C
+ 0506                   .dbline 445
+ 0506           ;               OCR1AH = angle_upper_byte_3A;
+ 0506 20903000          lds R2,_angle_upper_byte_3A
+ 050A 20928900          sts 137,R2
+ 050E                   .dbline 446
+ 050E           ;               OCR1AL = angle_lower_byte_3A;
+ 050E 20902F00          lds R2,_angle_lower_byte_3A
+ 0512 20928800          sts 136,R2
+ 0516                   .dbline 447
+ 0516           ;               OCR1BH = angle_upper_byte_3B;
+ 0516 20902D00          lds R2,_angle_upper_byte_3B
+ 051A 30902E00          lds R3,_angle_upper_byte_3B+1
+ 051E 20928B00          sts 139,R2
+ 0522                   .dbline 448
+ 0522           ;               OCR1BL = angle_lower_byte_3B;
+ 0522 20902B00          lds R2,_angle_lower_byte_3B
+ 0526 30902C00          lds R3,_angle_lower_byte_3B+1
+ 052A 20928A00          sts 138,R2
+ 052E                   .dbline 449
+ 052E           ;               OCR1CH = angle_upper_byte_3C;
+ 052E 20902900          lds R2,_angle_upper_byte_3C
+ 0532 30902A00          lds R3,_angle_upper_byte_3C+1
+ 0536 20928D00          sts 141,R2
+ 053A                   .dbline 450
+ 053A           ;               OCR1CL = angle_lower_byte_3C;
+ 053A 20902700          lds R2,_angle_lower_byte_3C
+ 053E 30902800          lds R3,_angle_lower_byte_3C+1
+ 0542 20928C00          sts 140,R2
+ 0546                   .dbline 451
+ 0546           ;       }
+ 0546           L89:
+ 0546                   .dbline 453
+ 0546           ; 
+ 0546           ;       if (arm_number == 3) {
+ 0546 80910000          lds R24,_arm_number
+ 054A 8330              cpi R24,3
+ 054C 19F5              brne L91
+ 054E           X22:
+ 054E                   .dbline 453
+ 054E                   .dbline 454
+ 054E           ;               set_4A();
+ 054E 1DDE              xcall _set_4A
+ 0550                   .dbline 455
+ 0550           ;               set_4B();
+ 0550 22DE              xcall _set_4B
+ 0552                   .dbline 456
+ 0552           ;               set_4C();
+ 0552 27DE              xcall _set_4C
+ 0554                   .dbline 457
+ 0554           ;               OCR1AH = angle_upper_byte_4A;
+ 0554 20902600          lds R2,_angle_upper_byte_4A
+ 0558 20928900          sts 137,R2
+ 055C                   .dbline 458
+ 055C           ;               OCR1AL = angle_lower_byte_4A;
+ 055C 20902500          lds R2,_angle_lower_byte_4A
+ 0560 20928800          sts 136,R2
+ 0564                   .dbline 459
+ 0564           ;               OCR1BH = angle_upper_byte_4B;
+ 0564 20902300          lds R2,_angle_upper_byte_4B
+ 0568 30902400          lds R3,_angle_upper_byte_4B+1
+ 056C 20928B00          sts 139,R2
+ 0570                   .dbline 460
+ 0570           ;               OCR1BL = angle_lower_byte_4B;
+ 0570 20902100          lds R2,_angle_lower_byte_4B
+ 0574 30902200          lds R3,_angle_lower_byte_4B+1
+ 0578 20928A00          sts 138,R2
+ 057C                   .dbline 461
+ 057C           ;               OCR1CH = angle_upper_byte_4C;
+ 057C 20901F00          lds R2,_angle_upper_byte_4C
+ 0580 30902000          lds R3,_angle_upper_byte_4C+1
+ 0584 20928D00          sts 141,R2
+ 0588                   .dbline 462
+ 0588           ;               OCR1CL = angle_lower_byte_4C;
+ 0588 20901D00          lds R2,_angle_lower_byte_4C
+ 058C 30901E00          lds R3,_angle_lower_byte_4C+1
+ 0590 20928C00          sts 140,R2
+ 0594                   .dbline 463
+ 0594           ;       }
+ 0594           L91:
+ 0594                   .dbline 465
+ 0594           ; 
+ 0594           ;       if (arm_number == 4) {
+ 0594 80910000          lds R24,_arm_number
+ 0598 8430              cpi R24,4
+ 059A 19F5              brne L93
+ 059C           X23:
+ 059C                   .dbline 465
+ 059C                   .dbline 466
+ 059C           ;               set_5A();
+ 059C 0ADE              xcall _set_5A
+ 059E                   .dbline 467
+ 059E           ;               set_5B();
+ 059E 15DE              xcall _set_5B
+ 05A0                   .dbline 468
+ 05A0           ;               set_5C();
+ 05A0 20DE              xcall _set_5C
+ 05A2                   .dbline 469
+ 05A2           ;               OCR1AH = angle_upper_byte_5A;
+ 05A2 20901C00          lds R2,_angle_upper_byte_5A
+ 05A6 20928900          sts 137,R2
+ 05AA                   .dbline 470
+ 05AA           ;               OCR1AL = angle_lower_byte_5A;
+ 05AA 20901B00          lds R2,_angle_lower_byte_5A
+ 05AE 20928800          sts 136,R2
+ 05B2                   .dbline 471
+ 05B2           ;               OCR1BH = angle_upper_byte_5B;
+ 05B2 20901900          lds R2,_angle_upper_byte_5B
+ 05B6 30901A00          lds R3,_angle_upper_byte_5B+1
+ 05BA 20928B00          sts 139,R2
+ 05BE                   .dbline 472
+ 05BE           ;               OCR1BL = angle_lower_byte_5B;
+ 05BE 20901700          lds R2,_angle_lower_byte_5B
+ 05C2 30901800          lds R3,_angle_lower_byte_5B+1
+ 05C6 20928A00          sts 138,R2
+ 05CA                   .dbline 473
+ 05CA           ;               OCR1CH = angle_upper_byte_5C;
+ 05CA 20901500          lds R2,_angle_upper_byte_5C
+ 05CE 30901600          lds R3,_angle_upper_byte_5C+1
+ 05D2 20928D00          sts 141,R2
+ 05D6                   .dbline 474
+ 05D6           ;               OCR1CL = angle_lower_byte_5C;
+ 05D6 20901300          lds R2,_angle_lower_byte_5C
+ 05DA 30901400          lds R3,_angle_lower_byte_5C+1
+ 05DE 20928C00          sts 140,R2
+ 05E2                   .dbline 475
+ 05E2           ;       }
+ 05E2           L93:
+ 05E2                   .dbline 477
+ 05E2           ; 
+ 05E2           ;       if (arm_number == 5) {
+ 05E2 80910000          lds R24,_arm_number
+ 05E6 8530              cpi R24,5
+ 05E8 19F5              brne L95
+ 05EA           X24:
+ 05EA                   .dbline 477
+ 05EA                   .dbline 478
+ 05EA           ;               set_6A();
+ 05EA 07DE              xcall _set_6A
+ 05EC                   .dbline 479
+ 05EC           ;               set_6B();
+ 05EC 12DE              xcall _set_6B
+ 05EE                   .dbline 480
+ 05EE           ;               set_6C();
+ 05EE 1DDE              xcall _set_6C
+ 05F0                   .dbline 481
+ 05F0           ;               OCR1AH = angle_upper_byte_6A;
+ 05F0 20901200          lds R2,_angle_upper_byte_6A
+ 05F4 20928900          sts 137,R2
+ 05F8                   .dbline 482
+ 05F8           ;               OCR1AL = angle_lower_byte_6A;
+ 05F8 20901100          lds R2,_angle_lower_byte_6A
+ 05FC 20928800          sts 136,R2
+ 0600                   .dbline 483
+ 0600           ;               OCR1BH = angle_upper_byte_6B;
+ 0600 20900F00          lds R2,_angle_upper_byte_6B
+ 0604 30901000          lds R3,_angle_upper_byte_6B+1
+ 0608 20928B00          sts 139,R2
+ 060C                   .dbline 484
+ 060C           ;               OCR1BL = angle_lower_byte_6B;
+ 060C 20900D00          lds R2,_angle_lower_byte_6B
+ 0610 30900E00          lds R3,_angle_lower_byte_6B+1
+ 0614 20928A00          sts 138,R2
+ 0618                   .dbline 485
+ 0618           ;               OCR1CH = angle_upper_byte_6C;
+ 0618 20900B00          lds R2,_angle_upper_byte_6C
+ 061C 30900C00          lds R3,_angle_upper_byte_6C+1
+ 0620 20928D00          sts 141,R2
+ 0624                   .dbline 486
+ 0624           ;               OCR1CL = angle_lower_byte_6C;
+ 0624 20900900          lds R2,_angle_lower_byte_6C
+ 0628 30900A00          lds R3,_angle_lower_byte_6C+1
+ 062C 20928C00          sts 140,R2
+ 0630                   .dbline 487
+ 0630           ;       }
+ 0630           L95:
+ 0630                   .dbline -2
+ 0630           L82:
+ 0630                   .dbline 0 ; func end
+ 0630 0990              ld R0,y+
+ 0632 0FBE              out 0x3f,R0
+ 0634 F991              ld R31,y+
+ 0636 E991              ld R30,y+
+ 0638 B991              ld R27,y+
+ 063A A991              ld R26,y+
+ 063C 9991              ld R25,y+
+ 063E 8991              ld R24,y+
+ 0640 3991              ld R19,y+
+ 0642 2991              ld R18,y+
+ 0644 1991              ld R17,y+
+ 0646 0991              ld R16,y+
+ 0648 9990              ld R9,y+
+ 064A 8990              ld R8,y+
+ 064C 7990              ld R7,y+
+ 064E 6990              ld R6,y+
+ 0650 5990              ld R5,y+
+ 0652 4990              ld R4,y+
+ 0654 3990              ld R3,y+
+ 0656 2990              ld R2,y+
+ 0658 1990              ld R1,y+
+ 065A 0990              ld R0,y+
+ 065C 1895              reti
+ 065E                   .dbend
+ 065E                   .dbfunc e uart0_init _uart0_init fV
+                        .even
+ 065E           _uart0_init::
+ 065E                   .dbline -1
+ 065E                   .dbline 511
+ 065E           ;       //serial communication related code
+ 065E           ;       /*serial_communication_interval++;
+ 065E           ;       if (serial_communication_interval > 40) //gives time interval of 40*2.5ms = 100ms
+ 065E           ;       {
+ 065E           ;               serial_communication_interval = 0;
+ 065E           ;               serial_communication_channel_number++;
+ 065E           ;               if (serial_communication_channel_number > 4) //set maximum number of command (can be set up to 7)
+ 065E           ;               {
+ 065E           ;                       serial_communication_channel_number = 3; //set first command to begin with (can be set up to 1)
+ 065E           ;               }
+ 065E           ;               UDR0 = serial_communication_channel_number;
+ 065E           ;       }*/
+ 065E           ; }
+ 065E           ; 
+ 065E           ; 
+ 065E           ; 
+ 065E           ; 
+ 065E           ; 
+ 065E           ; //UART0 initialize
+ 065E           ; // desired baud rate: 9600
+ 065E           ; // actual: baud rate:9600 (0.0%)
+ 065E           ; // char size: 8 bit
+ 065E           ; // parity: Disabled
+ 065E           ; void uart0_init(void) {
+ 065E                   .dbline 512
+ 065E           ;       UCSR0B = 0x00; //disable while setting baud rate
+ 065E 2224              clr R2
+ 0660 2092C100          sts 193,R2
+ 0664                   .dbline 513
+ 0664           ;       UCSR0A = 0x00;
+ 0664 2092C000          sts 192,R2
+ 0668                   .dbline 514
+ 0668           ;       UCSR0C = 0x06;
+ 0668 86E0              ldi R24,6
+ 066A 8093C200          sts 194,R24
+ 066E                   .dbline 515
+ 066E           ;       UBRR0L = 0x47; //set baud rate lo
+ 066E 87E4              ldi R24,71
+ 0670 8093C400          sts 196,R24
+ 0674                   .dbline 516
+ 0674           ;       UBRR0H = 0x00; //set baud rate hi
+ 0674 2092C500          sts 197,R2
+ 0678                   .dbline 517
+ 0678           ;       UCSR0B = 0x98;
+ 0678 88E9              ldi R24,152
+ 067A 8093C100          sts 193,R24
+ 067E                   .dbline -2
+ 067E           L97:
+ 067E                   .dbline 0 ; func end
+ 067E 0895              ret
+ 0680                   .dbend
+ 0680                   .dbfunc e init_devices _init_devices fV
+                        .even
+ 0680           _init_devices::
+ 0680                   .dbline -1
+ 0680                   .dbline 523
+ 0680           ; }
+ 0680           ; 
+ 0680           ; 
+ 0680           ; 
+ 0680           ; //call this routine to initialize all peripherals
+ 0680           ; void init_devices(void) {
+ 0680                   .dbline 525
+ 0680           ;       //stop errant interrupts until set up
+ 0680           ;       CLI(); //disable all interrupts
+ 0680 F894              cli
+ 0682                   .dbline 526
+ 0682           ;       XMCRA = 0x00; //external memory
+ 0682 2224              clr R2
+ 0684 20927400          sts 116,R2
+ 0688                   .dbline 527
+ 0688           ;       XMCRB = 0x00; //external memory
+ 0688 20927500          sts 117,R2
+ 068C                   .dbline 528
+ 068C           ;       port_init();
+ 068C B9DC              xcall _port_init
+ 068E                   .dbline 529
+ 068E           ;       timer1_init();
+ 068E E0DC              xcall _timer1_init
+ 0690                   .dbline 530
+ 0690           ;       uart0_init();
+ 0690 E6DF              xcall _uart0_init
+ 0692                   .dbline 532
+ 0692           ; 
+ 0692           ;       MCUCR = 0x00;
+ 0692 2224              clr R2
+ 0694 25BE              out 0x35,R2
+ 0696                   .dbline 533
+ 0696           ;       EICRA = 0x00; //pin change int edge 0:3
+ 0696 20926900          sts 105,R2
+ 069A                   .dbline 534
+ 069A           ;       EICRB = 0x00; //pin change int edge 4:7
+ 069A 20926A00          sts 106,R2
+ 069E                   .dbline 535
+ 069E           ;       PCICR = 0x00; //pin change int enable
+ 069E 20926800          sts 104,R2
+ 06A2                   .dbline 536
+ 06A2           ;       PCMSK0 = 0x00; //pin change mask
+ 06A2 20926B00          sts 107,R2
+ 06A6                   .dbline 537
+ 06A6           ;       PCMSK1 = 0x00; //pin change mask
+ 06A6 20926C00          sts 108,R2
+ 06AA                   .dbline 538
+ 06AA           ;       PCMSK2 = 0x00; //pin change mask
+ 06AA 20926D00          sts 109,R2
+ 06AE                   .dbline 539
+ 06AE           ;       EIMSK = 0x00;
+ 06AE 2DBA              out 0x1d,R2
+ 06B0                   .dbline 540
+ 06B0           ;       TIMSK0 = 0x00; //timer0 interrupt sources
+ 06B0 20926E00          sts 110,R2
+ 06B4                   .dbline 541
+ 06B4           ;       TIMSK1 = 0x0F; //timer1 interrupt sources
+ 06B4 8FE0              ldi R24,15
+ 06B6 80936F00          sts 111,R24
+ 06BA                   .dbline 542
+ 06BA           ;       TIMSK2 = 0x00; //timer2 interrupt sources
+ 06BA 20927000          sts 112,R2
+ 06BE                   .dbline 543
+ 06BE           ;       TIMSK3 = 0x00; //timer3 interrupt sources
+ 06BE 20927100          sts 113,R2
+ 06C2                   .dbline 544
+ 06C2           ;       TIMSK4 = 0x00; //timer4 interrupt sources
+ 06C2 20927200          sts 114,R2
+ 06C6                   .dbline 545
+ 06C6           ;       TIMSK5 = 0x00; //timer5 interrupt sources
+ 06C6 20927300          sts 115,R2
+ 06CA                   .dbline 547
+ 06CA           ; 
+ 06CA           ;       SEI(); //re-enable interrupts
+ 06CA 7894              sei
+ 06CC                   .dbline -2
+ 06CC           L98:
+ 06CC                   .dbline 0 ; func end
+ 06CC 0895              ret
+ 06CE                   .dbend
+                        .area vector(rom, abs)
+                        .org 100
+ 0064 0C946703          jmp _uart0_rx_isr
+                        .area text(rom, con, rel)
+ 06CE                   .dbfile D:\BUILDI~1\hexapod.c
+ 06CE                   .dbfunc e uart0_rx_isr _uart0_rx_isr fV
+                        .even
+ 06CE           _uart0_rx_isr::
+ 06CE 0A92              st -y,R0
+ 06D0 1A92              st -y,R1
+ 06D2 2A92              st -y,R2
+ 06D4 3A92              st -y,R3
+ 06D6 4A92              st -y,R4
+ 06D8 5A92              st -y,R5
+ 06DA 6A92              st -y,R6
+ 06DC 7A92              st -y,R7
+ 06DE 8A92              st -y,R8
+ 06E0 9A92              st -y,R9
+ 06E2 0A93              st -y,R16
+ 06E4 1A93              st -y,R17
+ 06E6 2A93              st -y,R18
+ 06E8 3A93              st -y,R19
+ 06EA 8A93              st -y,R24
+ 06EC 9A93              st -y,R25
+ 06EE AA93              st -y,R26
+ 06F0 BA93              st -y,R27
+ 06F2 EA93              st -y,R30
+ 06F4 FA93              st -y,R31
+ 06F6 0FB6              in R0,0x3f
+ 06F8 0A92              st -y,R0
+ 06FA                   .dbline -1
+ 06FA                   .dbline 552
+ 06FA           ;       //all peripherals are now initialized
+ 06FA           ; }
+ 06FA           ; 
+ 06FA           ; #pragma interrupt_handler uart0_rx_isr:iv_USART0_RXC
+ 06FA           ; void uart0_rx_isr(void) {
+ 06FA                   .dbline 557
+ 06FA           ;       //uart has received a character in UDR
+ 06FA           ;       
+ 06FA           ;       //buzzer_on();
+ 06FA           ;       
+ 06FA           ;       data = UDR0;
+ 06FA 2090C600          lds R2,198
+ 06FE 20920000          sts _data,R2
+ 0702                   .dbline 558
+ 0702           ;       UDR0 = data;
+ 0702 2092C600          sts 198,R2
+ 0706                   .dbline 559
+ 0706           ;       if(KEYBOARD_ON)
+ 0706                   .dbline 560
+ 0706           ;           keyboard_control();
+ 0706 0E940000          xcall _keyboard_control
+ 070A           L100:
+ 070A                   .dbline -2
+ 070A           L99:
+ 070A                   .dbline 0 ; func end
+ 070A 0990              ld R0,y+
+ 070C 0FBE              out 0x3f,R0
+ 070E F991              ld R31,y+
+ 0710 E991              ld R30,y+
+ 0712 B991              ld R27,y+
+ 0714 A991              ld R26,y+
+ 0716 9991              ld R25,y+
+ 0718 8991              ld R24,y+
+ 071A 3991              ld R19,y+
+ 071C 2991              ld R18,y+
+ 071E 1991              ld R17,y+
+ 0720 0991              ld R16,y+
+ 0722 9990              ld R9,y+
+ 0724 8990              ld R8,y+
+ 0726 7990              ld R7,y+
+ 0728 6990              ld R6,y+
+ 072A 5990              ld R5,y+
+ 072C 4990              ld R4,y+
+ 072E 3990              ld R3,y+
+ 0730 2990              ld R2,y+
+ 0732 1990              ld R1,y+
+ 0734 0990              ld R0,y+
+ 0736 1895              reti
+ 0738                   .dbend
+ 0738                   .dbfunc e servo_on _servo_on fV
+                        .even
+ 0738           _servo_on::
+ 0738                   .dbline -1
+ 0738                   .dbline 563
+ 0738           ; }
+ 0738           ; 
+ 0738           ; void servo_on(void) {
+ 0738                   .dbline 564
+ 0738           ;       PORTB = PORTB | 0x01;
+ 0738 289A              sbi 0x5,0
+ 073A                   .dbline -2
+ 073A           L102:
+ 073A                   .dbline 0 ; func end
+ 073A 0895              ret
+ 073C                   .dbend
+ 073C                   .dbfunc e servo_off _servo_off fV
+                        .even
+ 073C           _servo_off::
+ 073C                   .dbline -1
+ 073C                   .dbline 567
+ 073C           ; }
+ 073C           ; 
+ 073C           ; void servo_off(void) {
+ 073C                   .dbline 568
+ 073C           ;       PORTB = PORTB & 0xFE;
+ 073C 85B1              in R24,0x5
+ 073E 8E7F              andi R24,254
+ 0740 85B9              out 0x5,R24
+ 0742                   .dbline -2
+ 0742           L103:
+ 0742                   .dbline 0 ; func end
+ 0742 0895              ret
+ 0744                   .dbend
+ 0744                   .dbfunc e reset_SP_LEFT _reset_SP_LEFT fV
+                        .even
+ 0744           _reset_SP_LEFT::
+ 0744                   .dbline -1
+ 0744                   .dbline 571
+ 0744           ; }
+ 0744           ; 
+ 0744           ; void reset_SP_LEFT(void) {
+ 0744                   .dbline 572
+ 0744           ;       PORTL = PORTL & 0xFD;
+ 0744 80910B01          lds R24,267
+ 0748 8D7F              andi R24,253
+ 074A 80930B01          sts 267,R24
+ 074E                   .dbline -2
+ 074E           L104:
+ 074E                   .dbline 0 ; func end
+ 074E 0895              ret
+ 0750                   .dbend
+ 0750                   .dbfunc e set_SP_LEFT _set_SP_LEFT fV
+                        .even
+ 0750           _set_SP_LEFT::
+ 0750                   .dbline -1
+ 0750                   .dbline 575
+ 0750           ; }
+ 0750           ; 
+ 0750           ; void set_SP_LEFT(void) {
+ 0750                   .dbline 576
+ 0750           ;       PORTL = PORTL | 0x02;
+ 0750 80910B01          lds R24,267
+ 0754 8260              ori R24,2
+ 0756 80930B01          sts 267,R24
+ 075A                   .dbline -2
+ 075A           L105:
+ 075A                   .dbline 0 ; func end
+ 075A 0895              ret
+ 075C                   .dbend
+ 075C                   .dbfunc e angle_value_calculation _angle_value_calculation fV
+ 075C           ;           temp -> R16,R17
+ 075C           ;    angle_value -> R18,R19
+                        .even
+ 075C           _angle_value_calculation::
+ 075C                   .dbline -1
+ 075C                   .dbline 580
+ 075C           ; }
+ 075C           ; 
+ 075C           ; 
+ 075C           ; void angle_value_calculation(void) {
+ 075C                   .dbline 581
+ 075C           ;       unsigned int angle_value = 0;
+ 075C 2227              clr R18
+ 075E 3327              clr R19
+ 0760                   .dbline 582
+ 0760           ;       unsigned int temp = 0;
+ 0760 0027              clr R16
+ 0762 1127              clr R17
+ 0764                   .dbline 583
+ 0764           ;       if (degree > 180)
+ 0764 84EB              ldi R24,180
+ 0766 20900300          lds R2,_degree
+ 076A 8215              cp R24,R2
+ 076C 10F4              brsh L107
+ 076E           X25:
+ 076E                   .dbline 584
+ 076E           ;               degree = 180; // limiting the scope of the servo rotation
+ 076E 80930300          sts _degree,R24
+ 0772           L107:
+ 0772                   .dbline 586
+ 0772           ; 
+ 0772           ;       angle_value = 0xBF39 + (64 * (unsigned char) degree); //actual constant is 64.4
+ 0772 20900300          lds R2,_degree
+ 0776 80E4              ldi R24,64
+ 0778 829D              mul R24,R2
+ 077A 9001              movw R18,R0
+ 077C 275C              subi R18,199  ; offset = 48953
+ 077E 3044              sbci R19,64
+ 0780                   .dbline 588
+ 0780           ; 
+ 0780           ;       angle_lower_byte = (unsigned char) angle_value; //separating the lower byte
+ 0780 20930200          sts _angle_lower_byte,R18
+ 0784                   .dbline 590
+ 0784           ; 
+ 0784           ;       temp = angle_value >> 8;
+ 0784 8901              movw R16,R18
+ 0786 012F              mov R16,R17
+ 0788 1127              clr R17
+ 078A                   .dbline 591
+ 078A           ;       angle_upper_byte = (unsigned char) temp; //separating the upper byte
+ 078A 00930100          sts _angle_upper_byte,R16
+ 078E                   .dbline -2
+ 078E           L106:
+ 078E                   .dbline 0 ; func end
+ 078E 0895              ret
+ 0790                   .dbsym r temp 16 i
+ 0790                   .dbsym r angle_value 18 i
+ 0790                   .dbend
+ 0790                   .dbfunc e angle_1A _angle_1A fV
+ 0790           ;          angle -> R10
+                        .even
+ 0790           _angle_1A::
+ 0790 AA92              st -y,R10
+ 0792 A02E              mov R10,R16
+ 0794                   .dbline -1
+ 0794                   .dbline 594
+ 0794           ; }
+ 0794           ; 
+ 0794           ; void angle_1A(unsigned char angle) {
+ 0794                   .dbline 595
+ 0794           ;       degree = angle;
+ 0794 A0920300          sts _degree,R10
+ 0798                   .dbline 596
+ 0798           ;       angle_value_calculation();
+ 0798 E1DF              xcall _angle_value_calculation
+ 079A                   .dbline 597
+ 079A           ;       angle_upper_byte_1A = angle_upper_byte;
+ 079A 20900100          lds R2,_angle_upper_byte
+ 079E 20924400          sts _angle_upper_byte_1A,R2
+ 07A2                   .dbline 598
+ 07A2           ;       angle_lower_byte_1A = angle_lower_byte;
+ 07A2 20900200          lds R2,_angle_lower_byte
+ 07A6 20924300          sts _angle_lower_byte_1A,R2
+ 07AA                   .dbline -2
+ 07AA           L109:
+ 07AA                   .dbline 0 ; func end
+ 07AA A990              ld R10,y+
+ 07AC 0895              ret
+ 07AE                   .dbsym r angle 10 c
+ 07AE                   .dbend
+ 07AE                   .dbfunc e angle_1B _angle_1B fV
+ 07AE           ;          angle -> R10
+                        .even
+ 07AE           _angle_1B::
+ 07AE AA92              st -y,R10
+ 07B0 A02E              mov R10,R16
+ 07B2                   .dbline -1
+ 07B2                   .dbline 601
+ 07B2           ; }
+ 07B2           ; 
+ 07B2           ; void angle_1B(unsigned char angle) {
+ 07B2                   .dbline 602
+ 07B2           ;       degree = angle;
+ 07B2 A0920300          sts _degree,R10
+ 07B6                   .dbline 603
+ 07B6           ;       angle_value_calculation();
+ 07B6 D2DF              xcall _angle_value_calculation
+ 07B8                   .dbline 604
+ 07B8           ;       angle_upper_byte_1B = angle_upper_byte;
+ 07B8 20900100          lds R2,_angle_upper_byte
+ 07BC 3324              clr R3
+ 07BE 30924200          sts _angle_upper_byte_1B+1,R3
+ 07C2 20924100          sts _angle_upper_byte_1B,R2
+ 07C6                   .dbline 605
+ 07C6           ;       angle_lower_byte_1B = angle_lower_byte;
+ 07C6 20900200          lds R2,_angle_lower_byte
+ 07CA 3324              clr R3
+ 07CC 30924000          sts _angle_lower_byte_1B+1,R3
+ 07D0 20923F00          sts _angle_lower_byte_1B,R2
+ 07D4                   .dbline -2
+ 07D4           L110:
+ 07D4                   .dbline 0 ; func end
+ 07D4 A990              ld R10,y+
+ 07D6 0895              ret
+ 07D8                   .dbsym r angle 10 c
+ 07D8                   .dbend
+ 07D8                   .dbfunc e angle_1C _angle_1C fV
+ 07D8           ;          angle -> R10
+                        .even
+ 07D8           _angle_1C::
+ 07D8 AA92              st -y,R10
+ 07DA A02E              mov R10,R16
+ 07DC                   .dbline -1
+ 07DC                   .dbline 608
+ 07DC           ; }
+ 07DC           ; 
+ 07DC           ; void angle_1C(unsigned char angle) {
+ 07DC                   .dbline 609
+ 07DC           ;       degree = angle;
+ 07DC A0920300          sts _degree,R10
+ 07E0                   .dbline 610
+ 07E0           ;       angle_value_calculation();
+ 07E0 BDDF              xcall _angle_value_calculation
+ 07E2                   .dbline 611
+ 07E2           ;       angle_upper_byte_1C = angle_upper_byte;
+ 07E2 20900100          lds R2,_angle_upper_byte
+ 07E6 3324              clr R3
+ 07E8 30923E00          sts _angle_upper_byte_1C+1,R3
+ 07EC 20923D00          sts _angle_upper_byte_1C,R2
+ 07F0                   .dbline 612
+ 07F0           ;       angle_lower_byte_1C = angle_lower_byte;
+ 07F0 20900200          lds R2,_angle_lower_byte
+ 07F4 3324              clr R3
+ 07F6 30923C00          sts _angle_lower_byte_1C+1,R3
+ 07FA 20923B00          sts _angle_lower_byte_1C,R2
+ 07FE                   .dbline -2
+ 07FE           L111:
+ 07FE                   .dbline 0 ; func end
+ 07FE A990              ld R10,y+
+ 0800 0895              ret
+ 0802                   .dbsym r angle 10 c
+ 0802                   .dbend
+ 0802                   .dbfunc e angle_2A _angle_2A fV
+ 0802           ;          angle -> R10
+                        .even
+ 0802           _angle_2A::
+ 0802 AA92              st -y,R10
+ 0804 A02E              mov R10,R16
+ 0806                   .dbline -1
+ 0806                   .dbline 615
+ 0806           ; }
+ 0806           ; 
+ 0806           ; void angle_2A(unsigned char angle) {
+ 0806                   .dbline 616
+ 0806           ;       degree = angle;
+ 0806 A0920300          sts _degree,R10
+ 080A                   .dbline 617
+ 080A           ;       angle_value_calculation();
+ 080A A8DF              xcall _angle_value_calculation
+ 080C                   .dbline 618
+ 080C           ;       angle_upper_byte_2A = angle_upper_byte;
+ 080C 20900100          lds R2,_angle_upper_byte
+ 0810 20923A00          sts _angle_upper_byte_2A,R2
+ 0814                   .dbline 619
+ 0814           ;       angle_lower_byte_2A = angle_lower_byte;
+ 0814 20900200          lds R2,_angle_lower_byte
+ 0818 20923900          sts _angle_lower_byte_2A,R2
+ 081C                   .dbline -2
+ 081C           L112:
+ 081C                   .dbline 0 ; func end
+ 081C A990              ld R10,y+
+ 081E 0895              ret
+ 0820                   .dbsym r angle 10 c
+ 0820                   .dbend
+ 0820                   .dbfunc e angle_2B _angle_2B fV
+ 0820           ;          angle -> R10
+                        .even
+ 0820           _angle_2B::
+ 0820 AA92              st -y,R10
+ 0822 A02E              mov R10,R16
+ 0824                   .dbline -1
+ 0824                   .dbline 622
+ 0824           ; }
+ 0824           ; 
+ 0824           ; void angle_2B(unsigned char angle) {
+ 0824                   .dbline 623
+ 0824           ;       degree = angle;
+ 0824 A0920300          sts _degree,R10
+ 0828                   .dbline 624
+ 0828           ;       angle_value_calculation();
+ 0828 99DF              xcall _angle_value_calculation
+ 082A                   .dbline 625
+ 082A           ;       angle_upper_byte_2B = angle_upper_byte;
+ 082A 20900100          lds R2,_angle_upper_byte
+ 082E 3324              clr R3
+ 0830 30923800          sts _angle_upper_byte_2B+1,R3
+ 0834 20923700          sts _angle_upper_byte_2B,R2
+ 0838                   .dbline 626
+ 0838           ;       angle_lower_byte_2B = angle_lower_byte;
+ 0838 20900200          lds R2,_angle_lower_byte
+ 083C 3324              clr R3
+ 083E 30923600          sts _angle_lower_byte_2B+1,R3
+ 0842 20923500          sts _angle_lower_byte_2B,R2
+ 0846                   .dbline -2
+ 0846           L113:
+ 0846                   .dbline 0 ; func end
+ 0846 A990              ld R10,y+
+ 0848 0895              ret
+ 084A                   .dbsym r angle 10 c
+ 084A                   .dbend
+ 084A                   .dbfunc e angle_2C _angle_2C fV
+ 084A           ;          angle -> R10
+                        .even
+ 084A           _angle_2C::
+ 084A AA92              st -y,R10
+ 084C A02E              mov R10,R16
+ 084E                   .dbline -1
+ 084E                   .dbline 629
+ 084E           ; }
+ 084E           ; 
+ 084E           ; void angle_2C(unsigned char angle) {
+ 084E                   .dbline 630
+ 084E           ;       degree = angle;
+ 084E A0920300          sts _degree,R10
+ 0852                   .dbline 631
+ 0852           ;       angle_value_calculation();
+ 0852 84DF              xcall _angle_value_calculation
+ 0854                   .dbline 632
+ 0854           ;       angle_upper_byte_2C = angle_upper_byte;
+ 0854 20900100          lds R2,_angle_upper_byte
+ 0858 3324              clr R3
+ 085A 30923400          sts _angle_upper_byte_2C+1,R3
+ 085E 20923300          sts _angle_upper_byte_2C,R2
+ 0862                   .dbline 633
+ 0862           ;       angle_lower_byte_2C = angle_lower_byte;
+ 0862 20900200          lds R2,_angle_lower_byte
+ 0866 3324              clr R3
+ 0868 30923200          sts _angle_lower_byte_2C+1,R3
+ 086C 20923100          sts _angle_lower_byte_2C,R2
+ 0870                   .dbline -2
+ 0870           L114:
+ 0870                   .dbline 0 ; func end
+ 0870 A990              ld R10,y+
+ 0872 0895              ret
+ 0874                   .dbsym r angle 10 c
+ 0874                   .dbend
+ 0874                   .dbfunc e angle_3A _angle_3A fV
+ 0874           ;          angle -> R10
+                        .even
+ 0874           _angle_3A::
+ 0874 AA92              st -y,R10
+ 0876 A02E              mov R10,R16
+ 0878                   .dbline -1
+ 0878                   .dbline 636
+ 0878           ; }
+ 0878           ; 
+ 0878           ; void angle_3A(unsigned char angle) {
+ 0878                   .dbline 637
+ 0878           ;       degree = angle;
+ 0878 A0920300          sts _degree,R10
+ 087C                   .dbline 638
+ 087C           ;       angle_value_calculation();
+ 087C 6FDF              xcall _angle_value_calculation
+ 087E                   .dbline 639
+ 087E           ;       angle_upper_byte_3A = angle_upper_byte;
+ 087E 20900100          lds R2,_angle_upper_byte
+ 0882 20923000          sts _angle_upper_byte_3A,R2
+ 0886                   .dbline 640
+ 0886           ;       angle_lower_byte_3A = angle_lower_byte;
+ 0886 20900200          lds R2,_angle_lower_byte
+ 088A 20922F00          sts _angle_lower_byte_3A,R2
+ 088E                   .dbline -2
+ 088E           L115:
+ 088E                   .dbline 0 ; func end
+ 088E A990              ld R10,y+
+ 0890 0895              ret
+ 0892                   .dbsym r angle 10 c
+ 0892                   .dbend
+ 0892                   .dbfunc e angle_3B _angle_3B fV
+ 0892           ;          angle -> R10
+                        .even
+ 0892           _angle_3B::
+ 0892 AA92              st -y,R10
+ 0894 A02E              mov R10,R16
+ 0896                   .dbline -1
+ 0896                   .dbline 643
+ 0896           ; }
+ 0896           ; 
+ 0896           ; void angle_3B(unsigned char angle) {
+ 0896                   .dbline 644
+ 0896           ;       degree = angle;
+ 0896 A0920300          sts _degree,R10
+ 089A                   .dbline 645
+ 089A           ;       angle_value_calculation();
+ 089A 60DF              xcall _angle_value_calculation
+ 089C                   .dbline 646
+ 089C           ;       angle_upper_byte_3B = angle_upper_byte;
+ 089C 20900100          lds R2,_angle_upper_byte
+ 08A0 3324              clr R3
+ 08A2 30922E00          sts _angle_upper_byte_3B+1,R3
+ 08A6 20922D00          sts _angle_upper_byte_3B,R2
+ 08AA                   .dbline 647
+ 08AA           ;       angle_lower_byte_3B = angle_lower_byte;
+ 08AA 20900200          lds R2,_angle_lower_byte
+ 08AE 3324              clr R3
+ 08B0 30922C00          sts _angle_lower_byte_3B+1,R3
+ 08B4 20922B00          sts _angle_lower_byte_3B,R2
+ 08B8                   .dbline -2
+ 08B8           L116:
+ 08B8                   .dbline 0 ; func end
+ 08B8 A990              ld R10,y+
+ 08BA 0895              ret
+ 08BC                   .dbsym r angle 10 c
+ 08BC                   .dbend
+ 08BC                   .dbfunc e angle_3C _angle_3C fV
+ 08BC           ;          angle -> R10
+                        .even
+ 08BC           _angle_3C::
+ 08BC AA92              st -y,R10
+ 08BE A02E              mov R10,R16
+ 08C0                   .dbline -1
+ 08C0                   .dbline 650
+ 08C0           ; }
+ 08C0           ; 
+ 08C0           ; void angle_3C(unsigned char angle) {
+ 08C0                   .dbline 651
+ 08C0           ;       degree = angle;
+ 08C0 A0920300          sts _degree,R10
+ 08C4                   .dbline 652
+ 08C4           ;       angle_value_calculation();
+ 08C4 4BDF              xcall _angle_value_calculation
+ 08C6                   .dbline 653
+ 08C6           ;       angle_upper_byte_3C = angle_upper_byte;
+ 08C6 20900100          lds R2,_angle_upper_byte
+ 08CA 3324              clr R3
+ 08CC 30922A00          sts _angle_upper_byte_3C+1,R3
+ 08D0 20922900          sts _angle_upper_byte_3C,R2
+ 08D4                   .dbline 654
+ 08D4           ;       angle_lower_byte_3C = angle_lower_byte;
+ 08D4 20900200          lds R2,_angle_lower_byte
+ 08D8 3324              clr R3
+ 08DA 30922800          sts _angle_lower_byte_3C+1,R3
+ 08DE 20922700          sts _angle_lower_byte_3C,R2
+ 08E2                   .dbline -2
+ 08E2           L117:
+ 08E2                   .dbline 0 ; func end
+ 08E2 A990              ld R10,y+
+ 08E4 0895              ret
+ 08E6                   .dbsym r angle 10 c
+ 08E6                   .dbend
+ 08E6                   .dbfunc e angle_4A _angle_4A fV
+ 08E6           ;          angle -> R10
+                        .even
+ 08E6           _angle_4A::
+ 08E6 AA92              st -y,R10
+ 08E8 A02E              mov R10,R16
+ 08EA                   .dbline -1
+ 08EA                   .dbline 657
+ 08EA           ; }
+ 08EA           ; 
+ 08EA           ; void angle_4A(unsigned char angle) {
+ 08EA                   .dbline 658
+ 08EA           ;       degree = angle;
+ 08EA A0920300          sts _degree,R10
+ 08EE                   .dbline 659
+ 08EE           ;       angle_value_calculation();
+ 08EE 36DF              xcall _angle_value_calculation
+ 08F0                   .dbline 660
+ 08F0           ;       angle_upper_byte_4A = angle_upper_byte;
+ 08F0 20900100          lds R2,_angle_upper_byte
+ 08F4 20922600          sts _angle_upper_byte_4A,R2
+ 08F8                   .dbline 661
+ 08F8           ;       angle_lower_byte_4A = angle_lower_byte;
+ 08F8 20900200          lds R2,_angle_lower_byte
+ 08FC 20922500          sts _angle_lower_byte_4A,R2
+ 0900                   .dbline -2
+ 0900           L118:
+ 0900                   .dbline 0 ; func end
+ 0900 A990              ld R10,y+
+ 0902 0895              ret
+ 0904                   .dbsym r angle 10 c
+ 0904                   .dbend
+ 0904                   .dbfunc e angle_4B _angle_4B fV
+ 0904           ;          angle -> R10
+                        .even
+ 0904           _angle_4B::
+ 0904 AA92              st -y,R10
+ 0906 A02E              mov R10,R16
+ 0908                   .dbline -1
+ 0908                   .dbline 664
+ 0908           ; }
+ 0908           ; 
+ 0908           ; void angle_4B(unsigned char angle) {
+ 0908                   .dbline 665
+ 0908           ;       degree = angle;
+ 0908 A0920300          sts _degree,R10
+ 090C                   .dbline 666
+ 090C           ;       angle_value_calculation();
+ 090C 27DF              xcall _angle_value_calculation
+ 090E                   .dbline 667
+ 090E           ;       angle_upper_byte_4B = angle_upper_byte;
+ 090E 20900100          lds R2,_angle_upper_byte
+ 0912 3324              clr R3
+ 0914 30922400          sts _angle_upper_byte_4B+1,R3
+ 0918 20922300          sts _angle_upper_byte_4B,R2
+ 091C                   .dbline 668
+ 091C           ;       angle_lower_byte_4B = angle_lower_byte;
+ 091C 20900200          lds R2,_angle_lower_byte
+ 0920 3324              clr R3
+ 0922 30922200          sts _angle_lower_byte_4B+1,R3
+ 0926 20922100          sts _angle_lower_byte_4B,R2
+ 092A                   .dbline -2
+ 092A           L119:
+ 092A                   .dbline 0 ; func end
+ 092A A990              ld R10,y+
+ 092C 0895              ret
+ 092E                   .dbsym r angle 10 c
+ 092E                   .dbend
+ 092E                   .dbfunc e angle_4C _angle_4C fV
+ 092E           ;          angle -> R10
+                        .even
+ 092E           _angle_4C::
+ 092E AA92              st -y,R10
+ 0930 A02E              mov R10,R16
+ 0932                   .dbline -1
+ 0932                   .dbline 671
+ 0932           ; }
+ 0932           ; 
+ 0932           ; void angle_4C(unsigned char angle) {
+ 0932                   .dbline 672
+ 0932           ;       degree = angle;
+ 0932 A0920300          sts _degree,R10
+ 0936                   .dbline 673
+ 0936           ;       angle_value_calculation();
+ 0936 12DF              xcall _angle_value_calculation
+ 0938                   .dbline 674
+ 0938           ;       angle_upper_byte_4C = angle_upper_byte;
+ 0938 20900100          lds R2,_angle_upper_byte
+ 093C 3324              clr R3
+ 093E 30922000          sts _angle_upper_byte_4C+1,R3
+ 0942 20921F00          sts _angle_upper_byte_4C,R2
+ 0946                   .dbline 675
+ 0946           ;       angle_lower_byte_4C = angle_lower_byte;
+ 0946 20900200          lds R2,_angle_lower_byte
+ 094A 3324              clr R3
+ 094C 30921E00          sts _angle_lower_byte_4C+1,R3
+ 0950 20921D00          sts _angle_lower_byte_4C,R2
+ 0954                   .dbline -2
+ 0954           L120:
+ 0954                   .dbline 0 ; func end
+ 0954 A990              ld R10,y+
+ 0956 0895              ret
+ 0958                   .dbsym r angle 10 c
+ 0958                   .dbend
+ 0958                   .dbfunc e angle_5A _angle_5A fV
+ 0958           ;          angle -> R10
+                        .even
+ 0958           _angle_5A::
+ 0958 AA92              st -y,R10
+ 095A A02E              mov R10,R16
+ 095C                   .dbline -1
+ 095C                   .dbline 678
+ 095C           ; }
+ 095C           ; 
+ 095C           ; void angle_5A(unsigned char angle) {
+ 095C                   .dbline 679
+ 095C           ;       degree = angle;
+ 095C A0920300          sts _degree,R10
+ 0960                   .dbline 680
+ 0960           ;       angle_value_calculation();
+ 0960 FDDE              xcall _angle_value_calculation
+ 0962                   .dbline 681
+ 0962           ;       angle_upper_byte_5A = angle_upper_byte;
+ 0962 20900100          lds R2,_angle_upper_byte
+ 0966 20921C00          sts _angle_upper_byte_5A,R2
+ 096A                   .dbline 682
+ 096A           ;       angle_lower_byte_5A = angle_lower_byte;
+ 096A 20900200          lds R2,_angle_lower_byte
+ 096E 20921B00          sts _angle_lower_byte_5A,R2
+ 0972                   .dbline -2
+ 0972           L121:
+ 0972                   .dbline 0 ; func end
+ 0972 A990              ld R10,y+
+ 0974 0895              ret
+ 0976                   .dbsym r angle 10 c
+ 0976                   .dbend
+ 0976                   .dbfunc e angle_5B _angle_5B fV
+ 0976           ;          angle -> R10
+                        .even
+ 0976           _angle_5B::
+ 0976 AA92              st -y,R10
+ 0978 A02E              mov R10,R16
+ 097A                   .dbline -1
+ 097A                   .dbline 685
+ 097A           ; }
+ 097A           ; 
+ 097A           ; void angle_5B(unsigned char angle) {
+ 097A                   .dbline 686
+ 097A           ;       degree = angle;
+ 097A A0920300          sts _degree,R10
+ 097E                   .dbline 687
+ 097E           ;       angle_value_calculation();
+ 097E EEDE              xcall _angle_value_calculation
+ 0980                   .dbline 688
+ 0980           ;       angle_upper_byte_5B = angle_upper_byte;
+ 0980 20900100          lds R2,_angle_upper_byte
+ 0984 3324              clr R3
+ 0986 30921A00          sts _angle_upper_byte_5B+1,R3
+ 098A 20921900          sts _angle_upper_byte_5B,R2
+ 098E                   .dbline 689
+ 098E           ;       angle_lower_byte_5B = angle_lower_byte;
+ 098E 20900200          lds R2,_angle_lower_byte
+ 0992 3324              clr R3
+ 0994 30921800          sts _angle_lower_byte_5B+1,R3
+ 0998 20921700          sts _angle_lower_byte_5B,R2
+ 099C                   .dbline -2
+ 099C           L122:
+ 099C                   .dbline 0 ; func end
+ 099C A990              ld R10,y+
+ 099E 0895              ret
+ 09A0                   .dbsym r angle 10 c
+ 09A0                   .dbend
+ 09A0                   .dbfunc e angle_5C _angle_5C fV
+ 09A0           ;          angle -> R10
+                        .even
+ 09A0           _angle_5C::
+ 09A0 AA92              st -y,R10
+ 09A2 A02E              mov R10,R16
+ 09A4                   .dbline -1
+ 09A4                   .dbline 692
+ 09A4           ; }
+ 09A4           ; 
+ 09A4           ; void angle_5C(unsigned char angle) {
+ 09A4                   .dbline 693
+ 09A4           ;       degree = angle;
+ 09A4 A0920300          sts _degree,R10
+ 09A8                   .dbline 694
+ 09A8           ;       angle_value_calculation();
+ 09A8 D9DE              xcall _angle_value_calculation
+ 09AA                   .dbline 695
+ 09AA           ;       angle_upper_byte_5C = angle_upper_byte;
+ 09AA 20900100          lds R2,_angle_upper_byte
+ 09AE 3324              clr R3
+ 09B0 30921600          sts _angle_upper_byte_5C+1,R3
+ 09B4 20921500          sts _angle_upper_byte_5C,R2
+ 09B8                   .dbline 696
+ 09B8           ;       angle_lower_byte_5C = angle_lower_byte;
+ 09B8 20900200          lds R2,_angle_lower_byte
+ 09BC 3324              clr R3
+ 09BE 30921400          sts _angle_lower_byte_5C+1,R3
+ 09C2 20921300          sts _angle_lower_byte_5C,R2
+ 09C6                   .dbline -2
+ 09C6           L123:
+ 09C6                   .dbline 0 ; func end
+ 09C6 A990              ld R10,y+
+ 09C8 0895              ret
+ 09CA                   .dbsym r angle 10 c
+ 09CA                   .dbend
+ 09CA                   .dbfunc e angle_6A _angle_6A fV
+ 09CA           ;          angle -> R10
+                        .even
+ 09CA           _angle_6A::
+ 09CA AA92              st -y,R10
+ 09CC A02E              mov R10,R16
+ 09CE                   .dbline -1
+ 09CE                   .dbline 699
+ 09CE           ; }
+ 09CE           ; 
+ 09CE           ; void angle_6A(unsigned char angle) {
+ 09CE                   .dbline 700
+ 09CE           ;       degree = angle;
+ 09CE A0920300          sts _degree,R10
+ 09D2                   .dbline 701
+ 09D2           ;       angle_value_calculation();
+ 09D2 C4DE              xcall _angle_value_calculation
+ 09D4                   .dbline 702
+ 09D4           ;       angle_upper_byte_6A = angle_upper_byte;
+ 09D4 20900100          lds R2,_angle_upper_byte
+ 09D8 20921200          sts _angle_upper_byte_6A,R2
+ 09DC                   .dbline 703
+ 09DC           ;       angle_lower_byte_6A = angle_lower_byte;
+ 09DC 20900200          lds R2,_angle_lower_byte
+ 09E0 20921100          sts _angle_lower_byte_6A,R2
+ 09E4                   .dbline -2
+ 09E4           L124:
+ 09E4                   .dbline 0 ; func end
+ 09E4 A990              ld R10,y+
+ 09E6 0895              ret
+ 09E8                   .dbsym r angle 10 c
+ 09E8                   .dbend
+ 09E8                   .dbfunc e angle_6B _angle_6B fV
+ 09E8           ;          angle -> R10
+                        .even
+ 09E8           _angle_6B::
+ 09E8 AA92              st -y,R10
+ 09EA A02E              mov R10,R16
+ 09EC                   .dbline -1
+ 09EC                   .dbline 706
+ 09EC           ; }
+ 09EC           ; 
+ 09EC           ; void angle_6B(unsigned char angle) {
+ 09EC                   .dbline 707
+ 09EC           ;       degree = angle;
+ 09EC A0920300          sts _degree,R10
+ 09F0                   .dbline 708
+ 09F0           ;       angle_value_calculation();
+ 09F0 B5DE              xcall _angle_value_calculation
+ 09F2                   .dbline 709
+ 09F2           ;       angle_upper_byte_6B = angle_upper_byte;
+ 09F2 20900100          lds R2,_angle_upper_byte
+ 09F6 3324              clr R3
+ 09F8 30921000          sts _angle_upper_byte_6B+1,R3
+ 09FC 20920F00          sts _angle_upper_byte_6B,R2
+ 0A00                   .dbline 710
+ 0A00           ;       angle_lower_byte_6B = angle_lower_byte;
+ 0A00 20900200          lds R2,_angle_lower_byte
+ 0A04 3324              clr R3
+ 0A06 30920E00          sts _angle_lower_byte_6B+1,R3
+ 0A0A 20920D00          sts _angle_lower_byte_6B,R2
+ 0A0E                   .dbline -2
+ 0A0E           L125:
+ 0A0E                   .dbline 0 ; func end
+ 0A0E A990              ld R10,y+
+ 0A10 0895              ret
+ 0A12                   .dbsym r angle 10 c
+ 0A12                   .dbend
+ 0A12                   .dbfunc e angle_6C _angle_6C fV
+ 0A12           ;          angle -> R10
+                        .even
+ 0A12           _angle_6C::
+ 0A12 AA92              st -y,R10
+ 0A14 A02E              mov R10,R16
+ 0A16                   .dbline -1
+ 0A16                   .dbline 713
+ 0A16           ; }
+ 0A16           ; 
+ 0A16           ; void angle_6C(unsigned char angle) {
+ 0A16                   .dbline 714
+ 0A16           ;       degree = angle;
+ 0A16 A0920300          sts _degree,R10
+ 0A1A                   .dbline 715
+ 0A1A           ;       angle_value_calculation();
+ 0A1A A0DE              xcall _angle_value_calculation
+ 0A1C                   .dbline 716
+ 0A1C           ;       angle_upper_byte_6C = angle_upper_byte;
+ 0A1C 20900100          lds R2,_angle_upper_byte
+ 0A20 3324              clr R3
+ 0A22 30920C00          sts _angle_upper_byte_6C+1,R3
+ 0A26 20920B00          sts _angle_upper_byte_6C,R2
+ 0A2A                   .dbline 717
+ 0A2A           ;       angle_lower_byte_6C = angle_lower_byte;
+ 0A2A 20900200          lds R2,_angle_lower_byte
+ 0A2E 3324              clr R3
+ 0A30 30920A00          sts _angle_lower_byte_6C+1,R3
+ 0A34 20920900          sts _angle_lower_byte_6C,R2
+ 0A38                   .dbline -2
+ 0A38           L126:
+ 0A38                   .dbline 0 ; func end
+ 0A38 A990              ld R10,y+
+ 0A3A 0895              ret
+ 0A3C                   .dbsym r angle 10 c
+ 0A3C                   .dbend
+ 0A3C                   .dbfunc e servo_calibration _servo_calibration fV
+                        .even
+ 0A3C           _servo_calibration::
+ 0A3C                   .dbline -1
+ 0A3C                   .dbline 722
+ 0A3C           ; }
+ 0A3C           ; 
+ 0A3C           ; 
+ 0A3C           ; 
+ 0A3C           ; void servo_calibration(void) {
+ 0A3C                   .dbline 723
+ 0A3C           ;       angle_1A(90);
+ 0A3C 0AE5              ldi R16,90
+ 0A3E A8DE              xcall _angle_1A
+ 0A40                   .dbline 724
+ 0A40           ;       angle_1B(90);
+ 0A40 0AE5              ldi R16,90
+ 0A42 B5DE              xcall _angle_1B
+ 0A44                   .dbline 725
+ 0A44           ;       angle_1C(90);
+ 0A44 0AE5              ldi R16,90
+ 0A46 C8DE              xcall _angle_1C
+ 0A48                   .dbline 726
+ 0A48           ;       angle_2A(90);
+ 0A48 0AE5              ldi R16,90
+ 0A4A DBDE              xcall _angle_2A
+ 0A4C                   .dbline 727
+ 0A4C           ;       angle_2B(90);
+ 0A4C 0AE5              ldi R16,90
+ 0A4E E8DE              xcall _angle_2B
+ 0A50                   .dbline 728
+ 0A50           ;       angle_2C(90);
+ 0A50 0AE5              ldi R16,90
+ 0A52 FBDE              xcall _angle_2C
+ 0A54                   .dbline 729
+ 0A54           ;       angle_3A(90);
+ 0A54 0AE5              ldi R16,90
+ 0A56 0EDF              xcall _angle_3A
+ 0A58                   .dbline 730
+ 0A58           ;       angle_3B(90);
+ 0A58 0AE5              ldi R16,90
+ 0A5A 1BDF              xcall _angle_3B
+ 0A5C                   .dbline 731
+ 0A5C           ;       angle_3C(90);
+ 0A5C 0AE5              ldi R16,90
+ 0A5E 2EDF              xcall _angle_3C
+ 0A60                   .dbline 732
+ 0A60           ;       angle_4A(90);
+ 0A60 0AE5              ldi R16,90
+ 0A62 41DF              xcall _angle_4A
+ 0A64                   .dbline 733
+ 0A64           ;       angle_4B(90);
+ 0A64 0AE5              ldi R16,90
+ 0A66 4EDF              xcall _angle_4B
+ 0A68                   .dbline 734
+ 0A68           ;       angle_4C(90);
+ 0A68 0AE5              ldi R16,90
+ 0A6A 61DF              xcall _angle_4C
+ 0A6C                   .dbline 735
+ 0A6C           ;       angle_5A(90);
+ 0A6C 0AE5              ldi R16,90
+ 0A6E 74DF              xcall _angle_5A
+ 0A70                   .dbline 736
+ 0A70           ;       angle_5B(90);
+ 0A70 0AE5              ldi R16,90
+ 0A72 81DF              xcall _angle_5B
+ 0A74                   .dbline 737
+ 0A74           ;       angle_5C(90);
+ 0A74 0AE5              ldi R16,90
+ 0A76 94DF              xcall _angle_5C
+ 0A78                   .dbline 738
+ 0A78           ;       angle_6A(90);
+ 0A78 0AE5              ldi R16,90
+ 0A7A A7DF              xcall _angle_6A
+ 0A7C                   .dbline 739
+ 0A7C           ;       angle_6B(90);
+ 0A7C 0AE5              ldi R16,90
+ 0A7E B4DF              xcall _angle_6B
+ 0A80                   .dbline 740
+ 0A80           ;       angle_6C(90);
+ 0A80 0AE5              ldi R16,90
+ 0A82 C7DF              xcall _angle_6C
+ 0A84                   .dbline -2
+ 0A84           L127:
+ 0A84                   .dbline 0 ; func end
+ 0A84 0895              ret
+ 0A86                   .dbend
+ 0A86                   .dbfunc e even_A_servo_90 _even_A_servo_90 fV
+                        .even
+ 0A86           _even_A_servo_90::
+ 0A86                   .dbline -1
+ 0A86                   .dbline 743
+ 0A86           ; }
+ 0A86           ; 
+ 0A86           ; void even_A_servo_90(void) {
+ 0A86                   .dbline 744
+ 0A86           ;       angle_2A(90);
+ 0A86 0AE5              ldi R16,90
+ 0A88 BCDE              xcall _angle_2A
+ 0A8A                   .dbline 745
+ 0A8A           ;       angle_4A(90);
+ 0A8A 0AE5              ldi R16,90
+ 0A8C 2CDF              xcall _angle_4A
+ 0A8E                   .dbline 746
+ 0A8E           ;       angle_6A(90);
+ 0A8E 0AE5              ldi R16,90
+ 0A90 9CDF              xcall _angle_6A
+ 0A92                   .dbline -2
+ 0A92           L128:
+ 0A92                   .dbline 0 ; func end
+ 0A92 0895              ret
+ 0A94                   .dbend
+ 0A94                   .dbfunc e even_A_servo_65 _even_A_servo_65 fV
+                        .even
+ 0A94           _even_A_servo_65::
+ 0A94                   .dbline -1
+ 0A94                   .dbline 750
+ 0A94           ; }
+ 0A94           ; 
+ 0A94           ; void even_A_servo_65(void) //clockwise
+ 0A94           ; {
+ 0A94                   .dbline 751
+ 0A94           ;       angle_2A(65);
+ 0A94 01E4              ldi R16,65
+ 0A96 B5DE              xcall _angle_2A
+ 0A98                   .dbline 752
+ 0A98           ;       angle_4A(65);
+ 0A98 01E4              ldi R16,65
+ 0A9A 25DF              xcall _angle_4A
+ 0A9C                   .dbline 753
+ 0A9C           ;       angle_6A(65);
+ 0A9C 01E4              ldi R16,65
+ 0A9E 95DF              xcall _angle_6A
+ 0AA0                   .dbline -2
+ 0AA0           L129:
+ 0AA0                   .dbline 0 ; func end
+ 0AA0 0895              ret
+ 0AA2                   .dbend
+ 0AA2                   .dbfunc e even_A_servo_115 _even_A_servo_115 fV
+                        .even
+ 0AA2           _even_A_servo_115::
+ 0AA2                   .dbline -1
+ 0AA2                   .dbline 757
+ 0AA2           ; }
+ 0AA2           ; 
+ 0AA2           ; void even_A_servo_115(void)//anticlockwise_
+ 0AA2           ; {
+ 0AA2                   .dbline 758
+ 0AA2           ;       angle_2A(115);
+ 0AA2 03E7              ldi R16,115
+ 0AA4 AEDE              xcall _angle_2A
+ 0AA6                   .dbline 759
+ 0AA6           ;       angle_4A(115);
+ 0AA6 03E7              ldi R16,115
+ 0AA8 1EDF              xcall _angle_4A
+ 0AAA                   .dbline 760
+ 0AAA           ;       angle_6A(115);
+ 0AAA 03E7              ldi R16,115
+ 0AAC 8EDF              xcall _angle_6A
+ 0AAE                   .dbline -2
+ 0AAE           L130:
+ 0AAE                   .dbline 0 ; func end
+ 0AAE 0895              ret
+ 0AB0                   .dbend
+ 0AB0                   .dbfunc e even_BC_servo_90 _even_BC_servo_90 fV
+                        .even
+ 0AB0           _even_BC_servo_90::
+ 0AB0                   .dbline -1
+ 0AB0                   .dbline 763
+ 0AB0           ; }
+ 0AB0           ; 
+ 0AB0           ; void even_BC_servo_90(void) {
+ 0AB0                   .dbline 764
+ 0AB0           ;       angle_2B(90);
+ 0AB0 0AE5              ldi R16,90
+ 0AB2 B6DE              xcall _angle_2B
+ 0AB4                   .dbline 765
+ 0AB4           ;       angle_2C(90);
+ 0AB4 0AE5              ldi R16,90
+ 0AB6 C9DE              xcall _angle_2C
+ 0AB8                   .dbline 766
+ 0AB8           ;       angle_4B(90);
+ 0AB8 0AE5              ldi R16,90
+ 0ABA 24DF              xcall _angle_4B
+ 0ABC                   .dbline 767
+ 0ABC           ;       angle_4C(90);
+ 0ABC 0AE5              ldi R16,90
+ 0ABE 37DF              xcall _angle_4C
+ 0AC0                   .dbline 768
+ 0AC0           ;       angle_6B(90);
+ 0AC0 0AE5              ldi R16,90
+ 0AC2 92DF              xcall _angle_6B
+ 0AC4                   .dbline 769
+ 0AC4           ;       angle_6C(90);
+ 0AC4 0AE5              ldi R16,90
+ 0AC6 A5DF              xcall _angle_6C
+ 0AC8                   .dbline -2
+ 0AC8           L131:
+ 0AC8                   .dbline 0 ; func end
+ 0AC8 0895              ret
+ 0ACA                   .dbend
+ 0ACA                   .dbfunc e even_BC_servo_up_45 _even_BC_servo_up_45 fV
+                        .even
+ 0ACA           _even_BC_servo_up_45::
+ 0ACA                   .dbline -1
+ 0ACA                   .dbline 772
+ 0ACA           ; }
+ 0ACA           ; 
+ 0ACA           ; void even_BC_servo_up_45(void) {
+ 0ACA                   .dbline 773
+ 0ACA           ;       angle_2B(45);
+ 0ACA 0DE2              ldi R16,45
+ 0ACC A9DE              xcall _angle_2B
+ 0ACE                   .dbline 774
+ 0ACE           ;       angle_2C(90);
+ 0ACE 0AE5              ldi R16,90
+ 0AD0 BCDE              xcall _angle_2C
+ 0AD2                   .dbline 775
+ 0AD2           ;       angle_4B(135);
+ 0AD2 07E8              ldi R16,135
+ 0AD4 17DF              xcall _angle_4B
+ 0AD6                   .dbline 776
+ 0AD6           ;       angle_4C(90);
+ 0AD6 0AE5              ldi R16,90
+ 0AD8 2ADF              xcall _angle_4C
+ 0ADA                   .dbline 777
+ 0ADA           ;       angle_6B(135);
+ 0ADA 07E8              ldi R16,135
+ 0ADC 85DF              xcall _angle_6B
+ 0ADE                   .dbline 778
+ 0ADE           ;       angle_6C(90);
+ 0ADE 0AE5              ldi R16,90
+ 0AE0 98DF              xcall _angle_6C
+ 0AE2                   .dbline -2
+ 0AE2           L132:
+ 0AE2                   .dbline 0 ; func end
+ 0AE2 0895              ret
+ 0AE4                   .dbend
+ 0AE4                   .dbfunc e even_BC_servo_down_45 _even_BC_servo_down_45 fV
+                        .even
+ 0AE4           _even_BC_servo_down_45::
+ 0AE4                   .dbline -1
+ 0AE4                   .dbline 781
+ 0AE4           ; }
+ 0AE4           ; 
+ 0AE4           ; void even_BC_servo_down_45(void) {
+ 0AE4                   .dbline 782
+ 0AE4           ;       angle_2B(135);
+ 0AE4 07E8              ldi R16,135
+ 0AE6 9CDE              xcall _angle_2B
+ 0AE8                   .dbline 783
+ 0AE8           ;       angle_2C(135);
+ 0AE8 07E8              ldi R16,135
+ 0AEA AFDE              xcall _angle_2C
+ 0AEC                   .dbline 784
+ 0AEC           ;       angle_4B(45);
+ 0AEC 0DE2              ldi R16,45
+ 0AEE 0ADF              xcall _angle_4B
+ 0AF0                   .dbline 785
+ 0AF0           ;       angle_4C(45);
+ 0AF0 0DE2              ldi R16,45
+ 0AF2 1DDF              xcall _angle_4C
+ 0AF4                   .dbline 786
+ 0AF4           ;       angle_6B(45);
+ 0AF4 0DE2              ldi R16,45
+ 0AF6 78DF              xcall _angle_6B
+ 0AF8                   .dbline 787
+ 0AF8           ;       angle_6C(45);
+ 0AF8 0DE2              ldi R16,45
+ 0AFA 8BDF              xcall _angle_6C
+ 0AFC                   .dbline -2
+ 0AFC           L133:
+ 0AFC                   .dbline 0 ; func end
+ 0AFC 0895              ret
+ 0AFE                   .dbend
+ 0AFE                   .dbfunc e odd_A_servo_90 _odd_A_servo_90 fV
+                        .even
+ 0AFE           _odd_A_servo_90::
+ 0AFE                   .dbline -1
+ 0AFE                   .dbline 790
+ 0AFE           ; }
+ 0AFE           ; 
+ 0AFE           ; void odd_A_servo_90(void) {
+ 0AFE                   .dbline 791
+ 0AFE           ;       angle_1A(90);
+ 0AFE 0AE5              ldi R16,90
+ 0B00 47DE              xcall _angle_1A
+ 0B02                   .dbline 792
+ 0B02           ;       angle_3A(90);
+ 0B02 0AE5              ldi R16,90
+ 0B04 B7DE              xcall _angle_3A
+ 0B06                   .dbline 793
+ 0B06           ;       angle_5A(90);
+ 0B06 0AE5              ldi R16,90
+ 0B08 27DF              xcall _angle_5A
+ 0B0A                   .dbline -2
+ 0B0A           L134:
+ 0B0A                   .dbline 0 ; func end
+ 0B0A 0895              ret
+ 0B0C                   .dbend
+ 0B0C                   .dbfunc e odd_A_servo_65 _odd_A_servo_65 fV
+                        .even
+ 0B0C           _odd_A_servo_65::
+ 0B0C                   .dbline -1
+ 0B0C                   .dbline 797
+ 0B0C           ; }
+ 0B0C           ; 
+ 0B0C           ; void odd_A_servo_65(void)//clockwise
+ 0B0C           ; {
+ 0B0C                   .dbline 798
+ 0B0C           ;       angle_1A(65);
+ 0B0C 01E4              ldi R16,65
+ 0B0E 40DE              xcall _angle_1A
+ 0B10                   .dbline 799
+ 0B10           ;       angle_3A(65);
+ 0B10 01E4              ldi R16,65
+ 0B12 B0DE              xcall _angle_3A
+ 0B14                   .dbline 800
+ 0B14           ;       angle_5A(65);
+ 0B14 01E4              ldi R16,65
+ 0B16 20DF              xcall _angle_5A
+ 0B18                   .dbline -2
+ 0B18           L135:
+ 0B18                   .dbline 0 ; func end
+ 0B18 0895              ret
+ 0B1A                   .dbend
+ 0B1A                   .dbfunc e odd_A_servo_115 _odd_A_servo_115 fV
+                        .even
+ 0B1A           _odd_A_servo_115::
+ 0B1A                   .dbline -1
+ 0B1A                   .dbline 804
+ 0B1A           ; }
+ 0B1A           ; 
+ 0B1A           ; void odd_A_servo_115(void) //anticlockwise
+ 0B1A           ; {
+ 0B1A                   .dbline 805
+ 0B1A           ;       angle_1A(115);
+ 0B1A 03E7              ldi R16,115
+ 0B1C 39DE              xcall _angle_1A
+ 0B1E                   .dbline 806
+ 0B1E           ;       angle_3A(115);
+ 0B1E 03E7              ldi R16,115
+ 0B20 A9DE              xcall _angle_3A
+ 0B22                   .dbline 807
+ 0B22           ;       angle_5A(115);
+ 0B22 03E7              ldi R16,115
+ 0B24 19DF              xcall _angle_5A
+ 0B26                   .dbline -2
+ 0B26           L136:
+ 0B26                   .dbline 0 ; func end
+ 0B26 0895              ret
+ 0B28                   .dbend
+ 0B28                   .dbfunc e odd_BC_servo_90 _odd_BC_servo_90 fV
+                        .even
+ 0B28           _odd_BC_servo_90::
+ 0B28                   .dbline -1
+ 0B28                   .dbline 810
+ 0B28           ; }
+ 0B28           ; 
+ 0B28           ; void odd_BC_servo_90(void) {
+ 0B28                   .dbline 811
+ 0B28           ;       angle_1B(90);
+ 0B28 0AE5              ldi R16,90
+ 0B2A 41DE              xcall _angle_1B
+ 0B2C                   .dbline 812
+ 0B2C           ;       angle_1C(90);
+ 0B2C 0AE5              ldi R16,90
+ 0B2E 54DE              xcall _angle_1C
+ 0B30                   .dbline 813
+ 0B30           ;       angle_3B(90);
+ 0B30 0AE5              ldi R16,90
+ 0B32 AFDE              xcall _angle_3B
+ 0B34                   .dbline 814
+ 0B34           ;       angle_3C(90);
+ 0B34 0AE5              ldi R16,90
+ 0B36 C2DE              xcall _angle_3C
+ 0B38                   .dbline 815
+ 0B38           ;       angle_5B(90);
+ 0B38 0AE5              ldi R16,90
+ 0B3A 1DDF              xcall _angle_5B
+ 0B3C                   .dbline 816
+ 0B3C           ;       angle_5C(90);
+ 0B3C 0AE5              ldi R16,90
+ 0B3E 30DF              xcall _angle_5C
+ 0B40                   .dbline -2
+ 0B40           L137:
+ 0B40                   .dbline 0 ; func end
+ 0B40 0895              ret
+ 0B42                   .dbend
+ 0B42                   .dbfunc e odd_BC_servo_up_45 _odd_BC_servo_up_45 fV
+                        .even
+ 0B42           _odd_BC_servo_up_45::
+ 0B42                   .dbline -1
+ 0B42                   .dbline 819
+ 0B42           ; }
+ 0B42           ; 
+ 0B42           ; void odd_BC_servo_up_45(void) {
+ 0B42                   .dbline 820
+ 0B42           ;       angle_1B(45);
+ 0B42 0DE2              ldi R16,45
+ 0B44 34DE              xcall _angle_1B
+ 0B46                   .dbline 821
+ 0B46           ;       angle_1C(90);
+ 0B46 0AE5              ldi R16,90
+ 0B48 47DE              xcall _angle_1C
+ 0B4A                   .dbline 822
+ 0B4A           ;       angle_3B(45);
+ 0B4A 0DE2              ldi R16,45
+ 0B4C A2DE              xcall _angle_3B
+ 0B4E                   .dbline 823
+ 0B4E           ;       angle_3C(90);
+ 0B4E 0AE5              ldi R16,90
+ 0B50 B5DE              xcall _angle_3C
+ 0B52                   .dbline 824
+ 0B52           ;       angle_5B(135);
+ 0B52 07E8              ldi R16,135
+ 0B54 10DF              xcall _angle_5B
+ 0B56                   .dbline 825
+ 0B56           ;       angle_5C(90);
+ 0B56 0AE5              ldi R16,90
+ 0B58 23DF              xcall _angle_5C
+ 0B5A                   .dbline -2
+ 0B5A           L138:
+ 0B5A                   .dbline 0 ; func end
+ 0B5A 0895              ret
+ 0B5C                   .dbend
+ 0B5C                   .dbfunc e odd_BC_servo_down_45 _odd_BC_servo_down_45 fV
+                        .even
+ 0B5C           _odd_BC_servo_down_45::
+ 0B5C                   .dbline -1
+ 0B5C                   .dbline 828
+ 0B5C           ; }
+ 0B5C           ; 
+ 0B5C           ; void odd_BC_servo_down_45(void) {
+ 0B5C                   .dbline 829
+ 0B5C           ;       angle_1B(135);
+ 0B5C 07E8              ldi R16,135
+ 0B5E 27DE              xcall _angle_1B
+ 0B60                   .dbline 830
+ 0B60           ;       angle_1C(135);
+ 0B60 07E8              ldi R16,135
+ 0B62 3ADE              xcall _angle_1C
+ 0B64                   .dbline 831
+ 0B64           ;       angle_3B(135);
+ 0B64 07E8              ldi R16,135
+ 0B66 95DE              xcall _angle_3B
+ 0B68                   .dbline 832
+ 0B68           ;       angle_3C(135);
+ 0B68 07E8              ldi R16,135
+ 0B6A A8DE              xcall _angle_3C
+ 0B6C                   .dbline 833
+ 0B6C           ;       angle_5B(45);
+ 0B6C 0DE2              ldi R16,45
+ 0B6E 03DF              xcall _angle_5B
+ 0B70                   .dbline 834
+ 0B70           ;       angle_5C(45);
+ 0B70 0DE2              ldi R16,45
+ 0B72 16DF              xcall _angle_5C
+ 0B74                   .dbline -2
+ 0B74           L139:
+ 0B74                   .dbline 0 ; func end
+ 0B74 0895              ret
+ 0B76                   .dbend
+ 0B76                   .dbfunc e robot_rotate_clockwise_7_5 _robot_rotate_clockwise_7_5 fV
+                        .even
+ 0B76           _robot_rotate_clockwise_7_5::
+ 0B76                   .dbline -1
+ 0B76                   .dbline 837
+ 0B76           ; }
+ 0B76           ; 
+ 0B76           ; void robot_rotate_clockwise_7_5(void) {
+ 0B76                   .dbline 838
+ 0B76           ;       motion_busy = 1;
+ 0B76 81E0              ldi R24,1
+ 0B78 80930900          sts _motion_busy,R24
+ 0B7C                   .dbline 839
+ 0B7C           ;       servo_calibration();
+ 0B7C 5FDF              xcall _servo_calibration
+ 0B7E                   .dbline 840
+ 0B7E           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0B7E 04E6              ldi R16,100
+ 0B80 10E0              ldi R17,0
+ 0B82 29D1              xcall _delay
+ 0B84                   .dbline 841
+ 0B84           ;       even_A_servo_65();
+ 0B84 87DF              xcall _even_A_servo_65
+ 0B86                   .dbline 842
+ 0B86           ;       even_BC_servo_up_45();
+ 0B86 A1DF              xcall _even_BC_servo_up_45
+ 0B88                   .dbline 843
+ 0B88           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0B88 04E6              ldi R16,100
+ 0B8A 10E0              ldi R17,0
+ 0B8C 24D1              xcall _delay
+ 0B8E                   .dbline 844
+ 0B8E           ;       even_BC_servo_90();
+ 0B8E 90DF              xcall _even_BC_servo_90
+ 0B90                   .dbline 845
+ 0B90           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0B90 04E6              ldi R16,100
+ 0B92 10E0              ldi R17,0
+ 0B94 20D1              xcall _delay
+ 0B96                   .dbline 846
+ 0B96           ;       odd_A_servo_65();
+ 0B96 BADF              xcall _odd_A_servo_65
+ 0B98                   .dbline 847
+ 0B98           ;       odd_BC_servo_up_45();
+ 0B98 D4DF              xcall _odd_BC_servo_up_45
+ 0B9A                   .dbline 848
+ 0B9A           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0B9A 04E6              ldi R16,100
+ 0B9C 10E0              ldi R17,0
+ 0B9E 1BD1              xcall _delay
+ 0BA0                   .dbline 849
+ 0BA0           ;       odd_BC_servo_90();
+ 0BA0 C3DF              xcall _odd_BC_servo_90
+ 0BA2                   .dbline 850
+ 0BA2           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0BA2 04E6              ldi R16,100
+ 0BA4 10E0              ldi R17,0
+ 0BA6 17D1              xcall _delay
+ 0BA8                   .dbline 851
+ 0BA8           ;       even_A_servo_90();
+ 0BA8 6EDF              xcall _even_A_servo_90
+ 0BAA                   .dbline 852
+ 0BAA           ;       odd_A_servo_90();
+ 0BAA A9DF              xcall _odd_A_servo_90
+ 0BAC                   .dbline 853
+ 0BAC           ;       motion_busy = 0;
+ 0BAC 2224              clr R2
+ 0BAE 20920900          sts _motion_busy,R2
+ 0BB2                   .dbline -2
+ 0BB2           L140:
+ 0BB2                   .dbline 0 ; func end
+ 0BB2 0895              ret
+ 0BB4                   .dbend
+ 0BB4                   .dbfunc e robot_rotate_anticlockwise_7_5 _robot_rotate_anticlockwise_7_5 fV
+                        .even
+ 0BB4           _robot_rotate_anticlockwise_7_5::
+ 0BB4                   .dbline -1
+ 0BB4                   .dbline 856
+ 0BB4           ; }
+ 0BB4           ; 
+ 0BB4           ; void robot_rotate_anticlockwise_7_5(void) {
+ 0BB4                   .dbline 857
+ 0BB4           ;       motion_busy = 1;
+ 0BB4 81E0              ldi R24,1
+ 0BB6 80930900          sts _motion_busy,R24
+ 0BBA                   .dbline 858
+ 0BBA           ;       servo_calibration();
+ 0BBA 40DF              xcall _servo_calibration
+ 0BBC                   .dbline 859
+ 0BBC           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0BBC 04E6              ldi R16,100
+ 0BBE 10E0              ldi R17,0
+ 0BC0 0AD1              xcall _delay
+ 0BC2                   .dbline 860
+ 0BC2           ;       even_A_servo_115();
+ 0BC2 6FDF              xcall _even_A_servo_115
+ 0BC4                   .dbline 861
+ 0BC4           ;       even_BC_servo_up_45();
+ 0BC4 82DF              xcall _even_BC_servo_up_45
+ 0BC6                   .dbline 862
+ 0BC6           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0BC6 04E6              ldi R16,100
+ 0BC8 10E0              ldi R17,0
+ 0BCA 05D1              xcall _delay
+ 0BCC                   .dbline 863
+ 0BCC           ;       even_BC_servo_90();
+ 0BCC 71DF              xcall _even_BC_servo_90
+ 0BCE                   .dbline 864
+ 0BCE           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0BCE 04E6              ldi R16,100
+ 0BD0 10E0              ldi R17,0
+ 0BD2 01D1              xcall _delay
+ 0BD4                   .dbline 865
+ 0BD4           ;       odd_A_servo_115();
+ 0BD4 A2DF              xcall _odd_A_servo_115
+ 0BD6                   .dbline 866
+ 0BD6           ;       odd_BC_servo_up_45();
+ 0BD6 B5DF              xcall _odd_BC_servo_up_45
+ 0BD8                   .dbline 867
+ 0BD8           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0BD8 04E6              ldi R16,100
+ 0BDA 10E0              ldi R17,0
+ 0BDC FCD0              xcall _delay
+ 0BDE                   .dbline 868
+ 0BDE           ;       odd_BC_servo_90();
+ 0BDE A4DF              xcall _odd_BC_servo_90
+ 0BE0                   .dbline 869
+ 0BE0           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0BE0 04E6              ldi R16,100
+ 0BE2 10E0              ldi R17,0
+ 0BE4 F8D0              xcall _delay
+ 0BE6                   .dbline 870
+ 0BE6           ;       even_A_servo_90();
+ 0BE6 4FDF              xcall _even_A_servo_90
+ 0BE8                   .dbline 871
+ 0BE8           ;       odd_A_servo_90();
+ 0BE8 8ADF              xcall _odd_A_servo_90
+ 0BEA                   .dbline 872
+ 0BEA           ;       motion_busy = 0;
+ 0BEA 2224              clr R2
+ 0BEC 20920900          sts _motion_busy,R2
+ 0BF0                   .dbline -2
+ 0BF0           L141:
+ 0BF0                   .dbline 0 ; func end
+ 0BF0 0895              ret
+ 0BF2                   .dbend
+ 0BF2                   .dbfunc e forward _forward fV
+                        .even
+ 0BF2           _forward::
+ 0BF2                   .dbline -1
+ 0BF2                   .dbline 876
+ 0BF2           ; }
+ 0BF2           ; 
+ 0BF2           ; //forward by using two legs at a time
+ 0BF2           ; void forward(void) {
+ 0BF2                   .dbline 877
+ 0BF2           ;       motion_busy = 1;
+ 0BF2 81E0              ldi R24,1
+ 0BF4 80930900          sts _motion_busy,R24
+ 0BF8                   .dbline 878
+ 0BF8           ;       servo_calibration();
+ 0BF8 21DF              xcall _servo_calibration
+ 0BFA                   .dbline 879
+ 0BFA           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0BFA 04E6              ldi R16,100
+ 0BFC 10E0              ldi R17,0
+ 0BFE EBD0              xcall _delay
+ 0C00                   .dbline 882
+ 0C00           ; 
+ 0C00           ;       //legs 2 and 4 move forward
+ 0C00           ;       angle_2B(45);
+ 0C00 0DE2              ldi R16,45
+ 0C02 0EDE              xcall _angle_2B
+ 0C04                   .dbline 883
+ 0C04           ;       angle_2C(45);
+ 0C04 0DE2              ldi R16,45
+ 0C06 21DE              xcall _angle_2C
+ 0C08                   .dbline 884
+ 0C08           ;       angle_4B(135);
+ 0C08 07E8              ldi R16,135
+ 0C0A 7CDE              xcall _angle_4B
+ 0C0C                   .dbline 885
+ 0C0C           ;       angle_4C(135); //front pair BC servo up 45
+ 0C0C 07E8              ldi R16,135
+ 0C0E 8FDE              xcall _angle_4C
+ 0C10                   .dbline 886
+ 0C10           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0C10 04E6              ldi R16,100
+ 0C12 10E0              ldi R17,0
+ 0C14 E0D0              xcall _delay
+ 0C16                   .dbline 887
+ 0C16           ;       angle_2A(45);
+ 0C16 0DE2              ldi R16,45
+ 0C18 F4DD              xcall _angle_2A
+ 0C1A                   .dbline 888
+ 0C1A           ;       angle_4A(135); //front pair move forward while legs are up
+ 0C1A 07E8              ldi R16,135
+ 0C1C 64DE              xcall _angle_4A
+ 0C1E                   .dbline 889
+ 0C1E           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0C1E 04E6              ldi R16,100
+ 0C20 10E0              ldi R17,0
+ 0C22 D9D0              xcall _delay
+ 0C24                   .dbline 890
+ 0C24           ;       angle_2B(90);
+ 0C24 0AE5              ldi R16,90
+ 0C26 FCDD              xcall _angle_2B
+ 0C28                   .dbline 891
+ 0C28           ;       angle_2C(90);
+ 0C28 0AE5              ldi R16,90
+ 0C2A 0FDE              xcall _angle_2C
+ 0C2C                   .dbline 892
+ 0C2C           ;       angle_4B(90);
+ 0C2C 0AE5              ldi R16,90
+ 0C2E 6ADE              xcall _angle_4B
+ 0C30                   .dbline 893
+ 0C30           ;       angle_4C(90); // put down legs
+ 0C30 0AE5              ldi R16,90
+ 0C32 7DDE              xcall _angle_4C
+ 0C34                   .dbline 894
+ 0C34           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0C34 04E6              ldi R16,100
+ 0C36 10E0              ldi R17,0
+ 0C38 CED0              xcall _delay
+ 0C3A                   .dbline 898
+ 0C3A           ; 
+ 0C3A           ;       //legs 1 and 6 move forward
+ 0C3A           ; 
+ 0C3A           ;       angle_1B(45);
+ 0C3A 0DE2              ldi R16,45
+ 0C3C B8DD              xcall _angle_1B
+ 0C3E                   .dbline 899
+ 0C3E           ;       angle_1C(45);
+ 0C3E 0DE2              ldi R16,45
+ 0C40 CBDD              xcall _angle_1C
+ 0C42                   .dbline 900
+ 0C42           ;       angle_6B(135);
+ 0C42 07E8              ldi R16,135
+ 0C44 D1DE              xcall _angle_6B
+ 0C46                   .dbline 901
+ 0C46           ;       angle_6C(135); //middel pair BC servo up 45
+ 0C46 07E8              ldi R16,135
+ 0C48 E4DE              xcall _angle_6C
+ 0C4A                   .dbline 902
+ 0C4A           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0C4A 04E6              ldi R16,100
+ 0C4C 10E0              ldi R17,0
+ 0C4E C3D0              xcall _delay
+ 0C50                   .dbline 903
+ 0C50           ;       angle_1A(45);
+ 0C50 0DE2              ldi R16,45
+ 0C52 9EDD              xcall _angle_1A
+ 0C54                   .dbline 904
+ 0C54           ;       angle_6A(135); //middel pair move back while legs are up
+ 0C54 07E8              ldi R16,135
+ 0C56 B9DE              xcall _angle_6A
+ 0C58                   .dbline 905
+ 0C58           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0C58 04E6              ldi R16,100
+ 0C5A 10E0              ldi R17,0
+ 0C5C BCD0              xcall _delay
+ 0C5E                   .dbline 906
+ 0C5E           ;       angle_1B(90);
+ 0C5E 0AE5              ldi R16,90
+ 0C60 A6DD              xcall _angle_1B
+ 0C62                   .dbline 907
+ 0C62           ;       angle_1C(90);
+ 0C62 0AE5              ldi R16,90
+ 0C64 B9DD              xcall _angle_1C
+ 0C66                   .dbline 908
+ 0C66           ;       angle_6B(90);
+ 0C66 0AE5              ldi R16,90
+ 0C68 BFDE              xcall _angle_6B
+ 0C6A                   .dbline 909
+ 0C6A           ;       angle_6C(90); // put down legs
+ 0C6A 0AE5              ldi R16,90
+ 0C6C D2DE              xcall _angle_6C
+ 0C6E                   .dbline 910
+ 0C6E           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0C6E 04E6              ldi R16,100
+ 0C70 10E0              ldi R17,0
+ 0C72 B1D0              xcall _delay
+ 0C74                   .dbline 913
+ 0C74           ; 
+ 0C74           ;       //legs 3 and 5 move forward
+ 0C74           ;       angle_3B(45);
+ 0C74 0DE2              ldi R16,45
+ 0C76 0DDE              xcall _angle_3B
+ 0C78                   .dbline 914
+ 0C78           ;       angle_3C(45);
+ 0C78 0DE2              ldi R16,45
+ 0C7A 20DE              xcall _angle_3C
+ 0C7C                   .dbline 915
+ 0C7C           ;       angle_5B(135);
+ 0C7C 07E8              ldi R16,135
+ 0C7E 7BDE              xcall _angle_5B
+ 0C80                   .dbline 916
+ 0C80           ;       angle_5C(135); //middel pair BC servo up 45
+ 0C80 07E8              ldi R16,135
+ 0C82 8EDE              xcall _angle_5C
+ 0C84                   .dbline 917
+ 0C84           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0C84 04E6              ldi R16,100
+ 0C86 10E0              ldi R17,0
+ 0C88 A6D0              xcall _delay
+ 0C8A                   .dbline 918
+ 0C8A           ;       angle_3A(45);
+ 0C8A 0DE2              ldi R16,45
+ 0C8C F3DD              xcall _angle_3A
+ 0C8E                   .dbline 919
+ 0C8E           ;       angle_5A(135); //middel pair move forward while legs are up
+ 0C8E 07E8              ldi R16,135
+ 0C90 63DE              xcall _angle_5A
+ 0C92                   .dbline 920
+ 0C92           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0C92 04E6              ldi R16,100
+ 0C94 10E0              ldi R17,0
+ 0C96 9FD0              xcall _delay
+ 0C98                   .dbline 921
+ 0C98           ;       angle_3B(90);
+ 0C98 0AE5              ldi R16,90
+ 0C9A FBDD              xcall _angle_3B
+ 0C9C                   .dbline 922
+ 0C9C           ;       angle_3C(90);
+ 0C9C 0AE5              ldi R16,90
+ 0C9E 0EDE              xcall _angle_3C
+ 0CA0                   .dbline 923
+ 0CA0           ;       angle_5B(90);
+ 0CA0 0AE5              ldi R16,90
+ 0CA2 69DE              xcall _angle_5B
+ 0CA4                   .dbline 924
+ 0CA4           ;       angle_5C(90); // put down legs
+ 0CA4 0AE5              ldi R16,90
+ 0CA6 7CDE              xcall _angle_5C
+ 0CA8                   .dbline 925
+ 0CA8           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0CA8 04E6              ldi R16,100
+ 0CAA 10E0              ldi R17,0
+ 0CAC 94D0              xcall _delay
+ 0CAE                   .dbline 927
+ 0CAE           ; 
+ 0CAE           ;       servo_calibration(); //push towards forward
+ 0CAE C6DE              xcall _servo_calibration
+ 0CB0                   .dbline 928
+ 0CB0           ;       motion_busy = 0;
+ 0CB0 2224              clr R2
+ 0CB2 20920900          sts _motion_busy,R2
+ 0CB6                   .dbline -2
+ 0CB6           L142:
+ 0CB6                   .dbline 0 ; func end
+ 0CB6 0895              ret
+ 0CB8                   .dbend
+ 0CB8                   .dbfunc e back _back fV
+                        .even
+ 0CB8           _back::
+ 0CB8                   .dbline -1
+ 0CB8                   .dbline 932
+ 0CB8           ; }
+ 0CB8           ; 
+ 0CB8           ; //backward by using two legs at a time
+ 0CB8           ; void back(void) {
+ 0CB8                   .dbline 933
+ 0CB8           ;       motion_busy = 1;
+ 0CB8 81E0              ldi R24,1
+ 0CBA 80930900          sts _motion_busy,R24
+ 0CBE                   .dbline 934
+ 0CBE           ;       servo_calibration();
+ 0CBE BEDE              xcall _servo_calibration
+ 0CC0                   .dbline 935
+ 0CC0           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0CC0 04E6              ldi R16,100
+ 0CC2 10E0              ldi R17,0
+ 0CC4 88D0              xcall _delay
+ 0CC6                   .dbline 938
+ 0CC6           ; 
+ 0CC6           ;       //legs 2 and 4 move back
+ 0CC6           ;       angle_2B(45);
+ 0CC6 0DE2              ldi R16,45
+ 0CC8 ABDD              xcall _angle_2B
+ 0CCA                   .dbline 939
+ 0CCA           ;       angle_2C(45);
+ 0CCA 0DE2              ldi R16,45
+ 0CCC BEDD              xcall _angle_2C
+ 0CCE                   .dbline 940
+ 0CCE           ;       angle_4B(135);
+ 0CCE 07E8              ldi R16,135
+ 0CD0 19DE              xcall _angle_4B
+ 0CD2                   .dbline 941
+ 0CD2           ;       angle_4C(135); //front pair BC servo up 45
+ 0CD2 07E8              ldi R16,135
+ 0CD4 2CDE              xcall _angle_4C
+ 0CD6                   .dbline 942
+ 0CD6           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0CD6 04E6              ldi R16,100
+ 0CD8 10E0              ldi R17,0
+ 0CDA 7DD0              xcall _delay
+ 0CDC                   .dbline 943
+ 0CDC           ;       angle_2A(135);
+ 0CDC 07E8              ldi R16,135
+ 0CDE 91DD              xcall _angle_2A
+ 0CE0                   .dbline 944
+ 0CE0           ;       angle_4A(45); //front pair move forward while legs are up
+ 0CE0 0DE2              ldi R16,45
+ 0CE2 01DE              xcall _angle_4A
+ 0CE4                   .dbline 945
+ 0CE4           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0CE4 04E6              ldi R16,100
+ 0CE6 10E0              ldi R17,0
+ 0CE8 76D0              xcall _delay
+ 0CEA                   .dbline 946
+ 0CEA           ;       angle_2B(90);
+ 0CEA 0AE5              ldi R16,90
+ 0CEC 99DD              xcall _angle_2B
+ 0CEE                   .dbline 947
+ 0CEE           ;       angle_2C(90);
+ 0CEE 0AE5              ldi R16,90
+ 0CF0 ACDD              xcall _angle_2C
+ 0CF2                   .dbline 948
+ 0CF2           ;       angle_4B(90);
+ 0CF2 0AE5              ldi R16,90
+ 0CF4 07DE              xcall _angle_4B
+ 0CF6                   .dbline 949
+ 0CF6           ;       angle_4C(90); // put down legs
+ 0CF6 0AE5              ldi R16,90
+ 0CF8 1ADE              xcall _angle_4C
+ 0CFA                   .dbline 950
+ 0CFA           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0CFA 04E6              ldi R16,100
+ 0CFC 10E0              ldi R17,0
+ 0CFE 6BD0              xcall _delay
+ 0D00                   .dbline 954
+ 0D00           ; 
+ 0D00           ;       //legs 1 and 6 move back
+ 0D00           ; 
+ 0D00           ;       angle_1B(45);
+ 0D00 0DE2              ldi R16,45
+ 0D02 55DD              xcall _angle_1B
+ 0D04                   .dbline 955
+ 0D04           ;       angle_1C(45);
+ 0D04 0DE2              ldi R16,45
+ 0D06 68DD              xcall _angle_1C
+ 0D08                   .dbline 956
+ 0D08           ;       angle_6B(135);
+ 0D08 07E8              ldi R16,135
+ 0D0A 6EDE              xcall _angle_6B
+ 0D0C                   .dbline 957
+ 0D0C           ;       angle_6C(135); //middel pair BC servo up 45
+ 0D0C 07E8              ldi R16,135
+ 0D0E 81DE              xcall _angle_6C
+ 0D10                   .dbline 958
+ 0D10           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0D10 04E6              ldi R16,100
+ 0D12 10E0              ldi R17,0
+ 0D14 60D0              xcall _delay
+ 0D16                   .dbline 959
+ 0D16           ;       angle_1A(135);
+ 0D16 07E8              ldi R16,135
+ 0D18 3BDD              xcall _angle_1A
+ 0D1A                   .dbline 960
+ 0D1A           ;       angle_6A(45); //middel pair move back while legs are up
+ 0D1A 0DE2              ldi R16,45
+ 0D1C 56DE              xcall _angle_6A
+ 0D1E                   .dbline 961
+ 0D1E           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0D1E 04E6              ldi R16,100
+ 0D20 10E0              ldi R17,0
+ 0D22 59D0              xcall _delay
+ 0D24                   .dbline 962
+ 0D24           ;       angle_1B(90);
+ 0D24 0AE5              ldi R16,90
+ 0D26 43DD              xcall _angle_1B
+ 0D28                   .dbline 963
+ 0D28           ;       angle_1C(90);
+ 0D28 0AE5              ldi R16,90
+ 0D2A 56DD              xcall _angle_1C
+ 0D2C                   .dbline 964
+ 0D2C           ;       angle_6B(90);
+ 0D2C 0AE5              ldi R16,90
+ 0D2E 5CDE              xcall _angle_6B
+ 0D30                   .dbline 965
+ 0D30           ;       angle_6C(90); // put down legs
+ 0D30 0AE5              ldi R16,90
+ 0D32 6FDE              xcall _angle_6C
+ 0D34                   .dbline 966
+ 0D34           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0D34 04E6              ldi R16,100
+ 0D36 10E0              ldi R17,0
+ 0D38 4ED0              xcall _delay
+ 0D3A                   .dbline 969
+ 0D3A           ; 
+ 0D3A           ;       //legs 3 and 5 move back
+ 0D3A           ;       angle_3B(45);
+ 0D3A 0DE2              ldi R16,45
+ 0D3C AADD              xcall _angle_3B
+ 0D3E                   .dbline 970
+ 0D3E           ;       angle_3C(45);
+ 0D3E 0DE2              ldi R16,45
+ 0D40 BDDD              xcall _angle_3C
+ 0D42                   .dbline 971
+ 0D42           ;       angle_5B(135);
+ 0D42 07E8              ldi R16,135
+ 0D44 18DE              xcall _angle_5B
+ 0D46                   .dbline 972
+ 0D46           ;       angle_5C(135); //middel pair BC servo up 45
+ 0D46 07E8              ldi R16,135
+ 0D48 2BDE              xcall _angle_5C
+ 0D4A                   .dbline 973
+ 0D4A           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0D4A 04E6              ldi R16,100
+ 0D4C 10E0              ldi R17,0
+ 0D4E 43D0              xcall _delay
+ 0D50                   .dbline 974
+ 0D50           ;       angle_3A(135);
+ 0D50 07E8              ldi R16,135
+ 0D52 90DD              xcall _angle_3A
+ 0D54                   .dbline 975
+ 0D54           ;       angle_5A(45); //middel pair move forward while legs are up
+ 0D54 0DE2              ldi R16,45
+ 0D56 00DE              xcall _angle_5A
+ 0D58                   .dbline 976
+ 0D58           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0D58 04E6              ldi R16,100
+ 0D5A 10E0              ldi R17,0
+ 0D5C 3CD0              xcall _delay
+ 0D5E                   .dbline 977
+ 0D5E           ;       angle_3B(90);
+ 0D5E 0AE5              ldi R16,90
+ 0D60 98DD              xcall _angle_3B
+ 0D62                   .dbline 978
+ 0D62           ;       angle_3C(90);
+ 0D62 0AE5              ldi R16,90
+ 0D64 ABDD              xcall _angle_3C
+ 0D66                   .dbline 979
+ 0D66           ;       angle_5B(90);
+ 0D66 0AE5              ldi R16,90
+ 0D68 06DE              xcall _angle_5B
+ 0D6A                   .dbline 980
+ 0D6A           ;       angle_5C(90); // put down legs
+ 0D6A 0AE5              ldi R16,90
+ 0D6C 19DE              xcall _angle_5C
+ 0D6E                   .dbline 981
+ 0D6E           ;       delay(TWO_HUNDRED_FIFTY_MSEC);
+ 0D6E 04E6              ldi R16,100
+ 0D70 10E0              ldi R17,0
+ 0D72 31D0              xcall _delay
+ 0D74                   .dbline 983
+ 0D74           ; 
+ 0D74           ;       servo_calibration(); //push towards back
+ 0D74 63DE              xcall _servo_calibration
+ 0D76                   .dbline 984
+ 0D76           ;       motion_busy = 0;
+ 0D76 2224              clr R2
+ 0D78 20920900          sts _motion_busy,R2
+ 0D7C                   .dbline -2
+ 0D7C           L143:
+ 0D7C                   .dbline 0 ; func end
+ 0D7C 0895              ret
+ 0D7E                   .dbend
+ 0D7E                   .dbfunc e robot_standup _robot_standup fV
+                        .even
+ 0D7E           _robot_standup::
+ 0D7E                   .dbline -1
+ 0D7E                   .dbline 989
+ 0D7E           ; }
+ 0D7E           ; 
+ 0D7E           ; 
+ 0D7E           ; void robot_standup(void) //warning: do not call this function while robot is standing or servos will get damaged
+ 0D7E           ; {
+ 0D7E                   .dbline 990
+ 0D7E           ;       motion_busy = 1;
+ 0D7E 81E0              ldi R24,1
+ 0D80 80930900          sts _motion_busy,R24
+ 0D84                   .dbline 991
+ 0D84           ;       angle_1B(1);
+ 0D84 01E0              ldi R16,1
+ 0D86 13DD              xcall _angle_1B
+ 0D88                   .dbline 992
+ 0D88           ;       angle_1C(110);
+ 0D88 0EE6              ldi R16,110
+ 0D8A 26DD              xcall _angle_1C
+ 0D8C                   .dbline 993
+ 0D8C           ;       angle_2B(1);
+ 0D8C 01E0              ldi R16,1
+ 0D8E 48DD              xcall _angle_2B
+ 0D90                   .dbline 994
+ 0D90           ;       angle_2C(110);
+ 0D90 0EE6              ldi R16,110
+ 0D92 5BDD              xcall _angle_2C
+ 0D94                   .dbline 995
+ 0D94           ;       angle_3B(1);
+ 0D94 01E0              ldi R16,1
+ 0D96 7DDD              xcall _angle_3B
+ 0D98                   .dbline 996
+ 0D98           ;       angle_3C(110);
+ 0D98 0EE6              ldi R16,110
+ 0D9A 90DD              xcall _angle_3C
+ 0D9C                   .dbline 997
+ 0D9C           ;       angle_4B(179);
+ 0D9C 03EB              ldi R16,179
+ 0D9E B2DD              xcall _angle_4B
+ 0DA0                   .dbline 998
+ 0DA0           ;       angle_4C(70);
+ 0DA0 06E4              ldi R16,70
+ 0DA2 C5DD              xcall _angle_4C
+ 0DA4                   .dbline 999
+ 0DA4           ;       angle_5B(179);
+ 0DA4 03EB              ldi R16,179
+ 0DA6 E7DD              xcall _angle_5B
+ 0DA8                   .dbline 1000
+ 0DA8           ;       angle_5C(70);
+ 0DA8 06E4              ldi R16,70
+ 0DAA FADD              xcall _angle_5C
+ 0DAC                   .dbline 1001
+ 0DAC           ;       angle_6B(179);
+ 0DAC 03EB              ldi R16,179
+ 0DAE 1CDE              xcall _angle_6B
+ 0DB0                   .dbline 1002
+ 0DB0           ;       angle_6C(70);
+ 0DB0 06E4              ldi R16,70
+ 0DB2 2FDE              xcall _angle_6C
+ 0DB4                   .dbline 1003
+ 0DB4           ;       delay(ONE_SEC);
+ 0DB4 00E9              ldi R16,400
+ 0DB6 11E0              ldi R17,1
+ 0DB8 0ED0              xcall _delay
+ 0DBA                   .dbline 1004
+ 0DBA           ;       delay(ONE_SEC);
+ 0DBA 00E9              ldi R16,400
+ 0DBC 11E0              ldi R17,1
+ 0DBE 0BD0              xcall _delay
+ 0DC0                   .dbline 1005
+ 0DC0           ;       servo_calibration();
+ 0DC0 3DDE              xcall _servo_calibration
+ 0DC2                   .dbline 1006
+ 0DC2           ;       motion_busy = 0;
+ 0DC2 2224              clr R2
+ 0DC4 20920900          sts _motion_busy,R2
+ 0DC8                   .dbline -2
+ 0DC8           L144:
+ 0DC8                   .dbline 0 ; func end
+ 0DC8 0895              ret
+ 0DCA                   .dbend
+ 0DCA                   .dbfunc e buzzer_on _buzzer_on fV
+                        .even
+ 0DCA           _buzzer_on::
+ 0DCA                   .dbline -1
+ 0DCA                   .dbline 1010
+ 0DCA           ; }
+ 0DCA           ; 
+ 0DCA           ; //set buzzer on
+ 0DCA           ; void buzzer_on(void) {
+ 0DCA                   .dbline 1011
+ 0DCA           ;       PORTC = PORTC | 0x08;
+ 0DCA 439A              sbi 0x8,3
+ 0DCC                   .dbline -2
+ 0DCC           L145:
+ 0DCC                   .dbline 0 ; func end
+ 0DCC 0895              ret
+ 0DCE                   .dbend
+ 0DCE                   .dbfunc e buzzer_off _buzzer_off fV
+                        .even
+ 0DCE           _buzzer_off::
+ 0DCE                   .dbline -1
+ 0DCE                   .dbline 1015
+ 0DCE           ; }
+ 0DCE           ; 
+ 0DCE           ; //set buzzer off
+ 0DCE           ; void buzzer_off(void) {
+ 0DCE                   .dbline 1016
+ 0DCE           ;       PORTC = PORTC & 0xF7;
+ 0DCE 88B1              in R24,0x8
+ 0DD0 877F              andi R24,247
+ 0DD2 88B9              out 0x8,R24
+ 0DD4                   .dbline -2
+ 0DD4           L146:
+ 0DD4                   .dbline 0 ; func end
+ 0DD4 0895              ret
+ 0DD6                   .dbend
+ 0DD6                   .dbfunc e delay _delay fV
+ 0DD6           ;           time -> R16,R17
+                        .even
+ 0DD6           _delay::
+ 0DD6                   .dbline -1
+ 0DD6                   .dbline 1072
+ 0DD6           ; }
+ 0DD6           ; 
+ 0DD6           ; /*
+ 0DD6           ; void remote_control(void) {
+ 0DD6           ;       unsigned char flag1 = 0;
+ 0DD6           ;       PORTA = remote_data[4]; //move left joystick up and down and see if there is any change in the bargraph display.
+ 0DD6           ;       flag1 = 0; //resetting the flag
+ 0DD6           ; 
+ 0DD6           ;       if ((flag1 == 0) && (motion_busy == 0)) //forward, 1 beep
+ 0DD6           ;       {
+ 0DD6           ;               if (remote_data[4] > 0x29) {
+ 0DD6           ;                       flag1 = 1;
+ 0DD6           ;                       forward();
+ 0DD6           ;                       //buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off(); //use it to debug remote onnection
+ 0DD6           ;               }
+ 0DD6           ;       }
+ 0DD6           ; 
+ 0DD6           ;       if ((flag1 == 0) && (motion_busy == 0)) //back, 2 beep
+ 0DD6           ;       {
+ 0DD6           ;               if (remote_data[4] < 0x15) {
+ 0DD6           ;                       flag1 = 1;
+ 0DD6           ;                       back();
+ 0DD6           ;                       //buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off();delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off(); //use it to debug remote onnection
+ 0DD6           ;               }
+ 0DD6           ;       }
+ 0DD6           ; 
+ 0DD6           ;       if ((flag1 == 0) && (motion_busy == 0)) //anticlockwise (left), 3 beep
+ 0DD6           ;       {
+ 0DD6           ;               if (remote_data[3] > 0x2D) {
+ 0DD6           ;                       flag1 = 1;
+ 0DD6           ;                       robot_rotate_anticlockwise_7_5();
+ 0DD6           ;                       //buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off();delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off(); //use it to debug remote onnection
+ 0DD6           ;               }
+ 0DD6           ;       }
+ 0DD6           ; 
+ 0DD6           ;       if ((flag1 == 0) && (motion_busy == 0)) //clockwise (right), 4 beep
+ 0DD6           ;       {
+ 0DD6           ;               if (remote_data[3] < 0x19) {
+ 0DD6           ;                       flag1 = 1;
+ 0DD6           ;                       robot_rotate_clockwise_7_5();
+ 0DD6           ;                       //buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off();delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off();delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off(); //use it to debug remote onnection
+ 0DD6           ;               }
+ 0DD6           ;       }
+ 0DD6           ; 
+ 0DD6           ;       if ((flag1 == 0) && (motion_busy == 0)) //stop 1 long beep
+ 0DD6           ;       {
+ 0DD6           ;               if ((0x19 < remote_data[3] < 0x2D) && (0x15 < remote_data[4] < 0x29)) {
+ 0DD6           ;                       flag1 = 1;
+ 0DD6           ;                       servo_calibration();
+ 0DD6           ;                       //buzzer_on(); delay(TWO_HUNDRED_FIFTY_MSEC); delay(TWO_HUNDRED_FIFTY_MSEC); delay(TWO_HUNDRED_FIFTY_MSEC); buzzer_off(); //use it to debug remote onnection
+ 0DD6           ;               }
+ 0DD6           ;       }
+ 0DD6           ; }*/
+ 0DD6           ; 
+ 0DD6           ; 
+ 0DD6           ; void delay(int time) {
+ 0DD6                   .dbline 1073
+ 0DD6           ;       delay_count = 0;
+ 0DD6 2224              clr R2
+ 0DD8 3324              clr R3
+ 0DDA 30920500          sts _delay_count+1,R3
+ 0DDE 20920400          sts _delay_count,R2
+ 0DE2           L148:
+ 0DE2                   .dbline 1075
+ 0DE2           ;       while (delay_count < time)
+ 0DE2           ;               ;
+ 0DE2           L149:
+ 0DE2                   .dbline 1074
+ 0DE2 20900400          lds R2,_delay_count
+ 0DE6 30900500          lds R3,_delay_count+1
+ 0DEA 2016              cp R2,R16
+ 0DEC 3106              cpc R3,R17
+ 0DEE C8F3              brlo L148
+ 0DF0           X26:
+ 0DF0                   .dbline -2
+ 0DF0           L147:
+ 0DF0                   .dbline 0 ; func end
+ 0DF0 0895              ret
+ 0DF2                   .dbsym r time 16 I
+ 0DF2                   .dbend
+ 0DF2                   .dbfunc e ADC_Conversion _ADC_Conversion fc
+ 0DF2           ;              a -> R10
+ 0DF2           ;             Ch -> R16
+                        .even
+ 0DF2           _ADC_Conversion::
+ 0DF2 AA92              st -y,R10
+ 0DF4                   .dbline -1
+ 0DF4                   .dbline 1079
+ 0DF4           ; }
+ 0DF4           ; 
+ 0DF4           ; unsigned char ADC_Conversion(unsigned char Ch)
+ 0DF4           ; {
+ 0DF4                   .dbline 1081
+ 0DF4           ;       unsigned char a;
+ 0DF4           ;       if(Ch>7)
+ 0DF4 87E0              ldi R24,7
+ 0DF6 8017              cp R24,R16
+ 0DF8 18F4              brsh L152
+ 0DFA           X27:
+ 0DFA                   .dbline 1082
+ 0DFA           ;               {
+ 0DFA                   .dbline 1083
+ 0DFA           ;               ADCSRB = 0x08;                  // select the ch. > 7
+ 0DFA 88E0              ldi R24,8
+ 0DFC 80937B00          sts 123,R24
+ 0E00                   .dbline 1084
+ 0E00           ;               }
+ 0E00           L152:
+ 0E00                   .dbline 1085
+ 0E00           ;       Ch = Ch & 0x07;                         
+ 0E00 0770              andi R16,7
+ 0E02                   .dbline 1086
+ 0E02           ;       ADMUX= 0x20| Ch;                        //do not disturb the left adjustment
+ 0E02 802F              mov R24,R16
+ 0E04 8062              ori R24,32
+ 0E06 80937C00          sts 124,R24
+ 0E0A                   .dbline 1087
+ 0E0A           ;       ADCSRA = ADCSRA | 0x40;         //Set start conversion bit
+ 0E0A 80917A00          lds R24,122
+ 0E0E 8064              ori R24,64
+ 0E10 80937A00          sts 122,R24
+ 0E14           L154:
+ 0E14                   .dbline 1088
+ 0E14           ;       while((ADCSRA&0x10)==0);        //Wait for ADC conversion to complete
+ 0E14           L155:
+ 0E14                   .dbline 1088
+ 0E14 20907A00          lds R2,122
+ 0E18 24FE              sbrs R2,4
+ 0E1A FCCF              rjmp L154
+ 0E1C           X28:
+ 0E1C                   .dbline 1089
+ 0E1C           ;       a=ADCH;
+ 0E1C A0907900          lds R10,121
+ 0E20                   .dbline 1090
+ 0E20           ;       ADCSRA = ADCSRA|0x10;           //clear ADIF (ADC Interrupt Flag) by writing 1 to it
+ 0E20 80917A00          lds R24,122
+ 0E24 8061              ori R24,16
+ 0E26 80937A00          sts 122,R24
+ 0E2A                   .dbline 1091
+ 0E2A           ;       ADCSRB = 0x00;
+ 0E2A 2224              clr R2
+ 0E2C 20927B00          sts 123,R2
+ 0E30                   .dbline 1092
+ 0E30           ;       return a;
+ 0E30 0A2D              mov R16,R10
+ 0E32                   .dbline -2
+ 0E32           L151:
+ 0E32                   .dbline 0 ; func end
+ 0E32 A990              ld R10,y+
+ 0E34 0895              ret
+ 0E36                   .dbsym r a 10 c
+ 0E36                   .dbsym r Ch 16 c
+ 0E36                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile D:\BUILDI~1\hexapod.c
+ 0000           _data::
+ 0000                   .blkb 1
+ 0001                   .dbsym e data _data c
+ 0001           _remote_data::
+ 0001                   .blkb 8
+ 0009                   .dbsym e remote_data _remote_data A[8:8]c
+ 0009           _angle_lower_byte_6C::
+ 0009                   .blkb 2
+ 000B                   .dbsym e angle_lower_byte_6C _angle_lower_byte_6C I
+ 000B           _angle_upper_byte_6C::
+ 000B                   .blkb 2
+ 000D                   .dbsym e angle_upper_byte_6C _angle_upper_byte_6C I
+ 000D           _angle_lower_byte_6B::
+ 000D                   .blkb 2
+ 000F                   .dbsym e angle_lower_byte_6B _angle_lower_byte_6B I
+ 000F           _angle_upper_byte_6B::
+ 000F                   .blkb 2
+ 0011                   .dbsym e angle_upper_byte_6B _angle_upper_byte_6B I
+ 0011           _angle_lower_byte_6A::
+ 0011                   .blkb 1
+ 0012                   .dbsym e angle_lower_byte_6A _angle_lower_byte_6A c
+ 0012           _angle_upper_byte_6A::
+ 0012                   .blkb 1
+ 0013                   .dbsym e angle_upper_byte_6A _angle_upper_byte_6A c
+ 0013           _angle_lower_byte_5C::
+ 0013                   .blkb 2
+ 0015                   .dbsym e angle_lower_byte_5C _angle_lower_byte_5C I
+ 0015           _angle_upper_byte_5C::
+ 0015                   .blkb 2
+ 0017                   .dbsym e angle_upper_byte_5C _angle_upper_byte_5C I
+ 0017           _angle_lower_byte_5B::
+ 0017                   .blkb 2
+ 0019                   .dbsym e angle_lower_byte_5B _angle_lower_byte_5B I
+ 0019           _angle_upper_byte_5B::
+ 0019                   .blkb 2
+ 001B                   .dbsym e angle_upper_byte_5B _angle_upper_byte_5B I
+ 001B           _angle_lower_byte_5A::
+ 001B                   .blkb 1
+ 001C                   .dbsym e angle_lower_byte_5A _angle_lower_byte_5A c
+ 001C           _angle_upper_byte_5A::
+ 001C                   .blkb 1
+ 001D                   .dbsym e angle_upper_byte_5A _angle_upper_byte_5A c
+ 001D           _angle_lower_byte_4C::
+ 001D                   .blkb 2
+ 001F                   .dbsym e angle_lower_byte_4C _angle_lower_byte_4C I
+ 001F           _angle_upper_byte_4C::
+ 001F                   .blkb 2
+ 0021                   .dbsym e angle_upper_byte_4C _angle_upper_byte_4C I
+ 0021           _angle_lower_byte_4B::
+ 0021                   .blkb 2
+ 0023                   .dbsym e angle_lower_byte_4B _angle_lower_byte_4B I
+ 0023           _angle_upper_byte_4B::
+ 0023                   .blkb 2
+ 0025                   .dbsym e angle_upper_byte_4B _angle_upper_byte_4B I
+ 0025           _angle_lower_byte_4A::
+ 0025                   .blkb 1
+ 0026                   .dbsym e angle_lower_byte_4A _angle_lower_byte_4A c
+ 0026           _angle_upper_byte_4A::
+ 0026                   .blkb 1
+ 0027                   .dbsym e angle_upper_byte_4A _angle_upper_byte_4A c
+ 0027           _angle_lower_byte_3C::
+ 0027                   .blkb 2
+ 0029                   .dbsym e angle_lower_byte_3C _angle_lower_byte_3C I
+ 0029           _angle_upper_byte_3C::
+ 0029                   .blkb 2
+ 002B                   .dbsym e angle_upper_byte_3C _angle_upper_byte_3C I
+ 002B           _angle_lower_byte_3B::
+ 002B                   .blkb 2
+ 002D                   .dbsym e angle_lower_byte_3B _angle_lower_byte_3B I
+ 002D           _angle_upper_byte_3B::
+ 002D                   .blkb 2
+ 002F                   .dbsym e angle_upper_byte_3B _angle_upper_byte_3B I
+ 002F           _angle_lower_byte_3A::
+ 002F                   .blkb 1
+ 0030                   .dbsym e angle_lower_byte_3A _angle_lower_byte_3A c
+ 0030           _angle_upper_byte_3A::
+ 0030                   .blkb 1
+ 0031                   .dbsym e angle_upper_byte_3A _angle_upper_byte_3A c
+ 0031           _angle_lower_byte_2C::
+ 0031                   .blkb 2
+ 0033                   .dbsym e angle_lower_byte_2C _angle_lower_byte_2C I
+ 0033           _angle_upper_byte_2C::
+ 0033                   .blkb 2
+ 0035                   .dbsym e angle_upper_byte_2C _angle_upper_byte_2C I
+ 0035           _angle_lower_byte_2B::
+ 0035                   .blkb 2
+ 0037                   .dbsym e angle_lower_byte_2B _angle_lower_byte_2B I
+ 0037           _angle_upper_byte_2B::
+ 0037                   .blkb 2
+ 0039                   .dbsym e angle_upper_byte_2B _angle_upper_byte_2B I
+ 0039           _angle_lower_byte_2A::
+ 0039                   .blkb 1
+ 003A                   .dbsym e angle_lower_byte_2A _angle_lower_byte_2A c
+ 003A           _angle_upper_byte_2A::
+ 003A                   .blkb 1
+ 003B                   .dbsym e angle_upper_byte_2A _angle_upper_byte_2A c
+ 003B           _angle_lower_byte_1C::
+ 003B                   .blkb 2
+ 003D                   .dbsym e angle_lower_byte_1C _angle_lower_byte_1C I
+ 003D           _angle_upper_byte_1C::
+ 003D                   .blkb 2
+ 003F                   .dbsym e angle_upper_byte_1C _angle_upper_byte_1C I
+ 003F           _angle_lower_byte_1B::
+ 003F                   .blkb 2
+ 0041                   .dbsym e angle_lower_byte_1B _angle_lower_byte_1B I
+ 0041           _angle_upper_byte_1B::
+ 0041                   .blkb 2
+ 0043                   .dbsym e angle_upper_byte_1B _angle_upper_byte_1B I
+ 0043           _angle_lower_byte_1A::
+ 0043                   .blkb 1
+ 0044                   .dbsym e angle_lower_byte_1A _angle_lower_byte_1A c
+ 0044           _angle_upper_byte_1A::
+ 0044                   .blkb 1
+ 0045                   .dbsym e angle_upper_byte_1A _angle_upper_byte_1A c
+ 0045           ; }
+ 0045           ; 

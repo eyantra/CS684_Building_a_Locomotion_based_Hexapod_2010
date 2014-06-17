@@ -1,0 +1,1327 @@
+                        .module gait.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile D:\BUILDI~1\gait.c
+ 0000                   .dbfunc e tripod_gait _tripod_gait fV
+ 0000           ;   step_forward -> R20
+ 0000           ;     delay_time -> R14,R15
+ 0000           ;      step_side -> R12
+ 0000           ;           dir6 -> R10
+ 0000           ;           dir4 -> y+4
+ 0000           ;           dir2 -> y+3
+ 0000           ;           dir5 -> y+2
+ 0000           ;           dir3 -> y+1
+ 0000           ;           lift -> R22
+ 0000           ;          steps -> y+17
+ 0000           ;           dir1 -> y+15
+                        .even
+ 0000           _tripod_gait::
+ 0000 0E940000          xcall push_arg4
+ 0004 0E940000          xcall push_xgsetF0FC
+ 0008 2597              sbiw R28,5
+ 000A                   .dbline -1
+ 000A                   .dbline 66
+ 000A           ; /***
+ 000A           ; Author : Srijit Dutt
+ 000A           ; Date Sun 07 Nov 2010 02:42:38 PM IST 
+ 000A           ; 
+ 000A           ; gait.c : File contains various walking motion functions for the hexapod
+ 000A           ; Please include gait.h file to call function from this file
+ 000A           ; 
+ 000A           ; */
+ 000A           ; 
+ 000A           ; 
+ 000A           ; /********************************************************************************
+ 000A           ; 
+ 000A           ;    Copyright (c) 2010, ERTS Lab IIT Bombay erts@cse.iitb.ac.in               -*- c -*-
+ 000A           ;    All rights reserved.
+ 000A           ; 
+ 000A           ;    Redistribution and use in source and binary forms, with or without
+ 000A           ;    modification, are permitted provided that the following conditions are met:
+ 000A           ; 
+ 000A           ;    * Redistributions of source code must retain the above copyright
+ 000A           ;      notice, this list of conditions and the following disclaimer.
+ 000A           ; 
+ 000A           ;    * Redistributions in binary form must reproduce the above copyright
+ 000A           ;      notice, this list of conditions and the following disclaimer in
+ 000A           ;      the documentation and/or other materials provided with the
+ 000A           ;      distribution.
+ 000A           ; 
+ 000A           ;    * Neither the name of the copyright holders nor the names of
+ 000A           ;      contributors may be used to endorse or promote products derived
+ 000A           ;      from this software without specific prior written permission.
+ 000A           ; 
+ 000A           ;    * Source code can be used for academic purpose. 
+ 000A           ;        For commercial use permission form the author needs to be taken.
+ 000A           ; 
+ 000A           ;   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ 000A           ;   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ 000A           ;   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ 000A           ;   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ 000A           ;   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ 000A           ;   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ 000A           ;   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ 000A           ;   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ 000A           ;   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ 000A           ;   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ 000A           ;   POSSIBILITY OF SUCH DAMAGE. 
+ 000A           ; 
+ 000A           ;   Software released under Creative Commence cc by-nc-sa licence.
+ 000A           ;   For legal information refer to: 
+ 000A           ;   http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+ 000A           ; 
+ 000A           ; ********************************************************************************/
+ 000A           ; 
+ 000A           ; 
+ 000A           ; #include "hexapod_macro.h"
+ 000A           ; #include "hexapod_basic.h"
+ 000A           ; #include "hexapod.h"
+ 000A           ; 
+ 000A           ; 
+ 000A           ; /**
+ 000A           ; Tripod gait moves the hexapod in the direction dir1 for steps.
+ 000A           ; Three legs forming a tripod move first then the other three legs move  
+ 000A           ; Used for normal gait of the hexapod
+ 000A           ; @param dir1 : Direction of motion
+ 000A           ; @param steps : number of steps
+ 000A           ; 
+ 000A           ; */
+ 000A           ; void tripod_gait(unsigned char dir1, unsigned char steps) {
+ 000A                   .dbline 67
+ 000A           ;       unsigned char dir3 = ((dir1 + 1) % 6) + 1;
+ 000A 16E0              ldi R17,6
+ 000C 0F85              ldd R16,y+15
+ 000E 0F5F              subi R16,255    ; addi 1
+ 0010 0E940000          xcall mod8u
+ 0014 802F              mov R24,R16
+ 0016 8F5F              subi R24,255    ; addi 1
+ 0018 8983              std y+1,R24
+ 001A                   .dbline 68
+ 001A           ;       unsigned char dir5 = ((dir3 + 1) % 6) + 1;
+ 001A 16E0              ldi R17,6
+ 001C 082F              mov R16,R24
+ 001E 0F5F              subi R16,255    ; addi 1
+ 0020 0E940000          xcall mod8u
+ 0024 802F              mov R24,R16
+ 0026 8F5F              subi R24,255    ; addi 1
+ 0028 8A83              std y+2,R24
+ 002A                   .dbline 69
+ 002A           ;       unsigned char dir2 = 7 - dir5;
+ 002A 282E              mov R2,R24
+ 002C 87E0              ldi R24,7
+ 002E 8219              sub R24,R2
+ 0030 8B83              std y+3,R24
+ 0032                   .dbline 70
+ 0032           ;       unsigned char dir4 = 7 - dir3;
+ 0032 2980              ldd R2,y+1
+ 0034 87E0              ldi R24,7
+ 0036 8219              sub R24,R2
+ 0038 8C83              std y+4,R24
+ 003A                   .dbline 71
+ 003A           ;       unsigned char dir6 = 7 - dir1;
+ 003A 87E0              ldi R24,7
+ 003C A82E              mov R10,R24
+ 003E 0F84              ldd R0,y+15
+ 0040 A018              sub R10,R0
+ 0042                   .dbline 72
+ 0042           ;       unsigned char step_forward = 70;
+ 0042 46E4              ldi R20,70
+ 0044                   .dbline 73
+ 0044           ;       unsigned char step_side = 50;
+ 0044 82E3              ldi R24,50
+ 0046 C82E              mov R12,R24
+ 0048                   .dbline 74
+ 0048           ;       unsigned char lift = 40;
+ 0048 68E2              ldi R22,40
+ 004A                   .dbline 75
+ 004A           ;       int delay_time = TWO_HUNDRED_FIFTY_MSEC;
+ 004A 84E6              ldi R24,100
+ 004C 90E0              ldi R25,0
+ 004E 7C01              movw R14,R24
+ 0050                   .dbline 78
+ 0050           ;       
+ 0050           ;       
+ 0050           ;       if(dir1%2 == 0) {
+ 0050 12E0              ldi R17,2
+ 0052 002D              mov R16,R0
+ 0054 0E940000          xcall mod8u
+ 0058 0023              tst R16
+ 005A 09F0              breq X2
+ 005C B5C0              xjmp L5
+ 005E           X2:
+ 005E           X0:
+ 005E                   .dbline 78
+ 005E                   .dbline 79
+ 005E           ;               swap(&dir2, &dir4);
+ 005E 9E01              movw R18,R28
+ 0060 2C5F              subi R18,252  ; offset = 4
+ 0062 3F4F              sbci R19,255
+ 0064 8E01              movw R16,R28
+ 0066 0D5F              subi R16,253  ; offset = 3
+ 0068 1F4F              sbci R17,255
+ 006A 0E940000          xcall _swap
+ 006E                   .dbline 80
+ 006E           ;               swap(&dir3, &dir5);       
+ 006E 9E01              movw R18,R28
+ 0070 2E5F              subi R18,254  ; offset = 2
+ 0072 3F4F              sbci R19,255
+ 0074 8E01              movw R16,R28
+ 0076 0F5F              subi R16,255  ; offset = 1
+ 0078 1F4F              sbci R17,255
+ 007A 0E940000          xcall _swap
+ 007E                   .dbline 81
+ 007E           ;       }
+ 007E A4C0              xjmp L5
+ 0080           L4:
+ 0080                   .dbline 83
+ 0080           ;       
+ 0080           ;       while (steps-- > 0) {
+ 0080                   .dbline 86
+ 0080           ; 
+ 0080           ;               //puuting down odd tripod
+ 0080           ;               angle(dir1, MOTOR_B, 90);
+ 0080 8AE5              ldi R24,90
+ 0082 8883              std y+0,R24
+ 0084 22E4              ldi R18,66
+ 0086 0F85              ldd R16,y+15
+ 0088 0E940000          xcall _angle
+ 008C                   .dbline 87
+ 008C           ;               angle(dir3, MOTOR_B, 90);
+ 008C 8AE5              ldi R24,90
+ 008E 8883              std y+0,R24
+ 0090 22E4              ldi R18,66
+ 0092 0981              ldd R16,y+1
+ 0094 0E940000          xcall _angle
+ 0098                   .dbline 88
+ 0098           ;               angle(dir5, MOTOR_B, 90);
+ 0098 8AE5              ldi R24,90
+ 009A 8883              std y+0,R24
+ 009C 22E4              ldi R18,66
+ 009E 0A81              ldd R16,y+2
+ 00A0 0E940000          xcall _angle
+ 00A4                   .dbline 90
+ 00A4           ;               
+ 00A4           ;               delay(HUNDRED_MSEC);
+ 00A4 08E2              ldi R16,40
+ 00A6 10E0              ldi R17,0
+ 00A8 0E940000          xcall _delay
+ 00AC                   .dbline 93
+ 00AC           ;               
+ 00AC           ;               //picking up even tripod
+ 00AC           ;               angle(dir2, MOTOR_B, lift);
+ 00AC 6883              std y+0,R22
+ 00AE 22E4              ldi R18,66
+ 00B0 0B81              ldd R16,y+3
+ 00B2 0E940000          xcall _angle
+ 00B6                   .dbline 94
+ 00B6           ;               angle(dir4, MOTOR_B, lift);
+ 00B6 6883              std y+0,R22
+ 00B8 22E4              ldi R18,66
+ 00BA 0C81              ldd R16,y+4
+ 00BC 0E940000          xcall _angle
+ 00C0                   .dbline 95
+ 00C0           ;               angle(dir6, MOTOR_B, lift);
+ 00C0 6883              std y+0,R22
+ 00C2 22E4              ldi R18,66
+ 00C4 0A2D              mov R16,R10
+ 00C6 0E940000          xcall _angle
+ 00CA                   .dbline 96
+ 00CA           ;               delay(delay_time);
+ 00CA 8701              movw R16,R14
+ 00CC 0E940000          xcall _delay
+ 00D0                   .dbline 99
+ 00D0           ; 
+ 00D0           ;               //moving body on odd tripod
+ 00D0           ;               angle(dir1, MOTOR_C, 90);
+ 00D0 8AE5              ldi R24,90
+ 00D2 8883              std y+0,R24
+ 00D4 23E4              ldi R18,67
+ 00D6 0F85              ldd R16,y+15
+ 00D8 0E940000          xcall _angle
+ 00DC                   .dbline 100
+ 00DC           ;               angle(dir3, MOTOR_A, 90);
+ 00DC 8AE5              ldi R24,90
+ 00DE 8883              std y+0,R24
+ 00E0 21E4              ldi R18,65
+ 00E2 0981              ldd R16,y+1
+ 00E4 0E940000          xcall _angle
+ 00E8                   .dbline 101
+ 00E8           ;               angle(dir5, MOTOR_A, 90);
+ 00E8 8AE5              ldi R24,90
+ 00EA 8883              std y+0,R24
+ 00EC 21E4              ldi R18,65
+ 00EE 0A81              ldd R16,y+2
+ 00F0 0E940000          xcall _angle
+ 00F4                   .dbline 103
+ 00F4           ;               //moving legs even forward in air
+ 00F4           ;               angle(dir2, MOTOR_A, 90 - step_side);
+ 00F4 8AE5              ldi R24,90
+ 00F6 8C19              sub R24,R12
+ 00F8 8883              std y+0,R24
+ 00FA 21E4              ldi R18,65
+ 00FC 0B81              ldd R16,y+3
+ 00FE 0E940000          xcall _angle
+ 0102                   .dbline 104
+ 0102           ;               angle(dir4, MOTOR_A, 90 + step_side);
+ 0102 8C2D              mov R24,R12
+ 0104 865A              subi R24,166    ; addi 90
+ 0106 8883              std y+0,R24
+ 0108 21E4              ldi R18,65
+ 010A 0C81              ldd R16,y+4
+ 010C 0E940000          xcall _angle
+ 0110                   .dbline 105
+ 0110           ;               angle(dir6, MOTOR_C, 90 + step_forward);
+ 0110 842F              mov R24,R20
+ 0112 865A              subi R24,166    ; addi 90
+ 0114 8883              std y+0,R24
+ 0116 23E4              ldi R18,67
+ 0118 0A2D              mov R16,R10
+ 011A 0E940000          xcall _angle
+ 011E                   .dbline 106
+ 011E           ;               delay(delay_time);
+ 011E 8701              movw R16,R14
+ 0120 0E940000          xcall _delay
+ 0124                   .dbline 109
+ 0124           ; 
+ 0124           ;               //putting down even legs
+ 0124           ;               angle(dir2, MOTOR_B, 90);
+ 0124 8AE5              ldi R24,90
+ 0126 8883              std y+0,R24
+ 0128 22E4              ldi R18,66
+ 012A 0B81              ldd R16,y+3
+ 012C 0E940000          xcall _angle
+ 0130                   .dbline 110
+ 0130           ;               angle(dir4, MOTOR_B, 90);
+ 0130 8AE5              ldi R24,90
+ 0132 8883              std y+0,R24
+ 0134 22E4              ldi R18,66
+ 0136 0C81              ldd R16,y+4
+ 0138 0E940000          xcall _angle
+ 013C                   .dbline 111
+ 013C           ;               angle(dir6, MOTOR_B, 90);
+ 013C 8AE5              ldi R24,90
+ 013E 8883              std y+0,R24
+ 0140 22E4              ldi R18,66
+ 0142 0A2D              mov R16,R10
+ 0144 0E940000          xcall _angle
+ 0148                   .dbline 113
+ 0148           ;               
+ 0148           ;               delay(HUNDRED_MSEC);
+ 0148 08E2              ldi R16,40
+ 014A 10E0              ldi R17,0
+ 014C 0E940000          xcall _delay
+ 0150                   .dbline 116
+ 0150           ;               
+ 0150           ;               //picking up odd legs
+ 0150           ;               angle(dir1, MOTOR_B, lift);
+ 0150 6883              std y+0,R22
+ 0152 22E4              ldi R18,66
+ 0154 0F85              ldd R16,y+15
+ 0156 0E940000          xcall _angle
+ 015A                   .dbline 117
+ 015A           ;               angle(dir3, MOTOR_B, lift);
+ 015A 6883              std y+0,R22
+ 015C 22E4              ldi R18,66
+ 015E 0981              ldd R16,y+1
+ 0160 0E940000          xcall _angle
+ 0164                   .dbline 118
+ 0164           ;               angle(dir5, MOTOR_B, lift);
+ 0164 6883              std y+0,R22
+ 0166 22E4              ldi R18,66
+ 0168 0A81              ldd R16,y+2
+ 016A 0E940000          xcall _angle
+ 016E                   .dbline 119
+ 016E           ;               delay(delay_time);
+ 016E 8701              movw R16,R14
+ 0170 0E940000          xcall _delay
+ 0174                   .dbline 122
+ 0174           ; 
+ 0174           ;               //moving the odd legs in air
+ 0174           ;               angle(dir1, MOTOR_C, 90 + step_forward);
+ 0174 842F              mov R24,R20
+ 0176 865A              subi R24,166    ; addi 90
+ 0178 8883              std y+0,R24
+ 017A 23E4              ldi R18,67
+ 017C 0F85              ldd R16,y+15
+ 017E 0E940000          xcall _angle
+ 0182                   .dbline 123
+ 0182           ;               angle(dir3, MOTOR_A, 90 - step_side);
+ 0182 8AE5              ldi R24,90
+ 0184 8C19              sub R24,R12
+ 0186 8883              std y+0,R24
+ 0188 21E4              ldi R18,65
+ 018A 0981              ldd R16,y+1
+ 018C 0E940000          xcall _angle
+ 0190                   .dbline 124
+ 0190           ;               angle(dir5, MOTOR_A, 90 + step_side);
+ 0190 8C2D              mov R24,R12
+ 0192 865A              subi R24,166    ; addi 90
+ 0194 8883              std y+0,R24
+ 0196 21E4              ldi R18,65
+ 0198 0A81              ldd R16,y+2
+ 019A 0E940000          xcall _angle
+ 019E                   .dbline 126
+ 019E           ;               //moving the body forward on even tripod
+ 019E           ;               angle(dir2, MOTOR_A, 90);
+ 019E 8AE5              ldi R24,90
+ 01A0 8883              std y+0,R24
+ 01A2 21E4              ldi R18,65
+ 01A4 0B81              ldd R16,y+3
+ 01A6 0E940000          xcall _angle
+ 01AA                   .dbline 127
+ 01AA           ;               angle(dir4, MOTOR_A, 90);
+ 01AA 8AE5              ldi R24,90
+ 01AC 8883              std y+0,R24
+ 01AE 21E4              ldi R18,65
+ 01B0 0C81              ldd R16,y+4
+ 01B2 0E940000          xcall _angle
+ 01B6                   .dbline 128
+ 01B6           ;               angle(dir6, MOTOR_C, 90);
+ 01B6 8AE5              ldi R24,90
+ 01B8 8883              std y+0,R24
+ 01BA 23E4              ldi R18,67
+ 01BC 0A2D              mov R16,R10
+ 01BE 0E940000          xcall _angle
+ 01C2                   .dbline 129
+ 01C2           ;               delay(delay_time);
+ 01C2 8701              movw R16,R14
+ 01C4 0E940000          xcall _delay
+ 01C8                   .dbline 130
+ 01C8           ;       }
+ 01C8           L5:
+ 01C8                   .dbline 83
+ 01C8 2988              ldd R2,y+17
+ 01CA 3324              clr R3
+ 01CC 822D              mov R24,R2
+ 01CE 8150              subi R24,1
+ 01D0 898B              std y+17,R24
+ 01D2 80E0              ldi R24,0
+ 01D4 8215              cp R24,R2
+ 01D6 08F4              brsh X3
+ 01D8 53CF              xjmp L4
+ 01DA           X3:
+ 01DA           X1:
+ 01DA                   .dbline -2
+ 01DA           L1:
+ 01DA                   .dbline 0 ; func end
+ 01DA 2596              adiw R28,5
+ 01DC 0E940000          xcall pop_xgsetF0FC
+ 01E0 2496              adiw R28,4
+ 01E2 0895              ret
+ 01E4                   .dbsym r step_forward 20 c
+ 01E4                   .dbsym r delay_time 14 I
+ 01E4                   .dbsym r step_side 12 c
+ 01E4                   .dbsym r dir6 10 c
+ 01E4                   .dbsym l dir4 4 c
+ 01E4                   .dbsym l dir2 3 c
+ 01E4                   .dbsym l dir5 2 c
+ 01E4                   .dbsym l dir3 1 c
+ 01E4                   .dbsym r lift 22 c
+ 01E4                   .dbsym l steps 17 c
+ 01E4                   .dbsym l dir1 15 c
+ 01E4                   .dbend
+ 01E4                   .dbfunc e tripod_gait_2 _tripod_gait_2 fV
+ 01E4           ;    delay_time1 -> R10,R11
+ 01E4           ;   step_forward -> R20
+ 01E4           ;      step_side -> R14
+ 01E4           ;     delay_time -> R12,R13
+ 01E4           ;           lift -> R22
+ 01E4           ;           dir6 -> y+5
+ 01E4           ;           dir4 -> y+4
+ 01E4           ;           dir2 -> y+3
+ 01E4           ;           dir5 -> y+2
+ 01E4           ;           dir3 -> y+1
+ 01E4           ;          steps -> y+18
+ 01E4           ;           dir1 -> y+16
+                        .even
+ 01E4           _tripod_gait_2::
+ 01E4 0E940000          xcall push_arg4
+ 01E8 0E940000          xcall push_xgsetF0FC
+ 01EC 2697              sbiw R28,6
+ 01EE                   .dbline -1
+ 01EE                   .dbline 138
+ 01EE           ; }
+ 01EE           ; 
+ 01EE           ; /**
+ 01EE           ; Tripod Gait 2 : Better suited for uneven terrain
+ 01EE           ; @param dir1 : Direction of motion
+ 01EE           ; @param steps : number of steps
+ 01EE           ; */
+ 01EE           ; void tripod_gait_2(unsigned char dir1, unsigned char steps) {
+ 01EE                   .dbline 139
+ 01EE           ;       unsigned char dir3 = ((dir1 + 1) % 6) + 1;
+ 01EE 16E0              ldi R17,6
+ 01F0 0889              ldd R16,y+16
+ 01F2 0F5F              subi R16,255    ; addi 1
+ 01F4 0E940000          xcall mod8u
+ 01F8 802F              mov R24,R16
+ 01FA 8F5F              subi R24,255    ; addi 1
+ 01FC 8983              std y+1,R24
+ 01FE                   .dbline 140
+ 01FE           ;       unsigned char dir5 = ((dir3 + 1) % 6) + 1;
+ 01FE 16E0              ldi R17,6
+ 0200 082F              mov R16,R24
+ 0202 0F5F              subi R16,255    ; addi 1
+ 0204 0E940000          xcall mod8u
+ 0208 802F              mov R24,R16
+ 020A 8F5F              subi R24,255    ; addi 1
+ 020C 8A83              std y+2,R24
+ 020E                   .dbline 141
+ 020E           ;       unsigned char dir2 = 7 - dir5;
+ 020E 282E              mov R2,R24
+ 0210 87E0              ldi R24,7
+ 0212 8219              sub R24,R2
+ 0214 8B83              std y+3,R24
+ 0216                   .dbline 142
+ 0216           ;       unsigned char dir4 = 7 - dir3;
+ 0216 2980              ldd R2,y+1
+ 0218 87E0              ldi R24,7
+ 021A 8219              sub R24,R2
+ 021C 8C83              std y+4,R24
+ 021E                   .dbline 143
+ 021E           ;       unsigned char dir6 = 7 - dir1;
+ 021E 87E0              ldi R24,7
+ 0220 0888              ldd R0,y+16
+ 0222 8019              sub R24,R0
+ 0224 8D83              std y+5,R24
+ 0226                   .dbline 144
+ 0226           ;       unsigned char step_forward = 60;
+ 0226 4CE3              ldi R20,60
+ 0228                   .dbline 145
+ 0228           ;       unsigned char step_side = 60;
+ 0228 8CE3              ldi R24,60
+ 022A E82E              mov R14,R24
+ 022C                   .dbline 146
+ 022C           ;       unsigned char lift = 40;
+ 022C 68E2              ldi R22,40
+ 022E                   .dbline 147
+ 022E           ;       int delay_time = ONE_SEC;
+ 022E 80E9              ldi R24,400
+ 0230 91E0              ldi R25,1
+ 0232 6C01              movw R12,R24
+ 0234                   .dbline 148
+ 0234           ;       int delay_time1 = ONE_SEC;
+ 0234 5C01              movw R10,R24
+ 0236                   .dbline 151
+ 0236           ;       
+ 0236           ;       
+ 0236           ;       if(dir1%2 == 0) {
+ 0236 12E0              ldi R17,2
+ 0238 0889              ldd R16,y+16
+ 023A 0E940000          xcall mod8u
+ 023E 0023              tst R16
+ 0240 09F0              breq X6
+ 0242 25C1              xjmp L11
+ 0244           X6:
+ 0244           X4:
+ 0244                   .dbline 151
+ 0244                   .dbline 152
+ 0244           ;               swap(&dir2, &dir4);
+ 0244 9E01              movw R18,R28
+ 0246 2C5F              subi R18,252  ; offset = 4
+ 0248 3F4F              sbci R19,255
+ 024A 8E01              movw R16,R28
+ 024C 0D5F              subi R16,253  ; offset = 3
+ 024E 1F4F              sbci R17,255
+ 0250 0E940000          xcall _swap
+ 0254                   .dbline 153
+ 0254           ;               swap(&dir3, &dir5);       
+ 0254 9E01              movw R18,R28
+ 0256 2E5F              subi R18,254  ; offset = 2
+ 0258 3F4F              sbci R19,255
+ 025A 8E01              movw R16,R28
+ 025C 0F5F              subi R16,255  ; offset = 1
+ 025E 1F4F              sbci R17,255
+ 0260 0E940000          xcall _swap
+ 0264                   .dbline 154
+ 0264           ;       }
+ 0264 14C1              xjmp L11
+ 0266           L10:
+ 0266                   .dbline 156
+ 0266           ;       
+ 0266           ;       while (steps-- > 0) {
+ 0266                   .dbline 159
+ 0266           ; 
+ 0266           ;               //puuting down odd tripod
+ 0266           ;               angle(dir1, MOTOR_C, 90);
+ 0266 8AE5              ldi R24,90
+ 0268 8883              std y+0,R24
+ 026A 23E4              ldi R18,67
+ 026C 0889              ldd R16,y+16
+ 026E 0E940000          xcall _angle
+ 0272                   .dbline 160
+ 0272           ;               angle(dir3, MOTOR_C, 90);
+ 0272 8AE5              ldi R24,90
+ 0274 8883              std y+0,R24
+ 0276 23E4              ldi R18,67
+ 0278 0981              ldd R16,y+1
+ 027A 0E940000          xcall _angle
+ 027E                   .dbline 161
+ 027E           ;               angle(dir5, MOTOR_C, 90);
+ 027E 8AE5              ldi R24,90
+ 0280 8883              std y+0,R24
+ 0282 23E4              ldi R18,67
+ 0284 0A81              ldd R16,y+2
+ 0286 0E940000          xcall _angle
+ 028A                   .dbline 162
+ 028A           ;               angle(dir1, MOTOR_B, 90);
+ 028A 8AE5              ldi R24,90
+ 028C 8883              std y+0,R24
+ 028E 22E4              ldi R18,66
+ 0290 0889              ldd R16,y+16
+ 0292 0E940000          xcall _angle
+ 0296                   .dbline 163
+ 0296           ;               angle(dir3, MOTOR_B, 90);
+ 0296 8AE5              ldi R24,90
+ 0298 8883              std y+0,R24
+ 029A 22E4              ldi R18,66
+ 029C 0981              ldd R16,y+1
+ 029E 0E940000          xcall _angle
+ 02A2                   .dbline 164
+ 02A2           ;               angle(dir5, MOTOR_B, 90);
+ 02A2 8AE5              ldi R24,90
+ 02A4 8883              std y+0,R24
+ 02A6 22E4              ldi R18,66
+ 02A8 0A81              ldd R16,y+2
+ 02AA 0E940000          xcall _angle
+ 02AE                   .dbline 167
+ 02AE           ;               
+ 02AE           ;                               
+ 02AE           ;               delay(delay_time1);
+ 02AE 8501              movw R16,R10
+ 02B0 0E940000          xcall _delay
+ 02B4                   .dbline 170
+ 02B4           ;               
+ 02B4           ;               //picking up even tripod
+ 02B4           ;               angle(dir2, MOTOR_B, lift);
+ 02B4 6883              std y+0,R22
+ 02B6 22E4              ldi R18,66
+ 02B8 0B81              ldd R16,y+3
+ 02BA 0E940000          xcall _angle
+ 02BE                   .dbline 171
+ 02BE           ;               angle(dir4, MOTOR_B, lift);
+ 02BE 6883              std y+0,R22
+ 02C0 22E4              ldi R18,66
+ 02C2 0C81              ldd R16,y+4
+ 02C4 0E940000          xcall _angle
+ 02C8                   .dbline 172
+ 02C8           ;               angle(dir6, MOTOR_B, lift);
+ 02C8 6883              std y+0,R22
+ 02CA 22E4              ldi R18,66
+ 02CC 0D81              ldd R16,y+5
+ 02CE 0E940000          xcall _angle
+ 02D2                   .dbline 173
+ 02D2           ;               angle(dir2, MOTOR_C, 0);
+ 02D2 2224              clr R2
+ 02D4 2882              std y+0,R2
+ 02D6 23E4              ldi R18,67
+ 02D8 0B81              ldd R16,y+3
+ 02DA 0E940000          xcall _angle
+ 02DE                   .dbline 174
+ 02DE           ;               angle(dir4, MOTOR_C, 0);
+ 02DE 2224              clr R2
+ 02E0 2882              std y+0,R2
+ 02E2 23E4              ldi R18,67
+ 02E4 0C81              ldd R16,y+4
+ 02E6 0E940000          xcall _angle
+ 02EA                   .dbline 175
+ 02EA           ;               angle(dir6, MOTOR_C, 0);
+ 02EA 2224              clr R2
+ 02EC 2882              std y+0,R2
+ 02EE 23E4              ldi R18,67
+ 02F0 0D81              ldd R16,y+5
+ 02F2 0E940000          xcall _angle
+ 02F6                   .dbline 176
+ 02F6           ;               delay(delay_time);
+ 02F6 8601              movw R16,R12
+ 02F8 0E940000          xcall _delay
+ 02FC                   .dbline 179
+ 02FC           ; 
+ 02FC           ;               //moving body on odd tripod
+ 02FC           ;               angle(dir1, MOTOR_A, 90);
+ 02FC 8AE5              ldi R24,90
+ 02FE 8883              std y+0,R24
+ 0300 21E4              ldi R18,65
+ 0302 0889              ldd R16,y+16
+ 0304 0E940000          xcall _angle
+ 0308                   .dbline 180
+ 0308           ;               angle(dir3, MOTOR_A, 90);
+ 0308 8AE5              ldi R24,90
+ 030A 8883              std y+0,R24
+ 030C 21E4              ldi R18,65
+ 030E 0981              ldd R16,y+1
+ 0310 0E940000          xcall _angle
+ 0314                   .dbline 181
+ 0314           ;               angle(dir5, MOTOR_A, 90);
+ 0314 8AE5              ldi R24,90
+ 0316 8883              std y+0,R24
+ 0318 21E4              ldi R18,65
+ 031A 0A81              ldd R16,y+2
+ 031C 0E940000          xcall _angle
+ 0320                   .dbline 183
+ 0320           ;               
+ 0320           ;               delay(delay_time);
+ 0320 8601              movw R16,R12
+ 0322 0E940000          xcall _delay
+ 0326                   .dbline 186
+ 0326           ;               
+ 0326           ;               //moving legs even forward in air
+ 0326           ;               angle(dir2, MOTOR_C, 180);
+ 0326 84EB              ldi R24,180
+ 0328 8883              std y+0,R24
+ 032A 23E4              ldi R18,67
+ 032C 0B81              ldd R16,y+3
+ 032E 0E940000          xcall _angle
+ 0332                   .dbline 187
+ 0332           ;               angle(dir4, MOTOR_C, 180);
+ 0332 84EB              ldi R24,180
+ 0334 8883              std y+0,R24
+ 0336 23E4              ldi R18,67
+ 0338 0C81              ldd R16,y+4
+ 033A 0E940000          xcall _angle
+ 033E                   .dbline 188
+ 033E           ;               angle(dir6, MOTOR_C, 180);
+ 033E 84EB              ldi R24,180
+ 0340 8883              std y+0,R24
+ 0342 23E4              ldi R18,67
+ 0344 0D81              ldd R16,y+5
+ 0346 0E940000          xcall _angle
+ 034A                   .dbline 189
+ 034A           ;               angle(dir2, MOTOR_A, 90 - step_side);
+ 034A 8AE5              ldi R24,90
+ 034C 8E19              sub R24,R14
+ 034E 8883              std y+0,R24
+ 0350 21E4              ldi R18,65
+ 0352 0B81              ldd R16,y+3
+ 0354 0E940000          xcall _angle
+ 0358                   .dbline 190
+ 0358           ;               angle(dir4, MOTOR_A, 90 + step_side);
+ 0358 8E2D              mov R24,R14
+ 035A 865A              subi R24,166    ; addi 90
+ 035C 8883              std y+0,R24
+ 035E 21E4              ldi R18,65
+ 0360 0C81              ldd R16,y+4
+ 0362 0E940000          xcall _angle
+ 0366                   .dbline 191
+ 0366           ;               angle(dir6, MOTOR_A, 90 + step_forward);
+ 0366 842F              mov R24,R20
+ 0368 865A              subi R24,166    ; addi 90
+ 036A 8883              std y+0,R24
+ 036C 21E4              ldi R18,65
+ 036E 0D81              ldd R16,y+5
+ 0370 0E940000          xcall _angle
+ 0374                   .dbline 192
+ 0374           ;               delay(delay_time);
+ 0374 8601              movw R16,R12
+ 0376 0E940000          xcall _delay
+ 037A                   .dbline 195
+ 037A           ; 
+ 037A           ;               //putting down even legs
+ 037A           ;               angle(dir2, MOTOR_C, 90);
+ 037A 8AE5              ldi R24,90
+ 037C 8883              std y+0,R24
+ 037E 23E4              ldi R18,67
+ 0380 0B81              ldd R16,y+3
+ 0382 0E940000          xcall _angle
+ 0386                   .dbline 196
+ 0386           ;               angle(dir4, MOTOR_C, 90);
+ 0386 8AE5              ldi R24,90
+ 0388 8883              std y+0,R24
+ 038A 23E4              ldi R18,67
+ 038C 0C81              ldd R16,y+4
+ 038E 0E940000          xcall _angle
+ 0392                   .dbline 197
+ 0392           ;               angle(dir6, MOTOR_C, 90);
+ 0392 8AE5              ldi R24,90
+ 0394 8883              std y+0,R24
+ 0396 23E4              ldi R18,67
+ 0398 0D81              ldd R16,y+5
+ 039A 0E940000          xcall _angle
+ 039E                   .dbline 198
+ 039E           ;               angle(dir2, MOTOR_B, 90);
+ 039E 8AE5              ldi R24,90
+ 03A0 8883              std y+0,R24
+ 03A2 22E4              ldi R18,66
+ 03A4 0B81              ldd R16,y+3
+ 03A6 0E940000          xcall _angle
+ 03AA                   .dbline 199
+ 03AA           ;               angle(dir4, MOTOR_B, 90);
+ 03AA 8AE5              ldi R24,90
+ 03AC 8883              std y+0,R24
+ 03AE 22E4              ldi R18,66
+ 03B0 0C81              ldd R16,y+4
+ 03B2 0E940000          xcall _angle
+ 03B6                   .dbline 200
+ 03B6           ;               angle(dir6, MOTOR_B, 90);
+ 03B6 8AE5              ldi R24,90
+ 03B8 8883              std y+0,R24
+ 03BA 22E4              ldi R18,66
+ 03BC 0D81              ldd R16,y+5
+ 03BE 0E940000          xcall _angle
+ 03C2                   .dbline 202
+ 03C2           ;               
+ 03C2           ;               delay(delay_time1);
+ 03C2 8501              movw R16,R10
+ 03C4 0E940000          xcall _delay
+ 03C8                   .dbline 205
+ 03C8           ;               
+ 03C8           ;               //picking up odd legs
+ 03C8           ;               angle(dir1, MOTOR_B, lift);
+ 03C8 6883              std y+0,R22
+ 03CA 22E4              ldi R18,66
+ 03CC 0889              ldd R16,y+16
+ 03CE 0E940000          xcall _angle
+ 03D2                   .dbline 206
+ 03D2           ;               angle(dir3, MOTOR_B, lift);
+ 03D2 6883              std y+0,R22
+ 03D4 22E4              ldi R18,66
+ 03D6 0981              ldd R16,y+1
+ 03D8 0E940000          xcall _angle
+ 03DC                   .dbline 207
+ 03DC           ;               angle(dir5, MOTOR_B, lift);
+ 03DC 6883              std y+0,R22
+ 03DE 22E4              ldi R18,66
+ 03E0 0A81              ldd R16,y+2
+ 03E2 0E940000          xcall _angle
+ 03E6                   .dbline 208
+ 03E6           ;               angle(dir1, MOTOR_C, 0);
+ 03E6 2224              clr R2
+ 03E8 2882              std y+0,R2
+ 03EA 23E4              ldi R18,67
+ 03EC 0889              ldd R16,y+16
+ 03EE 0E940000          xcall _angle
+ 03F2                   .dbline 209
+ 03F2           ;               angle(dir3, MOTOR_C, 0);
+ 03F2 2224              clr R2
+ 03F4 2882              std y+0,R2
+ 03F6 23E4              ldi R18,67
+ 03F8 0981              ldd R16,y+1
+ 03FA 0E940000          xcall _angle
+ 03FE                   .dbline 210
+ 03FE           ;               angle(dir5, MOTOR_C, 0);
+ 03FE 2224              clr R2
+ 0400 2882              std y+0,R2
+ 0402 23E4              ldi R18,67
+ 0404 0A81              ldd R16,y+2
+ 0406 0E940000          xcall _angle
+ 040A                   .dbline 211
+ 040A           ;               delay(delay_time);
+ 040A 8601              movw R16,R12
+ 040C 0E940000          xcall _delay
+ 0410                   .dbline 214
+ 0410           ; 
+ 0410           ;               //moving the odd legs in air
+ 0410           ;               angle(dir1, MOTOR_C, 180);
+ 0410 84EB              ldi R24,180
+ 0412 8883              std y+0,R24
+ 0414 23E4              ldi R18,67
+ 0416 0889              ldd R16,y+16
+ 0418 0E940000          xcall _angle
+ 041C                   .dbline 215
+ 041C           ;               angle(dir3, MOTOR_C, 180);
+ 041C 84EB              ldi R24,180
+ 041E 8883              std y+0,R24
+ 0420 23E4              ldi R18,67
+ 0422 0981              ldd R16,y+1
+ 0424 0E940000          xcall _angle
+ 0428                   .dbline 216
+ 0428           ;               angle(dir5, MOTOR_C, 180);
+ 0428 84EB              ldi R24,180
+ 042A 8883              std y+0,R24
+ 042C 23E4              ldi R18,67
+ 042E 0A81              ldd R16,y+2
+ 0430 0E940000          xcall _angle
+ 0434                   .dbline 217
+ 0434           ;               angle(dir1, MOTOR_A, 90 + step_forward);
+ 0434 842F              mov R24,R20
+ 0436 865A              subi R24,166    ; addi 90
+ 0438 8883              std y+0,R24
+ 043A 21E4              ldi R18,65
+ 043C 0889              ldd R16,y+16
+ 043E 0E940000          xcall _angle
+ 0442                   .dbline 218
+ 0442           ;               angle(dir3, MOTOR_A, 90 - step_side);
+ 0442 8AE5              ldi R24,90
+ 0444 8E19              sub R24,R14
+ 0446 8883              std y+0,R24
+ 0448 21E4              ldi R18,65
+ 044A 0981              ldd R16,y+1
+ 044C 0E940000          xcall _angle
+ 0450                   .dbline 219
+ 0450           ;               angle(dir5, MOTOR_A, 90 + step_side);
+ 0450 8E2D              mov R24,R14
+ 0452 865A              subi R24,166    ; addi 90
+ 0454 8883              std y+0,R24
+ 0456 21E4              ldi R18,65
+ 0458 0A81              ldd R16,y+2
+ 045A 0E940000          xcall _angle
+ 045E                   .dbline 220
+ 045E           ;               delay(delay_time);
+ 045E 8601              movw R16,R12
+ 0460 0E940000          xcall _delay
+ 0464                   .dbline 223
+ 0464           ;               
+ 0464           ;               //moving the body forward on even tripod
+ 0464           ;               angle(dir2, MOTOR_A, 90);
+ 0464 8AE5              ldi R24,90
+ 0466 8883              std y+0,R24
+ 0468 21E4              ldi R18,65
+ 046A 0B81              ldd R16,y+3
+ 046C 0E940000          xcall _angle
+ 0470                   .dbline 224
+ 0470           ;               angle(dir4, MOTOR_A, 90);
+ 0470 8AE5              ldi R24,90
+ 0472 8883              std y+0,R24
+ 0474 21E4              ldi R18,65
+ 0476 0C81              ldd R16,y+4
+ 0478 0E940000          xcall _angle
+ 047C                   .dbline 225
+ 047C           ;               angle(dir6, MOTOR_A, 90);
+ 047C 8AE5              ldi R24,90
+ 047E 8883              std y+0,R24
+ 0480 21E4              ldi R18,65
+ 0482 0D81              ldd R16,y+5
+ 0484 0E940000          xcall _angle
+ 0488                   .dbline 226
+ 0488           ;               delay(delay_time);
+ 0488 8601              movw R16,R12
+ 048A 0E940000          xcall _delay
+ 048E                   .dbline 227
+ 048E           ;       }
+ 048E           L11:
+ 048E                   .dbline 156
+ 048E 2A88              ldd R2,y+18
+ 0490 3324              clr R3
+ 0492 822D              mov R24,R2
+ 0494 8150              subi R24,1
+ 0496 8A8B              std y+18,R24
+ 0498 80E0              ldi R24,0
+ 049A 8215              cp R24,R2
+ 049C 08F4              brsh X7
+ 049E E3CE              xjmp L10
+ 04A0           X7:
+ 04A0           X5:
+ 04A0                   .dbline -2
+ 04A0           L7:
+ 04A0                   .dbline 0 ; func end
+ 04A0 2696              adiw R28,6
+ 04A2 0E940000          xcall pop_xgsetF0FC
+ 04A6 2496              adiw R28,4
+ 04A8 0895              ret
+ 04AA                   .dbsym r delay_time1 10 I
+ 04AA                   .dbsym r step_forward 20 c
+ 04AA                   .dbsym r step_side 14 c
+ 04AA                   .dbsym r delay_time 12 I
+ 04AA                   .dbsym r lift 22 c
+ 04AA                   .dbsym l dir6 5 c
+ 04AA                   .dbsym l dir4 4 c
+ 04AA                   .dbsym l dir2 3 c
+ 04AA                   .dbsym l dir5 2 c
+ 04AA                   .dbsym l dir3 1 c
+ 04AA                   .dbsym l steps 18 c
+ 04AA                   .dbsym l dir1 16 c
+ 04AA                   .dbend
+                        .area lit(rom, con, rel)
+ 0000           L14:
+ 0000 0002              .byte 0,2
+ 0002 0306              .byte 3,6
+ 0004 0104              .byte 1,4
+ 0006 05                .byte 5
+ 0007           L15:
+ 0007 0004              .byte 0,4
+ 0009 0102              .byte 1,2
+ 000B 0506              .byte 5,6
+ 000D 03                .byte 3
+                        .area text(rom, con, rel)
+ 04AA                   .dbfile D:\BUILDI~1\gait.c
+ 04AA                   .dbfunc e two_leg_gait _two_leg_gait fV
+ 04AA           ;     legs_clock -> y+8
+ 04AA           ; legs_anticlock -> y+1
+ 04AA           ;    delay_time2 -> R10,R11
+ 04AA           ;    delay_time1 -> R14,R15
+ 04AA           ;      step_side -> R12
+ 04AA           ;           dir6 -> y+18
+ 04AA           ;           dir5 -> y+17
+ 04AA           ;           dir4 -> y+16
+ 04AA           ;           dir3 -> y+15
+ 04AA           ;           lift -> R22
+ 04AA           ;   step_forward -> R20
+ 04AA           ;          steps -> y+33
+ 04AA           ;           dir2 -> y+31
+ 04AA           ;           dir1 -> y+29
+                        .even
+ 04AA           _two_leg_gait::
+ 04AA 0E940000          xcall push_arg4
+ 04AE 0E940000          xcall push_xgsetF0FC
+ 04B2 6397              sbiw R28,19
+ 04B4                   .dbline -1
+ 04B4                   .dbline 236
+ 04B4           ; }
+ 04B4           ; 
+ 04B4           ; /**
+ 04B4           ; Two leg gait in which two legs are moved at a time
+ 04B4           ; @param dir1 : Direction of motion
+ 04B4           ; @param dir2 : Direction of motion
+ 04B4           ; @param steps : number of steps
+ 04B4           ; */
+ 04B4           ; void two_leg_gait(unsigned char dir1, unsigned char dir2, int steps) {
+ 04B4                   .dbline 237
+ 04B4           ;        unsigned char legs_anticlock[] = {0,2,3,6,1,4,5};
+ 04B4 80E0              ldi R24,<L14
+ 04B6 90E0              ldi R25,>L14
+ 04B8 FE01              movw R30,R28
+ 04BA 3196              adiw R30,1
+ 04BC 07E0              ldi R16,7
+ 04BE 10E0              ldi R17,0
+ 04C0 FA93              st -y,R31
+ 04C2 EA93              st -y,R30
+ 04C4 9A93              st -y,R25
+ 04C6 8A93              st -y,R24
+ 04C8 0E940000          xcall asgncblkx
+ 04CC                   .dbline 238
+ 04CC           ;        unsigned char legs_clock[] = {0,4,1,2,5,6,3}; 
+ 04CC 80E0              ldi R24,<L15
+ 04CE 90E0              ldi R25,>L15
+ 04D0 FE01              movw R30,R28
+ 04D2 3896              adiw R30,8
+ 04D4 07E0              ldi R16,7
+ 04D6 10E0              ldi R17,0
+ 04D8 FA93              st -y,R31
+ 04DA EA93              st -y,R30
+ 04DC 9A93              st -y,R25
+ 04DE 8A93              st -y,R24
+ 04E0 0E940000          xcall asgncblkx
+ 04E4                   .dbline 239
+ 04E4           ;        unsigned char dir3 = legs_anticlock[dir2];
+ 04E4 CE01              movw R24,R28
+ 04E6 0196              adiw R24,1
+ 04E8 EF8D              ldd R30,y+31
+ 04EA FF27              clr R31
+ 04EC E80F              add R30,R24
+ 04EE F91F              adc R31,R25
+ 04F0 2080              ldd R2,z+0
+ 04F2 2F86              std y+15,R2
+ 04F4                   .dbline 240
+ 04F4           ;        unsigned char dir4 = legs_clock[dir1];
+ 04F4 CE01              movw R24,R28
+ 04F6 0896              adiw R24,8
+ 04F8 ED8D              ldd R30,y+29
+ 04FA FF27              clr R31
+ 04FC E80F              add R30,R24
+ 04FE F91F              adc R31,R25
+ 0500 2080              ldd R2,z+0
+ 0502 288A              std y+16,R2
+ 0504                   .dbline 241
+ 0504           ;        unsigned char dir5 = legs_clock[dir4];
+ 0504 CE01              movw R24,R28
+ 0506 0896              adiw R24,8
+ 0508 E22D              mov R30,R2
+ 050A FF27              clr R31
+ 050C E80F              add R30,R24
+ 050E F91F              adc R31,R25
+ 0510 2080              ldd R2,z+0
+ 0512 298A              std y+17,R2
+ 0514                   .dbline 242
+ 0514           ;        unsigned char dir6= legs_anticlock[dir3];
+ 0514 CE01              movw R24,R28
+ 0516 0196              adiw R24,1
+ 0518 EF85              ldd R30,y+15
+ 051A FF27              clr R31
+ 051C E80F              add R30,R24
+ 051E F91F              adc R31,R25
+ 0520 2080              ldd R2,z+0
+ 0522 2A8A              std y+18,R2
+ 0524                   .dbline 243
+ 0524           ;        unsigned char step_forward = 50;
+ 0524 42E3              ldi R20,50
+ 0526                   .dbline 244
+ 0526           ;        unsigned char step_side = 40;
+ 0526 88E2              ldi R24,40
+ 0528 C82E              mov R12,R24
+ 052A                   .dbline 245
+ 052A           ;        unsigned char lift = 40;
+ 052A 68E2              ldi R22,40
+ 052C                   .dbline 246
+ 052C           ;        int delay_time1 = FIVE_HUNDRED_MSEC;
+ 052C 88EC              ldi R24,200
+ 052E 90E0              ldi R25,0
+ 0530 7C01              movw R14,R24
+ 0532                   .dbline 247
+ 0532           ;        int delay_time2 = FIVE_HUNDRED_MSEC;
+ 0532 5C01              movw R10,R24
+ 0534 A8C0              xjmp L17
+ 0536           L16:
+ 0536                   .dbline 249
+ 0536           ;        
+ 0536           ;        while(steps-- > 0) {
+ 0536                   .dbline 252
+ 0536           ;        
+ 0536           ;           //putting down legs 5 & 6
+ 0536           ;               angle(dir5, MOTOR_B, 90);
+ 0536 8AE5              ldi R24,90
+ 0538 8883              std y+0,R24
+ 053A 22E4              ldi R18,66
+ 053C 0989              ldd R16,y+17
+ 053E 0E940000          xcall _angle
+ 0542                   .dbline 253
+ 0542           ;               angle(dir6, MOTOR_B, 90);
+ 0542 8AE5              ldi R24,90
+ 0544 8883              std y+0,R24
+ 0546 22E4              ldi R18,66
+ 0548 0A89              ldd R16,y+18
+ 054A 0E940000          xcall _angle
+ 054E                   .dbline 256
+ 054E           ;        
+ 054E           ;               //picking up 1 & 2 legs
+ 054E           ;               angle(dir1, MOTOR_B, lift);
+ 054E 6883              std y+0,R22
+ 0550 22E4              ldi R18,66
+ 0552 0D8D              ldd R16,y+29
+ 0554 0E940000          xcall _angle
+ 0558                   .dbline 257
+ 0558           ;               angle(dir2, MOTOR_B, lift);
+ 0558 6883              std y+0,R22
+ 055A 22E4              ldi R18,66
+ 055C 0F8D              ldd R16,y+31
+ 055E 0E940000          xcall _angle
+ 0562                   .dbline 260
+ 0562           ;               
+ 0562           ;               //delay
+ 0562           ;               delay(delay_time1);
+ 0562 8701              movw R16,R14
+ 0564 0E940000          xcall _delay
+ 0568                   .dbline 263
+ 0568           ;               
+ 0568           ;               //moving body on legs 5 & 6
+ 0568           ;               angle(dir5, MOTOR_A, 90 - step_forward);
+ 0568 8AE5              ldi R24,90
+ 056A 841B              sub R24,R20
+ 056C 8883              std y+0,R24
+ 056E 21E4              ldi R18,65
+ 0570 0989              ldd R16,y+17
+ 0572 0E940000          xcall _angle
+ 0576                   .dbline 264
+ 0576           ;               angle(dir6, MOTOR_A, 90 + step_forward);
+ 0576 842F              mov R24,R20
+ 0578 865A              subi R24,166    ; addi 90
+ 057A 8883              std y+0,R24
+ 057C 21E4              ldi R18,65
+ 057E 0A89              ldd R16,y+18
+ 0580 0E940000          xcall _angle
+ 0584                   .dbline 267
+ 0584           ;               
+ 0584           ;               //moving 1 & 2 legs in air 
+ 0584           ;               angle(dir1, MOTOR_A, 90 + step_forward);
+ 0584 842F              mov R24,R20
+ 0586 865A              subi R24,166    ; addi 90
+ 0588 8883              std y+0,R24
+ 058A 21E4              ldi R18,65
+ 058C 0D8D              ldd R16,y+29
+ 058E 0E940000          xcall _angle
+ 0592                   .dbline 268
+ 0592           ;               angle(dir2, MOTOR_A, 90 - step_forward);
+ 0592 8AE5              ldi R24,90
+ 0594 841B              sub R24,R20
+ 0596 8883              std y+0,R24
+ 0598 21E4              ldi R18,65
+ 059A 0F8D              ldd R16,y+31
+ 059C 0E940000          xcall _angle
+ 05A0                   .dbline 271
+ 05A0           ;               
+ 05A0           ;               //delay
+ 05A0           ;               delay(delay_time1);
+ 05A0 8701              movw R16,R14
+ 05A2 0E940000          xcall _delay
+ 05A6                   .dbline 274
+ 05A6           ;               
+ 05A6           ;               //putting 1 & 2 legs down
+ 05A6           ;               angle(dir1, MOTOR_B, 90);
+ 05A6 8AE5              ldi R24,90
+ 05A8 8883              std y+0,R24
+ 05AA 22E4              ldi R18,66
+ 05AC 0D8D              ldd R16,y+29
+ 05AE 0E940000          xcall _angle
+ 05B2                   .dbline 275
+ 05B2           ;               angle(dir2, MOTOR_B, 90);
+ 05B2 8AE5              ldi R24,90
+ 05B4 8883              std y+0,R24
+ 05B6 22E4              ldi R18,66
+ 05B8 0F8D              ldd R16,y+31
+ 05BA 0E940000          xcall _angle
+ 05BE                   .dbline 278
+ 05BE           ;               
+ 05BE           ;               //picking up 3 & 4 legs            
+ 05BE           ;               angle(dir3, MOTOR_B, lift);
+ 05BE 6883              std y+0,R22
+ 05C0 22E4              ldi R18,66
+ 05C2 0F85              ldd R16,y+15
+ 05C4 0E940000          xcall _angle
+ 05C8                   .dbline 279
+ 05C8           ;               angle(dir4, MOTOR_B, lift);
+ 05C8 6883              std y+0,R22
+ 05CA 22E4              ldi R18,66
+ 05CC 0889              ldd R16,y+16
+ 05CE 0E940000          xcall _angle
+ 05D2                   .dbline 281
+ 05D2           ;               
+ 05D2           ;               delay(delay_time1);
+ 05D2 8701              movw R16,R14
+ 05D4 0E940000          xcall _delay
+ 05D8                   .dbline 284
+ 05D8           ;               
+ 05D8           ;               //moving body on legs 1 & 2
+ 05D8           ;               angle(dir1, MOTOR_A, 90 - step_forward);
+ 05D8 8AE5              ldi R24,90
+ 05DA 841B              sub R24,R20
+ 05DC 8883              std y+0,R24
+ 05DE 21E4              ldi R18,65
+ 05E0 0D8D              ldd R16,y+29
+ 05E2 0E940000          xcall _angle
+ 05E6                   .dbline 285
+ 05E6           ;               angle(dir2, MOTOR_A, 90 + step_forward);
+ 05E6 842F              mov R24,R20
+ 05E8 865A              subi R24,166    ; addi 90
+ 05EA 8883              std y+0,R24
+ 05EC 21E4              ldi R18,65
+ 05EE 0F8D              ldd R16,y+31
+ 05F0 0E940000          xcall _angle
+ 05F4                   .dbline 288
+ 05F4           ;               
+ 05F4           ;               //moving legs 3 & 4 in air
+ 05F4           ;               angle(dir3, MOTOR_A, 90 - step_side);
+ 05F4 8AE5              ldi R24,90
+ 05F6 8C19              sub R24,R12
+ 05F8 8883              std y+0,R24
+ 05FA 21E4              ldi R18,65
+ 05FC 0F85              ldd R16,y+15
+ 05FE 0E940000          xcall _angle
+ 0602                   .dbline 289
+ 0602           ;               angle(dir4, MOTOR_A, 90 + step_side);
+ 0602 8C2D              mov R24,R12
+ 0604 865A              subi R24,166    ; addi 90
+ 0606 8883              std y+0,R24
+ 0608 21E4              ldi R18,65
+ 060A 0889              ldd R16,y+16
+ 060C 0E940000          xcall _angle
+ 0610                   .dbline 291
+ 0610           ;               
+ 0610           ;               delay(delay_time2);
+ 0610 8501              movw R16,R10
+ 0612 0E940000          xcall _delay
+ 0616                   .dbline 294
+ 0616           ;               
+ 0616           ;               //putting down legs 3 & 4
+ 0616           ;               angle(dir3, MOTOR_B, 90);
+ 0616 8AE5              ldi R24,90
+ 0618 8883              std y+0,R24
+ 061A 22E4              ldi R18,66
+ 061C 0F85              ldd R16,y+15
+ 061E 0E940000          xcall _angle
+ 0622                   .dbline 295
+ 0622           ;               angle(dir4, MOTOR_B, 90);
+ 0622 8AE5              ldi R24,90
+ 0624 8883              std y+0,R24
+ 0626 22E4              ldi R18,66
+ 0628 0889              ldd R16,y+16
+ 062A 0E940000          xcall _angle
+ 062E                   .dbline 298
+ 062E           ;               
+ 062E           ;               //picking up legs 5 & 6
+ 062E           ;               angle(dir5, MOTOR_B, lift);
+ 062E 6883              std y+0,R22
+ 0630 22E4              ldi R18,66
+ 0632 0989              ldd R16,y+17
+ 0634 0E940000          xcall _angle
+ 0638                   .dbline 299
+ 0638           ;               angle(dir6, MOTOR_B, lift);
+ 0638 6883              std y+0,R22
+ 063A 22E4              ldi R18,66
+ 063C 0A89              ldd R16,y+18
+ 063E 0E940000          xcall _angle
+ 0642                   .dbline 301
+ 0642           ;               
+ 0642           ;               delay(delay_time1);
+ 0642 8701              movw R16,R14
+ 0644 0E940000          xcall _delay
+ 0648                   .dbline 304
+ 0648           ;               
+ 0648           ;               //moving body on legs 3 & 4
+ 0648           ;               angle(dir3, MOTOR_A, 90 + step_side);
+ 0648 8C2D              mov R24,R12
+ 064A 865A              subi R24,166    ; addi 90
+ 064C 8883              std y+0,R24
+ 064E 21E4              ldi R18,65
+ 0650 0F85              ldd R16,y+15
+ 0652 0E940000          xcall _angle
+ 0656                   .dbline 305
+ 0656           ;               angle(dir4, MOTOR_A, 90 - step_side);
+ 0656 8AE5              ldi R24,90
+ 0658 8C19              sub R24,R12
+ 065A 8883              std y+0,R24
+ 065C 21E4              ldi R18,65
+ 065E 0889              ldd R16,y+16
+ 0660 0E940000          xcall _angle
+ 0664                   .dbline 308
+ 0664           ;               
+ 0664           ;               //moving legs 5 & 6 in air 
+ 0664           ;               angle(dir5, MOTOR_A, 90 + step_forward);
+ 0664 842F              mov R24,R20
+ 0666 865A              subi R24,166    ; addi 90
+ 0668 8883              std y+0,R24
+ 066A 21E4              ldi R18,65
+ 066C 0989              ldd R16,y+17
+ 066E 0E940000          xcall _angle
+ 0672                   .dbline 309
+ 0672           ;               angle(dir6, MOTOR_A, 90 - step_forward);
+ 0672 8AE5              ldi R24,90
+ 0674 841B              sub R24,R20
+ 0676 8883              std y+0,R24
+ 0678 21E4              ldi R18,65
+ 067A 0A89              ldd R16,y+18
+ 067C 0E940000          xcall _angle
+ 0680                   .dbline 311
+ 0680           ;               
+ 0680           ;               delay(delay_time2);
+ 0680 8501              movw R16,R10
+ 0682 0E940000          xcall _delay
+ 0686                   .dbline 313
+ 0686           ;                                  
+ 0686           ;        }
+ 0686           L17:
+ 0686                   .dbline 249
+ 0686 49A0              ldd R4,y+33
+ 0688 5AA0              ldd R5,y+34
+ 068A C201              movw R24,R4
+ 068C 0197              sbiw R24,1
+ 068E 9AA3              std y+34,R25
+ 0690 89A3              std y+33,R24
+ 0692 2224              clr R2
+ 0694 3324              clr R3
+ 0696 2414              cp R2,R4
+ 0698 3504              cpc R3,R5
+ 069A 0CF4              brge X9
+ 069C 4CCF              xjmp L16
+ 069E           X9:
+ 069E           X8:
+ 069E                   .dbline -2
+ 069E           L13:
+ 069E                   .dbline 0 ; func end
+ 069E 6396              adiw R28,19
+ 06A0 0E940000          xcall pop_xgsetF0FC
+ 06A4 2496              adiw R28,4
+ 06A6 0895              ret
+ 06A8                   .dbsym l legs_clock 8 A[7:7]c
+ 06A8                   .dbsym l legs_anticlock 1 A[7:7]c
+ 06A8                   .dbsym r delay_time2 10 I
+ 06A8                   .dbsym r delay_time1 14 I
+ 06A8                   .dbsym r step_side 12 c
+ 06A8                   .dbsym l dir6 18 c
+ 06A8                   .dbsym l dir5 17 c
+ 06A8                   .dbsym l dir4 16 c
+ 06A8                   .dbsym l dir3 15 c
+ 06A8                   .dbsym r lift 22 c
+ 06A8                   .dbsym r step_forward 20 c
+ 06A8                   .dbsym l steps 33 I
+ 06A8                   .dbsym l dir2 31 c
+ 06A8                   .dbsym l dir1 29 c
+ 06A8                   .dbend
+ 06A8           ; }

@@ -1,0 +1,418 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile D:\BUILDI~1\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           ;              i -> R20,R21
+                        .even
+ 0000           _main::
+ 0000 2297              sbiw R28,2
+ 0002                   .dbline -1
+ 0002                   .dbline 72
+ 0002           ; /**
+ 0002           ; @mainpage Building a locamotion based Hexapod Application
+ 0002           ; @author Group 6 Srijit Dutt 10305056
+ 0002           ; 
+ 0002           ; Mon 08 Nov 2010 12:49:10 AM IST 
+ 0002           ; 
+ 0002           ; ICC AVR 7
+ 0002           ; 
+ 0002           ; Conatins various functions for basic, advanced hexapod motions
+ 0002           ; 
+ 0002           ; 
+ 0002           ; */
+ 0002           ; 
+ 0002           ; /*********************************************************************************
+ 0002           ; 
+ 0002           ;    Copyright (c) 2010, ERTS Lab IIT Bombay erts@cse.iitb.ac.in               -*- c -*-
+ 0002           ;    All rights reserved.
+ 0002           ; 
+ 0002           ;    Redistribution and use in source and binary forms, with or without
+ 0002           ;    modification, are permitted provided that the following conditions are met:
+ 0002           ; 
+ 0002           ;    * Redistributions of source code must retain the above copyright
+ 0002           ;      notice, this list of conditions and the following disclaimer.
+ 0002           ; 
+ 0002           ;    * Redistributions in binary form must reproduce the above copyright
+ 0002           ;      notice, this list of conditions and the following disclaimer in
+ 0002           ;      the documentation and/or other materials provided with the
+ 0002           ;      distribution.
+ 0002           ; 
+ 0002           ;    * Neither the name of the copyright holders nor the names of
+ 0002           ;      contributors may be used to endorse or promote products derived
+ 0002           ;      from this software without specific prior written permission.
+ 0002           ; 
+ 0002           ;    * Source code can be used for academic purpose. 
+ 0002           ;        For commercial use permission form the author needs to be taken.
+ 0002           ; 
+ 0002           ;   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ 0002           ;   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ 0002           ;   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ 0002           ;   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ 0002           ;   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ 0002           ;   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ 0002           ;   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ 0002           ;   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ 0002           ;   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ 0002           ;   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ 0002           ;   POSSIBILITY OF SUCH DAMAGE. 
+ 0002           ; 
+ 0002           ;   Software released under Creative Commence cc by-nc-sa licence.
+ 0002           ;   For legal information refer to: 
+ 0002           ;   http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+ 0002           ; 
+ 0002           ; ********************************************************************************/
+ 0002           ; 
+ 0002           ; 
+ 0002           ; #include <iom2560v.h>
+ 0002           ; #include <macros.h>
+ 0002           ; #include "hexapod_macro.h"
+ 0002           ; #include "hexapod.h"
+ 0002           ; #include "hexapod_basic.h"
+ 0002           ; #include "hexapod_motions.h"
+ 0002           ; #include "gait.h"
+ 0002           ; #include "keyboard.h"
+ 0002           ; 
+ 0002           ; extern unsigned char data;
+ 0002           ; 
+ 0002           ; 
+ 0002           ; 
+ 0002           ; /**
+ 0002           ; The main function used to call other functions
+ 0002           ; */
+ 0002           ; void main(void) {
+ 0002                   .dbline 74
+ 0002           ; 
+ 0002           ;       int i = 100;
+ 0002 44E6              ldi R20,100
+ 0004 50E0              ldi R21,0
+ 0006                   .dbline 75
+ 0006           ;       init_devices();
+ 0006 0E940000          xcall _init_devices
+ 000A                   .dbline 77
+ 000A           ;       //insert your functional code here...
+ 000A           ;       servo_calibration(); //must be called as the first instruction
+ 000A 0E940000          xcall _servo_calibration
+ 000E                   .dbline 78
+ 000E           ;       servo_on();//turning on the servo supply
+ 000E 0E940000          xcall _servo_on
+ 0012                   .dbline 79
+ 0012           ;       initializeAngles();
+ 0012 0E940000          xcall _initializeAngles
+ 0016                   .dbline 80
+ 0016           ;       delay(ONE_SEC);
+ 0016 00E9              ldi R16,400
+ 0018 11E0              ldi R17,1
+ 001A 0E940000          xcall _delay
+ 001E                   .dbline 81
+ 001E           ;       delay(ONE_SEC);
+ 001E 00E9              ldi R16,400
+ 0020 11E0              ldi R17,1
+ 0022 0E940000          xcall _delay
+ 0026                   .dbline 82
+ 0026           ;       delay(ONE_SEC);
+ 0026 00E9              ldi R16,400
+ 0028 11E0              ldi R17,1
+ 002A 0E940000          xcall _delay
+ 002E                   .dbline 224
+ 002E           ; 
+ 002E           ;       //angle_XA(0);
+ 002E           ;       //angle_XB(0);
+ 002E           ;       //angle_XC(0);
+ 002E           ;       //delay_1s();
+ 002E           ;       //delay_1s();
+ 002E           ;       //angle_XA(180);
+ 002E           ;       //angle_XB(180);
+ 002E           ;       //angle_XC(180);
+ 002E           ; 
+ 002E           ;       //angle(1, MOTOR_B, 40);
+ 002E           ;       //angle(3, MOTOR_B, 40);
+ 002E           ;       //angle(5, MOTOR_B, 40);
+ 002E           ;       //angle(LEG_2, MOTOR_A, 0);
+ 002E           ;       //angle(4, MOTOR_B, 0);
+ 002E           ;       //angle(6, MOTOR_B, 0);
+ 002E           ;               
+ 002E           ;       //tripod_gait(1, 10);
+ 002E           ;       //tripod_gait(2, 10);
+ 002E           ;       //tripod_gait(3, 10);
+ 002E           ;       //tripod_gait(4, 10);
+ 002E           ;       //tripod_gait(5, 10);
+ 002E           ;       //tripod_gait(6, 10);
+ 002E           ;       
+ 002E           ;       //two_leg_gait(1, 2, 10);
+ 002E           ;       //two_leg_gait(2, 3, 10);
+ 002E           ;       //two_leg_gait(3, 6, 10);
+ 002E           ;       //two_leg_gait(6, 5, 10);
+ 002E           ;       //two_leg_gait(5, 4, 10);
+ 002E           ;       //two_leg_gait(4, 1, 10);
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       //robot_rotate_clockwise_7_5();
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       /*
+ 002E           ;       dance(1,2,10);
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       delay(ONE_SEC);
+ 002E           ;       servo_calibration();
+ 002E           ;       
+ 002E           ;       pose(1, 2, 10);
+ 002E           ;       */
+ 002E           ;               
+ 002E           ;       //delay(ONE_SEC);
+ 002E           ;       //servo_calibration();
+ 002E           ;       
+ 002E           ;       //dance(4,5,10);
+ 002E           ;       
+ 002E           ;       //delay(ONE_SEC);
+ 002E           ;       
+ 002E           ;       //sway(24, CLOCK_WISE);
+ 002E           ;       
+ 002E           ;       //climb();
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       //tripod_gait_2(LEG_1, 30);
+ 002E           ;       
+ 002E           ;       //delay(ONE_SEC);
+ 002E           ;       
+ 002E           ;       //walk_on_four();
+ 002E           ;       
+ 002E           ;       //servo_calibration();
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       //setMirrorDir(DIR_MIRROR_LEG_1_2);
+ 002E           ;       //angleMirror(LEG_1, MOTOR_A, 0);
+ 002E           ;       //angleMirror(LEG_4, MOTOR_A, 0);
+ 002E           ;       //angleMirror(LEG_5, MOTOR_A, 0);
+ 002E           ;       
+ 002E           ;       //delay(ONE_SEC);
+ 002E           ;       
+ 002E           ;       //angleMirror(LEG_1, MOTOR_A, 180);
+ 002E           ;       //angleMirror(LEG_4, MOTOR_A, 180);
+ 002E           ;       //angleMirror(LEG_5, MOTOR_A, 180);
+ 002E           ; 
+ 002E           ;       /*
+ 002E           ;       angleMirror(LEG_1, MOTOR_B, 0);
+ 002E           ;       angleMirror(LEG_4, MOTOR_B, 0);
+ 002E           ;       angleMirror(LEG_5, MOTOR_B, 0);
+ 002E           ;       
+ 002E           ;       delay(ONE_SEC);
+ 002E           ;       
+ 002E           ;       angleMirror(LEG_1, MOTOR_B, 180);
+ 002E           ;       angleMirror(LEG_4, MOTOR_B, 180);
+ 002E           ;       angleMirror(LEG_5, MOTOR_B, 180);
+ 002E           ;       */
+ 002E           ;       
+ 002E           ;       /*
+ 002E           ;       angleMirror(LEG_1, MOTOR_C, 0);
+ 002E           ;       angleMirror(LEG_4, MOTOR_C, 0);
+ 002E           ;       angleMirror(LEG_5, MOTOR_C, 0);
+ 002E           ;               
+ 002E           ;       delay(ONE_SEC);
+ 002E           ;       
+ 002E           ;       angleMirror(LEG_1, MOTOR_C, 180);
+ 002E           ;       angleMirror(LEG_4, MOTOR_C, 180);
+ 002E           ;       angleMirror(LEG_5, MOTOR_C, 180);
+ 002E           ;       */
+ 002E           ;       
+ 002E           ;       /* Testing Remaining
+ 002E           ;       angleMirrorChange(LEG_1, MOTOR_C, 90);
+ 002E           ;       angleMirrorChange(LEG_4, MOTOR_C, 90);
+ 002E           ;       angleMirrorChange(LEG_5, MOTOR_C, 90);
+ 002E           ;       */
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       /*
+ 002E           ;       while(1) {
+ 002E           ;               keyboard_control();
+ 002E           ;               delay(TWO_HUNDRED_FIFTY_MSEC);   
+ 002E           ;       }
+ 002E           ;       */
+ 002E           ;        
+ 002E           ;       /*
+ 002E           ;       tripod_gait(LEG_1, 6);
+ 002E           ;       
+ 002E           ;       //two_leg_gait(LEG_1, LEG_2, 6);
+ 002E           ;       
+ 002E           ;       delay(ONE_SEC);
+ 002E           ;       
+ 002E           ;       robot_rotate_clockwise_7_5();
+ 002E           ;       
+ 002E           ;       delay(HUNDRED_MSEC);
+ 002E           ;       
+ 002E           ;       robot_rotate_clockwise_7_5();
+ 002E           ;       
+ 002E           ;       delay(HUNDRED_MSEC);
+ 002E           ;       
+ 002E           ;       robot_rotate_clockwise_7_5();
+ 002E           ;       
+ 002E           ;       delay(HUNDRED_MSEC);
+ 002E           ;       
+ 002E           ;       
+ 002E           ;       tripod_gait(LEG_2, 2);
+ 002E           ;       
+ 002E           ;       */
+ 002E           ;       
+ 002E           ;       delay(ONE_SEC);
+ 002E 00E9              ldi R16,400
+ 0030 11E0              ldi R17,1
+ 0032 0E940000          xcall _delay
+ 0036                   .dbline 228
+ 0036           ;       
+ 0036           ;       //servo_calibration();
+ 0036           ;       
+ 0036           ;       delay(ONE_SEC);
+ 0036 00E9              ldi R16,400
+ 0038 11E0              ldi R17,1
+ 003A 0E940000          xcall _delay
+ 003E                   .dbline 230
+ 003E           ;               
+ 003E           ;       climb();
+ 003E 0E940000          xcall _climb
+ 0042                   .dbline 233
+ 0042           ;       
+ 0042           ;       //delay(ONE_SEC);
+ 0042           ;       delay(ONE_SEC);
+ 0042 00E9              ldi R16,400
+ 0044 11E0              ldi R17,1
+ 0046 0E940000          xcall _delay
+ 004A                   .dbline 249
+ 004A           ;       
+ 004A           ;       /*
+ 004A           ;       buzzer_on();
+ 004A           ;       delay(ONE_SEC);
+ 004A           ;       buzzer_off();
+ 004A           ;       
+ 004A           ;       
+ 004A           ;       i = 100;
+ 004A           ;       while(i-- > 0) {
+ 004A           ;               keyboard_control();
+ 004A           ;               delay(TWO_HUNDRED_FIFTY_MSEC);   
+ 004A           ;       }
+ 004A           ;       */
+ 004A           ;       
+ 004A           ;       
+ 004A           ;       tripod_gait(LEG_2, 2);
+ 004A 22E0              ldi R18,2
+ 004C 02E0              ldi R16,2
+ 004E 0E940000          xcall _tripod_gait
+ 0052                   .dbline 251
+ 0052           ;       
+ 0052           ;       delay(ONE_SEC);
+ 0052 00E9              ldi R16,400
+ 0054 11E0              ldi R17,1
+ 0056 0E940000          xcall _delay
+ 005A                   .dbline 253
+ 005A           ;       
+ 005A           ;       dance(4,5,6);
+ 005A 86E0              ldi R24,6
+ 005C 90E0              ldi R25,0
+ 005E 9983              std y+1,R25
+ 0060 8883              std y+0,R24
+ 0062 25E0              ldi R18,5
+ 0064 04E0              ldi R16,4
+ 0066 0E940000          xcall _dance
+ 006A                   .dbline 255
+ 006A           ;       
+ 006A           ;       delay(ONE_SEC);
+ 006A 00E9              ldi R16,400
+ 006C 11E0              ldi R17,1
+ 006E 0E940000          xcall _delay
+ 0072                   .dbline 257
+ 0072           ;       
+ 0072           ;       servo_calibration();
+ 0072 0E940000          xcall _servo_calibration
+ 0076                   .dbline 259
+ 0076           ;       
+ 0076           ;       delay(ONE_SEC);
+ 0076 00E9              ldi R16,400
+ 0078 11E0              ldi R17,1
+ 007A 0E940000          xcall _delay
+ 007E                   .dbline 261
+ 007E           ;               
+ 007E           ;       sway(24, CLOCK_WISE);
+ 007E 21E0              ldi R18,1
+ 0080 08E1              ldi R16,24
+ 0082 10E0              ldi R17,0
+ 0084 0E940000          xcall _sway
+ 0088                   .dbline 263
+ 0088           ;       
+ 0088           ;       delay(ONE_SEC);
+ 0088 00E9              ldi R16,400
+ 008A 11E0              ldi R17,1
+ 008C 0E940000          xcall _delay
+ 0090                   .dbline 265
+ 0090           ;       
+ 0090           ;       servo_calibration();
+ 0090 0E940000          xcall _servo_calibration
+ 0094                   .dbline 267
+ 0094           ;       
+ 0094           ;       delay(ONE_SEC);
+ 0094 00E9              ldi R16,400
+ 0096 11E0              ldi R17,1
+ 0098 0E940000          xcall _delay
+ 009C                   .dbline 269
+ 009C           ;       
+ 009C           ;       pose(3, 6, 10);
+ 009C 8AE0              ldi R24,10
+ 009E 90E0              ldi R25,0
+ 00A0 9983              std y+1,R25
+ 00A2 8883              std y+0,R24
+ 00A4 26E0              ldi R18,6
+ 00A6 03E0              ldi R16,3
+ 00A8 0E940000          xcall _pose
+ 00AC                   .dbline 271
+ 00AC           ;       
+ 00AC           ;       delay(ONE_SEC);
+ 00AC 00E9              ldi R16,400
+ 00AE 11E0              ldi R17,1
+ 00B0 0E940000          xcall _delay
+ 00B4                   .dbline 273
+ 00B4           ;       
+ 00B4           ;       servo_calibration();
+ 00B4 0E940000          xcall _servo_calibration
+ 00B8                   .dbline 275
+ 00B8           ;       
+ 00B8           ;       delay(ONE_SEC);
+ 00B8 00E9              ldi R16,400
+ 00BA 11E0              ldi R17,1
+ 00BC 0E940000          xcall _delay
+ 00C0                   .dbline 277
+ 00C0           ;       
+ 00C0           ;       dance(4,5,6);
+ 00C0 86E0              ldi R24,6
+ 00C2 90E0              ldi R25,0
+ 00C4 9983              std y+1,R25
+ 00C6 8883              std y+0,R24
+ 00C8 25E0              ldi R18,5
+ 00CA 04E0              ldi R16,4
+ 00CC 0E940000          xcall _dance
+ 00D0                   .dbline 279
+ 00D0           ;       
+ 00D0           ;       delay(ONE_SEC);
+ 00D0 00E9              ldi R16,400
+ 00D2 11E0              ldi R17,1
+ 00D4 0E940000          xcall _delay
+ 00D8                   .dbline 281
+ 00D8           ;       
+ 00D8           ;       sway(24, ANTI_CLOCK_WISE);
+ 00D8 2227              clr R18
+ 00DA 08E1              ldi R16,24
+ 00DC 10E0              ldi R17,0
+ 00DE 0E940000          xcall _sway
+ 00E2                   .dbline -2
+ 00E2           L1:
+ 00E2                   .dbline 0 ; func end
+ 00E2 2296              adiw R28,2
+ 00E4 0895              ret
+ 00E6                   .dbsym r i 20 I
+ 00E6                   .dbend
+ 00E6           ;       
+ 00E6           ;       
+ 00E6           ;       
+ 00E6           ;        
+ 00E6           ; }
+ 00E6           ; 
+ 00E6           ; 

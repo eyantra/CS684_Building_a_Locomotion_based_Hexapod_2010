@@ -1,0 +1,35 @@
+#define TWENTY_FIVE_MSEC 10
+#define FIFTY_MSEC 20
+#define HUNDERED_MSEC 40
+#define TWO_HUNDERED_FIFTY_MSEC 100
+#define FIVE_HUNDERED_MSEC 200
+#define ONE_SEC 400
+
+#define MOTOR_A 'A'
+#define MOTOR_B 'B'
+#define MOTOR_C 'C'
+
+#define LEG_1 1
+#define LEG_2 2
+#define LEG_3 3
+#define LEG_4 4
+#define LEG_5 5
+#define LEG_6 6
+
+#define CLOCK_WISE 1
+#define ANTI_CLOCK_WISE 0
+
+#define NO_OF_LEGS 6
+#define NO_OF_SERVOS 24
+#define NO_OF_SERVOS_IN_EACH_LEG 3
+
+#define DEGREE_MIN 0
+#define DEGREE_MAX 180
+
+#define INITIAL_ANGLE 90
+
+#define KEYBOARD_ON 1
+
+#define DIR_MIRROR_LEG_1_2 1
+#define DIR_MIRROR_LEG_2_3 2
+#define DIR_MIRROR_LEG_1_4 3

@@ -1,0 +1,314 @@
+/***
+Author : Srijit Dutt
+Date Sun 07 Nov 2010 02:42:38 PM IST 
+
+gait.c : File contains various walking motion functions for the hexapod
+Please include gait.h file to call function from this file
+
+*/
+
+
+/********************************************************************************
+
+   Copyright (c) 2010, ERTS Lab IIT Bombay erts@cse.iitb.ac.in               -*- c -*-
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
+     the documentation and/or other materials provided with the
+     distribution.
+
+   * Neither the name of the copyright holders nor the names of
+     contributors may be used to endorse or promote products derived
+     from this software without specific prior written permission.
+
+   * Source code can be used for academic purpose. 
+	 For commercial use permission form the author needs to be taken.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE. 
+
+  Software released under Creative Commence cc by-nc-sa licence.
+  For legal information refer to: 
+  http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+
+********************************************************************************/
+
+
+#include "hexapod_macro.h"
+#include "hexapod_basic.h"
+#include "hexapod.h"
+
+
+/**
+Tripod gait moves the hexapod in the direction dir1 for steps.
+Three legs forming a tripod move first then the other three legs move  
+Used for normal gait of the hexapod
+@param dir1 : Direction of motion
+@param steps : number of steps
+
+*/
+void tripod_gait(unsigned char dir1, unsigned char steps) {
+	unsigned char dir3 = ((dir1 + 1) % 6) + 1;
+	unsigned char dir5 = ((dir3 + 1) % 6) + 1;
+	unsigned char dir2 = 7 - dir5;
+	unsigned char dir4 = 7 - dir3;
+	unsigned char dir6 = 7 - dir1;
+	unsigned char step_forward = 70;
+	unsigned char step_side = 50;
+	unsigned char lift = 40;
+	int delay_time = TWO_HUNDRED_FIFTY_MSEC;
+	
+	
+	if(dir1%2 == 0) {
+		swap(&dir2, &dir4);
+		swap(&dir3, &dir5);	  
+	}
+	
+	while (steps-- > 0) {
+
+		//puuting down odd tripod
+		angle(dir1, MOTOR_B, 90);
+		angle(dir3, MOTOR_B, 90);
+		angle(dir5, MOTOR_B, 90);
+		
+		delay(HUNDRED_MSEC);
+		
+		//picking up even tripod
+		angle(dir2, MOTOR_B, lift);
+		angle(dir4, MOTOR_B, lift);
+		angle(dir6, MOTOR_B, lift);
+		delay(delay_time);
+
+		//moving body on odd tripod
+		angle(dir1, MOTOR_C, 90);
+		angle(dir3, MOTOR_A, 90);
+		angle(dir5, MOTOR_A, 90);
+		//moving legs even forward in air
+		angle(dir2, MOTOR_A, 90 - step_side);
+		angle(dir4, MOTOR_A, 90 + step_side);
+		angle(dir6, MOTOR_C, 90 + step_forward);
+		delay(delay_time);
+
+		//putting down even legs
+		angle(dir2, MOTOR_B, 90);
+		angle(dir4, MOTOR_B, 90);
+		angle(dir6, MOTOR_B, 90);
+		
+		delay(HUNDRED_MSEC);
+		
+		//picking up odd legs
+		angle(dir1, MOTOR_B, lift);
+		angle(dir3, MOTOR_B, lift);
+		angle(dir5, MOTOR_B, lift);
+		delay(delay_time);
+
+		//moving the odd legs in air
+		angle(dir1, MOTOR_C, 90 + step_forward);
+		angle(dir3, MOTOR_A, 90 - step_side);
+		angle(dir5, MOTOR_A, 90 + step_side);
+		//moving the body forward on even tripod
+		angle(dir2, MOTOR_A, 90);
+		angle(dir4, MOTOR_A, 90);
+		angle(dir6, MOTOR_C, 90);
+		delay(delay_time);
+	}
+}
+
+/**
+Tripod Gait 2 : Better suited for uneven terrain
+@param dir1 : Direction of motion
+@param steps : number of steps
+*/
+void tripod_gait_2(unsigned char dir1, unsigned char steps) {
+	unsigned char dir3 = ((dir1 + 1) % 6) + 1;
+	unsigned char dir5 = ((dir3 + 1) % 6) + 1;
+	unsigned char dir2 = 7 - dir5;
+	unsigned char dir4 = 7 - dir3;
+	unsigned char dir6 = 7 - dir1;
+	unsigned char step_forward = 60;
+	unsigned char step_side = 60;
+	unsigned char lift = 40;
+	int delay_time = ONE_SEC;
+	int delay_time1 = ONE_SEC;
+	
+	
+	if(dir1%2 == 0) {
+		swap(&dir2, &dir4);
+		swap(&dir3, &dir5);	  
+	}
+	
+	while (steps-- > 0) {
+
+		//puuting down odd tripod
+		angle(dir1, MOTOR_C, 90);
+		angle(dir3, MOTOR_C, 90);
+		angle(dir5, MOTOR_C, 90);
+		angle(dir1, MOTOR_B, 90);
+		angle(dir3, MOTOR_B, 90);
+		angle(dir5, MOTOR_B, 90);
+		
+				
+		delay(delay_time1);
+		
+		//picking up even tripod
+		angle(dir2, MOTOR_B, lift);
+		angle(dir4, MOTOR_B, lift);
+		angle(dir6, MOTOR_B, lift);
+		angle(dir2, MOTOR_C, 0);
+		angle(dir4, MOTOR_C, 0);
+		angle(dir6, MOTOR_C, 0);
+		delay(delay_time);
+
+		//moving body on odd tripod
+		angle(dir1, MOTOR_A, 90);
+		angle(dir3, MOTOR_A, 90);
+		angle(dir5, MOTOR_A, 90);
+		
+		delay(delay_time);
+		
+		//moving legs even forward in air
+		angle(dir2, MOTOR_C, 180);
+		angle(dir4, MOTOR_C, 180);
+		angle(dir6, MOTOR_C, 180);
+		angle(dir2, MOTOR_A, 90 - step_side);
+		angle(dir4, MOTOR_A, 90 + step_side);
+		angle(dir6, MOTOR_A, 90 + step_forward);
+		delay(delay_time);
+
+		//putting down even legs
+		angle(dir2, MOTOR_C, 90);
+		angle(dir4, MOTOR_C, 90);
+		angle(dir6, MOTOR_C, 90);
+		angle(dir2, MOTOR_B, 90);
+		angle(dir4, MOTOR_B, 90);
+		angle(dir6, MOTOR_B, 90);
+		
+		delay(delay_time1);
+		
+		//picking up odd legs
+		angle(dir1, MOTOR_B, lift);
+		angle(dir3, MOTOR_B, lift);
+		angle(dir5, MOTOR_B, lift);
+		angle(dir1, MOTOR_C, 0);
+		angle(dir3, MOTOR_C, 0);
+		angle(dir5, MOTOR_C, 0);
+		delay(delay_time);
+
+		//moving the odd legs in air
+		angle(dir1, MOTOR_C, 180);
+		angle(dir3, MOTOR_C, 180);
+		angle(dir5, MOTOR_C, 180);
+		angle(dir1, MOTOR_A, 90 + step_forward);
+		angle(dir3, MOTOR_A, 90 - step_side);
+		angle(dir5, MOTOR_A, 90 + step_side);
+		delay(delay_time);
+		
+		//moving the body forward on even tripod
+		angle(dir2, MOTOR_A, 90);
+		angle(dir4, MOTOR_A, 90);
+		angle(dir6, MOTOR_A, 90);
+		delay(delay_time);
+	}
+}
+
+/**
+Two leg gait in which two legs are moved at a time
+@param dir1 : Direction of motion
+@param dir2 : Direction of motion
+@param steps : number of steps
+*/
+void two_leg_gait(unsigned char dir1, unsigned char dir2, int steps) {
+	 unsigned char legs_anticlock[] = {0,2,3,6,1,4,5};
+	 unsigned char legs_clock[] = {0,4,1,2,5,6,3}; 
+	 unsigned char dir3 = legs_anticlock[dir2];
+	 unsigned char dir4 = legs_clock[dir1];
+	 unsigned char dir5 = legs_clock[dir4];
+	 unsigned char dir6= legs_anticlock[dir3];
+	 unsigned char step_forward = 50;
+	 unsigned char step_side = 50;
+	 unsigned char lift = 40;
+	 int delay_time1 = FIVE_HUNDRED_MSEC;
+	 int delay_time2 = FIVE_HUNDRED_MSEC;
+	 
+	 while(steps-- > 0) {
+	 
+	    //putting down legs 5 & 6
+		angle(dir5, MOTOR_B, 90);
+		angle(dir6, MOTOR_B, 90);
+	 
+	 	//picking up 1 & 2 legs
+		angle(dir1, MOTOR_B, lift);
+		angle(dir2, MOTOR_B, lift);
+		
+		//delay
+		delay(delay_time1);
+		
+		//moving body on legs 5 & 6
+		angle(dir5, MOTOR_A, 90 - step_forward);
+		angle(dir6, MOTOR_A, 90 + step_forward);
+		
+		//moving 1 & 2 legs in air 
+		angle(dir1, MOTOR_A, 90 + step_forward);
+		angle(dir2, MOTOR_A, 90 - step_forward);
+		
+		//delay
+		delay(delay_time1);
+		
+		//putting 1 & 2 legs down
+		angle(dir1, MOTOR_B, 90);
+		angle(dir2, MOTOR_B, 90);
+		
+		//picking up 3 & 4 legs		   
+	 	angle(dir3, MOTOR_B, lift);
+		angle(dir4, MOTOR_B, lift);
+		
+		delay(delay_time1);
+		
+		//moving body on legs 1 & 2
+		angle(dir1, MOTOR_A, 90 - step_forward);
+		angle(dir2, MOTOR_A, 90 + step_forward);
+		
+		//moving legs 3 & 4 in air
+		angle(dir3, MOTOR_A, 90 - step_side);
+		angle(dir4, MOTOR_A, 90 + step_side);
+		
+		delay(delay_time2);
+		
+		//putting down legs 3 & 4
+		angle(dir3, MOTOR_B, 90);
+		angle(dir4, MOTOR_B, 90);
+		
+		//picking up legs 5 & 6
+		angle(dir5, MOTOR_B, lift);
+		angle(dir6, MOTOR_B, lift);
+		
+		delay(delay_time1);
+		
+		//moving body on legs 3 & 4
+		angle(dir3, MOTOR_A, 90 + step_side);
+		angle(dir4, MOTOR_A, 90 - step_side);
+		
+		//moving legs 5 & 6 in air 
+		angle(dir5, MOTOR_A, 90 + step_forward);
+		angle(dir6, MOTOR_A, 90 - step_forward);
+		
+		delay(delay_time2);
+				   
+	 }
+}
